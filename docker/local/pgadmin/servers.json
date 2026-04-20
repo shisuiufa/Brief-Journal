@@ -1,0 +1,13 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "Brief Journal Postgres",
+      "Group": "Servers",
+      "Host": "postgres",
+      "Port": 5432,
+      "MaintenanceDB": "brief_journal",
+      "Username": "postgres",
+      "SSLMode": "prefer"
+    }
+  }
+}
