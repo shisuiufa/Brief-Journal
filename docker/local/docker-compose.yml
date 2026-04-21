@@ -28,6 +28,7 @@ services:
       - postgres
     volumes:
       - ./pgadmin/servers.json:/pgadmin4/servers.json
+      - brief_journal_pgadmin_data:/var/lib/pgadmin
 
   api:
     build:
@@ -72,3 +73,4 @@ services:
 
 volumes:
   brief_journal_postgres_data:
+  brief_journal_pgadmin_data:
