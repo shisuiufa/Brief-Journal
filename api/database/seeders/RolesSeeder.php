@@ -14,16 +14,16 @@ class RolesSeeder extends Seeder
      */
     public function run(): void
     {
-        $admin = Role::findOrCreate(RoleEnum::ADMIN->value);
-        $editor = Role::findOrCreate(RoleEnum::EDITOR->value);
+        $admin = Role::findOrCreate(RoleEnum::Admin->value);
+        $editor = Role::findOrCreate(RoleEnum::Editor->value);
 
         $admin->givePermissionTo(array_column(PermissionEnum::cases(), 'value'));
 
         $editor->givePermissionTo([
-            PermissionEnum::CREATE_POSTS->value,
-            PermissionEnum::EDIT_POSTS->value,
-            PermissionEnum::DELETE_POSTS->value,
-            PermissionEnum::PUBLISH_POSTS->value,
+            PermissionEnum::CreatePosts->value,
+            PermissionEnum::EditPosts->value,
+            PermissionEnum::DeletePosts->value,
+            PermissionEnum::PublishPosts->value,
         ]);
     }
 }

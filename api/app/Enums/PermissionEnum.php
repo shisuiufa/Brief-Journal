@@ -4,10 +4,10 @@ namespace App\Enums;
 
 enum PermissionEnum: string
 {
-    case CREATE_POSTS = 'create posts';
-    case EDIT_POSTS = 'edit posts';
-    case DELETE_POSTS = 'delete posts';
-    case PUBLISH_POSTS = 'publish posts';
-    case MANAGE_USERS = 'manage users';
-    case MANAGE_ROLES = 'manage roles';
+    case CreatePosts = 'create posts';
+    case EditPosts = 'edit posts';
+    case DeletePosts = 'delete posts';
+    case PublishPosts = 'publish posts';
+    case ManageUsers = 'manage users';
+    case ManageRoles = 'manage roles';
 }
