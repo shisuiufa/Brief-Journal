@@ -3,10 +3,8 @@
 namespace App\Providers;
 
 use App\Actions\Auth\AuthenticateUserAction;
-use App\Actions\Auth\CreateUserAction;
 use App\Actions\Auth\LogoutUserAction;
 use App\Contracts\Auth\AuthenticateUserActionInterface;
-use App\Contracts\Auth\CreateUserActionInterface;
 use App\Contracts\Auth\LogoutUserActionInterface;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
@@ -28,11 +26,6 @@ class AuthServiceProvider extends ServiceProvider
         $this->app->bind(
             LogoutUserActionInterface::class,
             LogoutUserAction::class
-        );
-
-        $this->app->bind(
-            CreateUserActionInterface::class,
-            CreateUserAction::class
         );
     }
 
