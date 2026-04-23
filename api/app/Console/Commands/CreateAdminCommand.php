@@ -2,15 +2,14 @@
 
 namespace App\Console\Commands;
 
-use App\Actions\CreateUserAction;
+use App\Contracts\Auth\CreateUserActionInterface;
 use App\Data\CreateUserData;
-use App\Enums\RoleEnum;
+use App\Enums\Access\RoleEnum;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
-use Throwable;
 
 #[Signature('app:create-admin')]
 #[Description('Create admin user')]
@@ -34,12 +33,7 @@ class CreateAdminCommand extends Command
         ])->validate();
     }
 
-    /**
-     * Execute the console command.
-     *
-     * @throws Throwable
-     */
-    public function handle(CreateUserAction $createUser): int
+    public function handle(CreateUserActionInterface $createUser): int
     {
         try {
             $payload = $this->validatedInput();
@@ -53,7 +47,7 @@ class CreateAdminCommand extends Command
             return self::FAILURE;
         }
 
-        $admin = $createUser(new CreateUserData(
+        $admin = $createUser->execute(new CreateUserData(
             name: $payload['name'],
             email: $payload['email'],
             password: $payload['password'],
