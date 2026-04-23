@@ -2,7 +2,7 @@
 
 namespace App\Data;
 
-use App\Enums\RoleEnum;
+use App\Enums\Access\RoleEnum;
 
 final readonly class CreateUserData
 {
