@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Data;
+namespace App\Data\Admin;
 
 use App\Enums\Access\RoleEnum;
 

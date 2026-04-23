@@ -1,7 +1,7 @@
 <?php
 
-use App\Actions\Auth\CreateUserAction;
-use App\Data\CreateUserData;
+use App\Actions\Admin\User\CreateUserAction;
+use App\Data\Admin\CreateUserData;
 use App\Enums\Access\RoleEnum;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
