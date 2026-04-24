@@ -38,26 +38,44 @@ class UserPolicy
      */
     public function createWithRole(User $user, RoleEnum $role): bool
     {
-        return match ($role) {
-            RoleEnum::Admin => $user->can(PermissionEnum::CreateAdmins->value),
+        if ($user->hasRole(RoleEnum::SuperAdmin->value)) {
+            return true;
+        }
 
-            RoleEnum::Editor => $user->can(PermissionEnum::CreateEditors->value),
+        if ($user->hasRole(RoleEnum::Admin->value)) {
+            return $role === RoleEnum::Editor;
+        }
 
-            RoleEnum::User, RoleEnum::SuperAdmin => false,
-        };
+        return false;
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, User $model): bool
+    public function update(User $user, User $model, ?RoleEnum $newRole = null): bool
     {
-        if ($model->is($user)) {
+        if (
+            $model->is($user)
+            && $newRole !== null
+            && ! $model->hasRole($newRole->value)
+        ) {
             return false;
         }
 
-        if ($model->hasRole(RoleEnum::Admin->value)) {
-            return $user->can(PermissionEnum::EditAdmins->value);
+        if ($user->hasRole(RoleEnum::SuperAdmin->value)) {
+            return true;
+        }
+
+        if ($model->hasRole(RoleEnum::SuperAdmin->value)) {
+            return false;
+        }
+
+        if ($newRole !== null && ! $model->hasRole($newRole->value)) {
+            return false;
+        }
+
+        if ($model->is($user)) {
+            return true;
         }
 
         if ($model->hasRole(RoleEnum::Editor->value)) {
@@ -73,6 +91,14 @@ class UserPolicy
     public function delete(User $user, User $model): bool
     {
         if ($model->is($user)) {
+            return false;
+        }
+
+        if ($user->hasRole(RoleEnum::SuperAdmin->value)) {
+            return true;
+        }
+
+        if ($model->hasRole(RoleEnum::SuperAdmin->value)) {
             return false;
         }
 

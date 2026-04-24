@@ -22,6 +22,8 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        $this->authorize('viewAny', User::class);
+
         $users = User::search($request->input('search'))
             ->with('roles')
             ->latest()
@@ -57,9 +59,9 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return response()->json([
-            'data' => $user->load('roles'),
-        ]);
+        $this->authorize('view', $user);
+
+        return new UserResource($user);
     }
 
     /**
@@ -67,6 +69,10 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user, UpdateUserActionInterface $updateUserAction)
     {
+        $role = RoleEnum::from($request->validated('role'));
+
+        $this->authorize('update', [$user, $role]);
+
         $updateUserAction->execute(
             $user,
             new UpdateUserData(
@@ -86,6 +92,8 @@ class UserController extends Controller
      */
     public function destroy(User $user, DeleteUserActionInterface $deleteUserAction)
     {
+        $this->authorize('delete', $user);
+
         $deleteUserAction->execute($user);
 
         return response()->json([
