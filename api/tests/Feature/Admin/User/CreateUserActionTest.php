@@ -14,9 +14,9 @@ beforeEach(function () {
     Role::findOrCreate(RoleEnum::Admin->value);
 });
 
-function createUser(CreateUserData $createUserData): User
+function createUser(CreateUserData $data): User
 {
-    return app(CreateUserActionInterface::class)->execute($createUserData);
+    return app(CreateUserActionInterface::class)->execute($data);
 }
 
 function createUserData(): CreateUserData
@@ -32,21 +32,25 @@ function createUserData(): CreateUserData
 it('creates a user', function () {
     $user = createUser(createUserData());
 
-    expect($user->email)->toBe('test@example.com');
+    expect($user->name)->toBe('John Doe')
+        ->and($user->email)->toBe('test@example.com');
 
     $this->assertDatabaseHas('users', [
+        'id' => $user->id,
+        'name' => 'John Doe',
         'email' => 'test@example.com',
     ]);
 });
 
-it('assigns the admin role', function () {
+it('assigns user role', function () {
     $user = createUser(createUserData());
 
     expect($user->hasRole(RoleEnum::Admin->value))->toBeTrue();
 });
 
-it('hashes the user password', function () {
+it('stores user password hashed', function () {
     $user = createUser(createUserData());
 
-    expect(Hash::check('password', $user->password))->toBeTrue();
+    expect($user->password)->not->toBe('password')
+        ->and(Hash::check('password', $user->password))->toBeTrue();
 });

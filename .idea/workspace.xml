@@ -4,8 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fcb65b18-4db8-4dd1-9949-4cab72024daf" name="Changes" comment="add swagger">
+    <list default="true" id="fcb65b18-4db8-4dd1-9949-4cab72024daf" name="Changes" comment="refactor">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/app/Http/Controllers/Admin/UserController.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/app/Http/Controllers/Admin/UserController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/app/Policies/UserPolicy.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/app/Policies/UserPolicy.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/tests/Feature/Admin/User/CreateUserActionTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/tests/Feature/Admin/User/CreateUserActionTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/tests/Feature/Admin/User/DeleteUserActionTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/tests/Feature/Admin/User/DeleteUserActionTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/tests/Feature/Admin/User/UpdateUserActionTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/tests/Feature/Admin/User/UpdateUserActionTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/tests/Feature/Admin/User/UserControllerTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/tests/Feature/Admin/User/UserControllerTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/tests/Feature/Auth/AuthControllerTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/tests/Feature/Auth/AuthControllerTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/tests/Feature/Feature/Auth/AuthSwaggerDocumentationTest.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/tests/Feature/Feature/Swagger/AdminUsersSwaggerDocumentationTest.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/tests/Feature/Feature/Swagger/SwaggerLocalOnlyMiddlewareTest.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/tests/Feature/Policies/UserPolicyTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/tests/Feature/Policies/UserPolicyTest.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -203,11 +214,11 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\Hacker\Desktop\www\blog\api\tests\Feature\Admin\User" />
-      <recent name="C:\Users\Hacker\Desktop\www\blog\api\tests\Feature\Policies" />
+      <recent name="C:\Users\Hacker\Desktop\www\blog\api\tests\Feature\Auth" />
       <recent name="C:\Users\Hacker\Desktop\www\blog\api\tests\Feature" />
       <recent name="C:\Users\Hacker\Desktop\www\blog\api\tests\Feature\Admin" />
-      <recent name="C:\Users\Hacker\Desktop\www\blog\api\app\Http\Controllers" />
+      <recent name="C:\Users\Hacker\Desktop\www\blog\api\tests\Feature\Admin\User" />
+      <recent name="C:\Users\Hacker\Desktop\www\blog\api\tests\Feature\Policies" />
     </key>
   </component>
   <component name="RunManager" selected="Pest.Main">
@@ -248,7 +259,7 @@
       <workItem from="1776957303663" duration="15002000" />
       <workItem from="1777018787250" duration="19663000" />
       <workItem from="1777038502896" duration="319000" />
-      <workItem from="1777038961663" duration="2282000" />
+      <workItem from="1777038961663" duration="12967000" />
     </task>
     <task id="LOCAL-00001" summary="add adaptive">
       <option name="closed" value="true" />
@@ -442,7 +453,23 @@
       <option name="project" value="LOCAL" />
       <updated>1777041105880</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="add swagger">
+      <option name="closed" value="true" />
+      <created>1777041553788</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1777041553788</updated>
+    </task>
+    <task id="LOCAL-00026" summary="refactor">
+      <option name="closed" value="true" />
+      <created>1777048921739</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1777048921739</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -462,7 +489,6 @@
     <MESSAGE value="auth" />
     <MESSAGE value="add soft deletes" />
     <MESSAGE value="admin route" />
-    <MESSAGE value="refactor" />
     <MESSAGE value="add user role" />
     <MESSAGE value="admin control user" />
     <MESSAGE value="add resolver" />
@@ -471,6 +497,7 @@
     <MESSAGE value="add alias" />
     <MESSAGE value="pint" />
     <MESSAGE value="add swagger" />
-    <option name="LAST_COMMIT_MESSAGE" value="add swagger" />
+    <MESSAGE value="refactor" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactor" />
   </component>
 </project>

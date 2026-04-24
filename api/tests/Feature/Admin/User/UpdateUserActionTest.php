@@ -19,7 +19,7 @@ function updateUser(User $user, UpdateUserData $updateUserData): User
     return app(UpdateUserActionInterface::class)->execute($user, $updateUserData);
 }
 
-function createUpdateUserData(?RoleEnum $role = RoleEnum::Admin): UpdateUserData
+function createUpdateUserData(?RoleEnum $role = null): UpdateUserData
 {
     return new UpdateUserData(
         name: 'New Name',
@@ -36,7 +36,7 @@ it('updates user name and email', function () {
 
     $updatedUser = updateUser(
         $user,
-        createUpdateUserData(role: null),
+        createUpdateUserData(),
     );
 
     expect($updatedUser->name)->toBe('New Name')
@@ -49,7 +49,20 @@ it('updates user name and email', function () {
     ]);
 });
 
-it('syncs user role', function () {
+it('replaces user role when role is provided', function () {
+    $user = User::factory()->create();
+    $user->assignRole(RoleEnum::Editor->value);
+
+    $updatedUser = updateUser(
+        $user,
+        createUpdateUserData(RoleEnum::Admin),
+    );
+
+    expect($updatedUser->hasRole(RoleEnum::Admin->value))->toBeTrue()
+        ->and($updatedUser->hasRole(RoleEnum::Editor->value))->toBeFalse();
+});
+
+it('keeps current user role when role is not provided', function () {
     $user = User::factory()->create();
     $user->assignRole(RoleEnum::Editor->value);
 
@@ -58,6 +71,6 @@ it('syncs user role', function () {
         createUpdateUserData(),
     );
 
-    expect($updatedUser->hasRole(RoleEnum::Admin->value))->toBeTrue()
-        ->and($updatedUser->hasRole(RoleEnum::Editor->value))->toBeFalse();
+    expect($updatedUser->hasRole(RoleEnum::Editor->value))->toBeTrue()
+        ->and($updatedUser->hasRole(RoleEnum::Admin->value))->toBeFalse();
 });

@@ -1,7 +1,10 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
+
+uses(RefreshDatabase::class);
 
 describe('AuthController', function () {
     it('logs in a user', function () {
@@ -46,11 +49,11 @@ describe('AuthController', function () {
     it('logs out an authenticated user', function () {
         $user = User::factory()->create();
 
-        $this->actingAs($user)
+        $this->actingAs($user, 'web')
             ->postJson('/api/auth/logout')
             ->assertOk()
             ->assertJsonPath('message', 'Logged out successfully.');
 
-        $this->assertGuest();
+        $this->assertGuest('web');
     });
 });

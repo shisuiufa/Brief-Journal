@@ -105,6 +105,94 @@ describe('UserController', function () {
             ->deleteJson("/api/admin/users/{$editor->id}")
             ->assertOk();
 
-        expect(User::whereKey($editor->id)->exists())->toBeFalse();
+        $this->assertSoftDeleted('users', [
+            'id' => $editor->id,
+        ]);
+    });
+
+    it('forbids changing another user role when not allowed', function (RoleEnum $actorRole, RoleEnum $targetRole, RoleEnum $newRole) {
+        $actor = createUserWithRole($actorRole);
+        $target = createUserWithRole($targetRole);
+
+        $this->actingAs($actor)
+            ->putJson("/api/admin/users/{$target->id}", updateUserPayload([
+                'name' => 'Updated User',
+                'email' => 'updated-user@example.com',
+                'role' => $newRole->value,
+            ]))
+            ->assertForbidden();
+
+        $target->refresh();
+
+        expect($target->hasRole($targetRole->value))->toBeTrue()
+            ->and($target->hasRole($newRole->value))->toBeFalse();
+    })->with([
+        'admin promotes editor to admin' => [RoleEnum::Admin, RoleEnum::Editor, RoleEnum::Admin],
+        'admin promotes editor to super admin' => [RoleEnum::Admin, RoleEnum::Editor, RoleEnum::SuperAdmin],
+        'editor changes editor to admin' => [RoleEnum::Editor, RoleEnum::Editor, RoleEnum::Admin],
+    ]);
+
+    it('forbids creating forbidden roles', function (RoleEnum $actorRole, RoleEnum $targetRole) {
+        $actor = createUserWithRole($actorRole);
+
+        $email = fake()->unique()->safeEmail();
+
+        $this->actingAs($actor)
+            ->postJson('/api/admin/users', userPayload([
+                'email' => $email,
+                'role' => $targetRole->value,
+            ]))
+            ->assertForbidden();
+
+        $this->assertDatabaseMissing('users', [
+            'email' => $email,
+        ]);
+    })->with([
+        'admin creates admin' => [RoleEnum::Admin, RoleEnum::Admin],
+        'admin creates user' => [RoleEnum::Admin, RoleEnum::User],
+        'admin creates super admin' => [RoleEnum::Admin, RoleEnum::SuperAdmin],
+        'super admin creates user' => [RoleEnum::SuperAdmin, RoleEnum::User],
+        'super admin creates super admin' => [RoleEnum::SuperAdmin, RoleEnum::SuperAdmin],
+        'editor creates editor' => [RoleEnum::Editor, RoleEnum::Editor],
+    ]);
+
+    it('forbids changing own role', function (RoleEnum $currentRole, RoleEnum $newRole) {
+        $user = createUserWithRole($currentRole);
+
+        $this->actingAs($user)
+            ->putJson("/api/admin/users/{$user->id}", updateUserPayload([
+                'name' => 'Updated Self',
+                'email' => 'updated-self@example.com',
+                'role' => $newRole->value,
+            ]))
+            ->assertForbidden();
+
+        $user->refresh();
+
+        expect($user->hasRole($currentRole->value))->toBeTrue()
+            ->and($user->hasRole($newRole->value))->toBeFalse();
+    })->with([
+        'editor to admin' => [RoleEnum::Editor, RoleEnum::Admin],
+        'editor to super admin' => [RoleEnum::Editor, RoleEnum::SuperAdmin],
+        'admin to editor' => [RoleEnum::Admin, RoleEnum::Editor],
+        'admin to super admin' => [RoleEnum::Admin, RoleEnum::SuperAdmin],
+    ]);
+
+    it('updates user without changing role', function () {
+        $superAdmin = createUserWithRole();
+        $editor = createUserWithRole(RoleEnum::Editor);
+
+        $this->actingAs($superAdmin)
+            ->putJson("/api/admin/users/{$editor->id}", [
+                'name' => 'Updated Without Role',
+                'email' => 'updated-without-role@example.com',
+            ])
+            ->assertOk();
+
+        $editor->refresh();
+
+        expect($editor->name)->toBe('Updated Without Role')
+            ->and($editor->email)->toBe('updated-without-role@example.com')
+            ->and($editor->hasRole(RoleEnum::Editor->value))->toBeTrue();
     });
 });

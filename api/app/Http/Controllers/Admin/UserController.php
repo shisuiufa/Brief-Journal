@@ -40,14 +40,16 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request, CreateUserActionInterface $createUserAction): JsonResponse
     {
-        $role = RoleEnum::from($request->validated('role'));
+        $validated = $request->validated();
+        $role = RoleEnum::from($validated['role']);
 
+        $this->authorize('create', User::class);
         $this->authorize('createWithRole', [User::class, $role]);
 
         $createUserAction->execute(new CreateUserData(
-            name: $request->validated('name'),
-            email: $request->validated('email'),
-            password: $request->validated('password'),
+            name: $validated['name'],
+            email: $validated['email'],
+            password: $validated['password'],
             role: $role,
         ));
 
@@ -74,16 +76,22 @@ class UserController extends Controller
         User $user,
         UpdateUserActionInterface $updateUserAction
     ): JsonResponse {
-        $role = RoleEnum::from($request->validated('role'));
+        $validated = $request->validated();
 
-        $this->authorize('update', [$user, $role]);
+        $role = isset($validated['role']) ? RoleEnum::from($validated['role']) : null;
+
+        $this->authorize('update', $user);
+
+        if ($role !== null) {
+            $this->authorize('changeRole', [$user, $role]);
+        }
 
         $updateUserAction->execute(
             $user,
             new UpdateUserData(
-                name: $request->validated('name'),
-                email: $request->validated('email'),
-                role: RoleEnum::from($request->validated('role')),
+                name: $validated['name'],
+                email: $validated['email'],
+                role: $role,
             )
         );
 

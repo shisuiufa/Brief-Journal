@@ -1,6 +1,5 @@
 <?php
 
-use App\Actions\Admin\User\DeleteUserAction;
 use App\Contracts\Admin\User\DeleteUserActionInterface;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -8,13 +7,18 @@ use Illuminate\Validation\ValidationException;
 
 uses(RefreshDatabase::class);
 
+function deleteUser(User $user): void
+{
+    app(DeleteUserActionInterface::class)->execute($user);
+}
+
 it('deletes another user', function () {
     $authUser = User::factory()->create();
     $user = User::factory()->create();
 
     $this->actingAs($authUser);
 
-    app(DeleteUserActionInterface::class)->execute($user);
+    deleteUser($user);
 
     $this->assertSoftDeleted('users', [
         'id' => $user->id,
@@ -26,5 +30,18 @@ it('cannot delete itself', function () {
 
     $this->actingAs($user);
 
-    app(DeleteUserAction::class)->execute($user);
-})->throws(ValidationException::class);
+    try {
+        deleteUser($user);
+
+        $this->fail('ValidationException was not thrown.');
+    } catch (ValidationException $exception) {
+        expect($exception->errors())->toBe([
+            'user' => ['You cannot delete yourself.'],
+        ]);
+    }
+
+    $this->assertDatabaseHas('users', [
+        'id' => $user->id,
+        'deleted_at' => null,
+    ]);
+});

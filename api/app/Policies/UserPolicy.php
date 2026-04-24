@@ -8,115 +8,127 @@ use App\Models\User;
 
 class UserPolicy
 {
-    /**
-     * Determine whether the user can view any models.
-     */
     public function viewAny(User $user): bool
     {
         return $user->can(PermissionEnum::ViewUsers->value);
     }
 
-    /**
-     * Determine whether the user can view the model.
-     */
     public function view(User $user, User $model): bool
     {
         return $user->can(PermissionEnum::ViewUsers->value);
     }
 
-    /**
-     * Determine whether the user can create models.
-     */
     public function create(User $user): bool
     {
         return $user->can(PermissionEnum::CreateEditors->value)
             || $user->can(PermissionEnum::CreateAdmins->value);
     }
 
-    /**
-     * Determine whether the user can create model with specific role.
-     */
     public function createWithRole(User $user, RoleEnum $role): bool
     {
-        if ($user->hasRole(RoleEnum::SuperAdmin->value)) {
-            return true;
+        if ($this->isSuperAdmin($user)) {
+            return in_array($role, [
+                RoleEnum::Admin,
+                RoleEnum::Editor,
+            ], true);
         }
 
-        if ($user->hasRole(RoleEnum::Admin->value)) {
-            return $role === RoleEnum::Editor;
-        }
-
-        return false;
+        return match ($role) {
+            RoleEnum::Editor => $user->can(PermissionEnum::CreateEditors->value),
+            RoleEnum::Admin,
+            RoleEnum::SuperAdmin,
+            RoleEnum::User => false,
+        };
     }
 
-    /**
-     * Determine whether the user can update the model.
-     */
-    public function update(User $user, User $model, ?RoleEnum $newRole = null): bool
+    public function update(User $user, User $model): bool
     {
-        if (
-            $model->is($user)
-            && $newRole !== null
-            && ! $model->hasRole($newRole->value)
-        ) {
-            return false;
-        }
-
-        if ($user->hasRole(RoleEnum::SuperAdmin->value)) {
-            return true;
-        }
-
-        if ($model->hasRole(RoleEnum::SuperAdmin->value)) {
-            return false;
-        }
-
-        if ($newRole !== null && ! $model->hasRole($newRole->value)) {
-            return false;
-        }
-
         if ($model->is($user)) {
             return true;
         }
 
-        if ($model->hasRole(RoleEnum::Editor->value)) {
-            return $user->can(PermissionEnum::EditEditors->value);
+        if ($this->isSuperAdmin($model)) {
+            return $this->isSuperAdmin($user);
         }
 
-        return false;
+        if ($this->isSuperAdmin($user)) {
+            return true;
+        }
+
+        return $this->canEditTarget($user, $model);
     }
 
-    /**
-     * Determine whether the user can delete the model.
-     */
+    public function changeRole(User $user, User $model, RoleEnum $newRole): bool
+    {
+        if ($model->is($user)) {
+            return false;
+        }
+
+        if ($this->isSuperAdmin($model)) {
+            return false;
+        }
+
+        if ($newRole === RoleEnum::SuperAdmin) {
+            return false;
+        }
+
+        if ($this->isSuperAdmin($user)) {
+            return true;
+        }
+
+        return $user->hasRole(RoleEnum::Admin->value)
+            && $model->hasRole(RoleEnum::Editor->value)
+            && $newRole === RoleEnum::Editor;
+    }
+
     public function delete(User $user, User $model): bool
     {
         if ($model->is($user)) {
             return false;
         }
 
-        if ($user->hasRole(RoleEnum::SuperAdmin->value)) {
-            return true;
-        }
-
-        if ($model->hasRole(RoleEnum::SuperAdmin->value)) {
+        if ($this->isSuperAdmin($model)) {
             return false;
         }
 
-        if ($model->hasRole(RoleEnum::Admin->value)) {
-            return $user->can(PermissionEnum::DeleteAdmins->value);
+        if ($this->isSuperAdmin($user)) {
+            return true;
         }
 
-        if ($model->hasRole(RoleEnum::Editor->value)) {
-            return $user->can(PermissionEnum::DeleteEditors->value);
-        }
-
-        return false;
+        return $this->canDeleteTarget($user, $model);
     }
 
-    /**
-     * Determine whether the user can restore the model.
-     */
     public function restore(User $user, User $model): bool
+    {
+        if ($this->isSuperAdmin($model)) {
+            return $this->isSuperAdmin($user);
+        }
+
+        if ($this->isSuperAdmin($user)) {
+            return true;
+        }
+
+        return $this->canEditTarget($user, $model);
+    }
+
+    public function forceDelete(User $user, User $model): bool
+    {
+        if ($model->is($user)) {
+            return false;
+        }
+
+        if ($this->isSuperAdmin($model)) {
+            return false;
+        }
+
+        if ($this->isSuperAdmin($user)) {
+            return true;
+        }
+
+        return $this->canDeleteTarget($user, $model);
+    }
+
+    private function canEditTarget(User $user, User $model): bool
     {
         if ($model->hasRole(RoleEnum::Admin->value)) {
             return $user->can(PermissionEnum::EditAdmins->value);
@@ -129,15 +141,8 @@ class UserPolicy
         return false;
     }
 
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, User $model): bool
+    private function canDeleteTarget(User $user, User $model): bool
     {
-        if ($model->is($user)) {
-            return false;
-        }
-
         if ($model->hasRole(RoleEnum::Admin->value)) {
             return $user->can(PermissionEnum::DeleteAdmins->value);
         }
@@ -147,5 +152,10 @@ class UserPolicy
         }
 
         return false;
+    }
+
+    private function isSuperAdmin(User $user): bool
+    {
+        return $user->hasRole(RoleEnum::SuperAdmin->value);
     }
 }
