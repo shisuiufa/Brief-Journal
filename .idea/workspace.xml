@@ -4,15 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fcb65b18-4db8-4dd1-9949-4cab72024daf" name="Changes" comment="add user policy">
+    <list default="true" id="fcb65b18-4db8-4dd1-9949-4cab72024daf" name="Changes" comment="pint">
+      <change beforePath="$PROJECT_DIR$/.idea/blog.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/blog.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/AGENTS.md" beforeDir="false" afterPath="$PROJECT_DIR$/api/AGENTS.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/api/app/Http/Controllers/Admin/UserController.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/app/Http/Controllers/Admin/UserController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/app/Policies/UserPolicy.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/app/Policies/UserPolicy.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/app/Http/Resources/UserResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/app/Http/Resources/UserResource.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/api/bootstrap/app.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/bootstrap/app.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/routes/admin.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/routes/admin.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/tests/Feature/CreateUserActionTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/tests/Feature/Admin/User/CreateUserActionTest.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/tests/Feature/ExampleTest.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/tests/Unit/ExampleTest.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/api/composer.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/api/composer.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -166,6 +167,11 @@
       <path value="$PROJECT_DIR$/api/vendor/vlucas/phpdotenv" />
       <path value="$PROJECT_DIR$/api/vendor/voku/portable-ascii" />
       <path value="$PROJECT_DIR$/api/vendor/webmozart/assert" />
+      <path value="$PROJECT_DIR$/api/vendor/swagger-api/swagger-ui" />
+      <path value="$PROJECT_DIR$/api/vendor/symfony/type-info" />
+      <path value="$PROJECT_DIR$/api/vendor/zircote/swagger-php" />
+      <path value="$PROJECT_DIR$/api/vendor/darkaonline/l5-swagger" />
+      <path value="$PROJECT_DIR$/api/vendor/radebatz/type-info-extras" />
     </include_path>
   </component>
   <component name="ProjectColorInfo">{
@@ -177,32 +183,32 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "Pest.UserControllerTest.php::it allows super admin to change editor role to admin.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "codeWithMe.voiceChat.enabledByDefault": "false",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "main",
-    "ignore.virus.scanning.warn.message": "true",
-    "javascript.preferred.runtime.type.id": "node",
-    "junie.onboarding.icon.badge.shown": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "php.override.implement.member.chooser.php.doc": "NONE",
-    "prettierjs.PrettierConfiguration.Package": "C:\\Users\\Hacker\\Desktop\\www\\blog\\web\\node_modules\\prettier",
-    "to.speed.mode.migration.done": "true",
-    "ts.external.directory.path": "C:\\Users\\Hacker\\Desktop\\www\\blog\\web\\node_modules\\typescript\\lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Pest.UserControllerTest.php::it allows super admin to change editor role to admin.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;javascript.preferred.runtime.type.id&quot;: &quot;node&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;php.override.implement.member.chooser.php.doc&quot;: &quot;NONE&quot;,
+    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;C:\\Users\\Hacker\\Desktop\\www\\blog\\web\\node_modules\\prettier&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\Hacker\\Desktop\\www\\blog\\web\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Hacker\Desktop\www\blog\api\tests\Feature\Admin\User" />
@@ -212,7 +218,7 @@
       <recent name="C:\Users\Hacker\Desktop\www\blog\api\app\Http\Controllers" />
     </key>
   </component>
-  <component name="RunManager" selected="Pest.UserControllerTest.php::it allows super admin to change editor role to admin">
+  <component name="RunManager" selected="Pest.Main">
     <configuration name="Main" type="PestRunConfigurationType">
       <PestRunner configuration_file="$PROJECT_DIR$/api/phpunit.xml" scope="ConfigurationFile" use_alternative_configuration_file="true" />
       <method v="2" />
@@ -221,11 +227,6 @@
       <PestRunner file="$PROJECT_DIR$/api/tests/Feature/Admin/User/UserControllerTest.php" method="it allows super admin to change editor role to admin" scope="Method" />
       <method v="2" />
     </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Pest.UserControllerTest.php::it allows super admin to change editor role to admin" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -253,7 +254,9 @@
       <workItem from="1776860930874" duration="5865000" />
       <workItem from="1776941018230" duration="8438000" />
       <workItem from="1776957303663" duration="15002000" />
-      <workItem from="1777018787250" duration="19359000" />
+      <workItem from="1777018787250" duration="19663000" />
+      <workItem from="1777038502896" duration="319000" />
+      <workItem from="1777038961663" duration="1995000" />
     </task>
     <task id="LOCAL-00001" summary="add adaptive">
       <option name="closed" value="true" />
@@ -399,7 +402,39 @@
       <option name="project" value="LOCAL" />
       <updated>1777030926184</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="add user policy">
+      <option name="closed" value="true" />
+      <created>1777038197318</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1777038197318</updated>
+    </task>
+    <task id="LOCAL-00020" summary="add tests">
+      <option name="closed" value="true" />
+      <created>1777038222012</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1777038222012</updated>
+    </task>
+    <task id="LOCAL-00021" summary="add alias">
+      <option name="closed" value="true" />
+      <created>1777038232402</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1777038232402</updated>
+    </task>
+    <task id="LOCAL-00022" summary="pint">
+      <option name="closed" value="true" />
+      <created>1777038300127</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1777038300127</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -424,6 +459,9 @@
     <MESSAGE value="admin control user" />
     <MESSAGE value="add resolver" />
     <MESSAGE value="add user policy" />
-    <option name="LAST_COMMIT_MESSAGE" value="add user policy" />
+    <MESSAGE value="add tests" />
+    <MESSAGE value="add alias" />
+    <MESSAGE value="pint" />
+    <option name="LAST_COMMIT_MESSAGE" value="pint" />
   </component>
 </project>

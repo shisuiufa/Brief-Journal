@@ -147,6 +147,11 @@
       <path value="$PROJECT_DIR$/api/vendor/vlucas/phpdotenv" />
       <path value="$PROJECT_DIR$/api/vendor/voku/portable-ascii" />
       <path value="$PROJECT_DIR$/api/vendor/webmozart/assert" />
+      <path value="$PROJECT_DIR$/api/vendor/swagger-api/swagger-ui" />
+      <path value="$PROJECT_DIR$/api/vendor/symfony/type-info" />
+      <path value="$PROJECT_DIR$/api/vendor/zircote/swagger-php" />
+      <path value="$PROJECT_DIR$/api/vendor/darkaonline/l5-swagger" />
+      <path value="$PROJECT_DIR$/api/vendor/radebatz/type-info-extras" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.3">
