@@ -11,9 +11,9 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
-#[Signature('app:create-admin')]
-#[Description('Create admin user')]
-class CreateAdminCommand extends Command
+#[Signature('app:create-s-admin')]
+#[Description('Create super admin user')]
+class CreateSuperAdminCommand extends Command
 {
     /**
      * @return array{name: string, email: string, password: string}
@@ -47,14 +47,14 @@ class CreateAdminCommand extends Command
             return self::FAILURE;
         }
 
-        $admin = $createUser->execute(new CreateUserData(
+        $sAdmin = $createUser->execute(new CreateUserData(
             name: $payload['name'],
             email: $payload['email'],
             password: $payload['password'],
-            role: RoleEnum::Admin
+            role: RoleEnum::SuperAdmin
         ));
 
-        $this->info("Admin {$admin->email} created successfully.");
+        $this->info("Admin {$sAdmin->email} created successfully.");
 
         return self::SUCCESS;
     }

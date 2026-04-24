@@ -4,17 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fcb65b18-4db8-4dd1-9949-4cab72024daf" name="Changes" comment="admin control user">
-      <change afterPath="$PROJECT_DIR$/api/app/Resolvers/Auth/AuthStrategyResolver.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/laravel-idea.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/laravel-idea.xml" afterDir="false" />
+    <list default="true" id="fcb65b18-4db8-4dd1-9949-4cab72024daf" name="Changes" comment="add resolver">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/app/Actions/Auth/AuthenticateUserAction.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/app/Actions/Auth/AuthUserAction.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/app/Contracts/Auth/AuthenticateUserActionInterface.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/app/Contracts/Auth/AuthUserActionInterface.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/app/Contracts/Auth/AuthenticationStrategyInterface.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/app/Contracts/Auth/AuthStrategyInterface.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/app/Factories/Auth/AuthenticationStrategyFactory.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/app/Http/Controllers/Api/AuthController.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/app/Http/Controllers/Api/AuthController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/app/Providers/AuthServiceProvider.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/app/Providers/AuthServiceProvider.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/app/Strategies/Auth/PasswordAuthenticationStrategy.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/app/Strategies/Auth/PasswordAuthStrategy.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/app/Console/Commands/CreateAdminCommand.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/app/Console/Commands/CreateSuperAdminCommand.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/app/Enums/Access/PermissionEnum.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/app/Enums/Access/PermissionEnum.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/app/Enums/Access/RoleEnum.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/app/Enums/Access/RoleEnum.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/app/Http/Controllers/Admin/UserController.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/app/Http/Controllers/Admin/UserController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/app/Http/Controllers/Controller.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/app/Http/Controllers/Controller.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/database/seeders/PermissionsSeeder.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/database/seeders/PermissionsSeeder.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/database/seeders/RolesSeeder.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/database/seeders/RolesSeeder.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -243,7 +241,7 @@
       <workItem from="1776860930874" duration="5865000" />
       <workItem from="1776941018230" duration="8438000" />
       <workItem from="1776957303663" duration="15002000" />
-      <workItem from="1777018787250" duration="5395000" />
+      <workItem from="1777018787250" duration="11770000" />
     </task>
     <task id="LOCAL-00001" summary="add adaptive">
       <option name="closed" value="true" />
@@ -365,7 +363,15 @@
       <option name="project" value="LOCAL" />
       <updated>1776971682459</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="add resolver">
+      <option name="closed" value="true" />
+      <created>1777024279720</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1777024279720</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -388,6 +394,7 @@
     <MESSAGE value="refactor" />
     <MESSAGE value="add user role" />
     <MESSAGE value="admin control user" />
-    <option name="LAST_COMMIT_MESSAGE" value="admin control user" />
+    <MESSAGE value="add resolver" />
+    <option name="LAST_COMMIT_MESSAGE" value="add resolver" />
   </component>
 </project>

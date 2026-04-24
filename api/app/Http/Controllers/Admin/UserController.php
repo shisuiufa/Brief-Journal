@@ -36,11 +36,15 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request, CreateUserActionInterface $createUserAction)
     {
+        $role = RoleEnum::from($request->validated('role'));
+
+        $this->authorize('createWithRole', [User::class, $role]);
+
         $createUserAction->execute(new CreateUserData(
             name: $request->validated('name'),
             email: $request->validated('email'),
             password: $request->validated('password'),
-            role: RoleEnum::from($request->validated('role')),
+            role: $role,
         ));
 
         return response()->json([
