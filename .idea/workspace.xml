@@ -4,16 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fcb65b18-4db8-4dd1-9949-4cab72024daf" name="Changes" comment="add resolver">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/app/Console/Commands/CreateAdminCommand.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/app/Console/Commands/CreateSuperAdminCommand.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/app/Enums/Access/PermissionEnum.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/app/Enums/Access/PermissionEnum.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/app/Enums/Access/RoleEnum.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/app/Enums/Access/RoleEnum.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/app/Http/Controllers/Admin/UserController.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/app/Http/Controllers/Admin/UserController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/app/Http/Controllers/Controller.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/app/Http/Controllers/Controller.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/database/seeders/PermissionsSeeder.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/database/seeders/PermissionsSeeder.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/database/seeders/RolesSeeder.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/database/seeders/RolesSeeder.php" afterDir="false" />
-    </list>
+    <list default="true" id="fcb65b18-4db8-4dd1-9949-4cab72024daf" name="Changes" comment="add user policy" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -241,7 +232,7 @@
       <workItem from="1776860930874" duration="5865000" />
       <workItem from="1776941018230" duration="8438000" />
       <workItem from="1776957303663" duration="15002000" />
-      <workItem from="1777018787250" duration="11770000" />
+      <workItem from="1777018787250" duration="12082000" />
     </task>
     <task id="LOCAL-00001" summary="add adaptive">
       <option name="closed" value="true" />
@@ -371,7 +362,15 @@
       <option name="project" value="LOCAL" />
       <updated>1777024279720</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="add user policy">
+      <option name="closed" value="true" />
+      <created>1777030785819</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1777030785819</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -395,6 +394,7 @@
     <MESSAGE value="add user role" />
     <MESSAGE value="admin control user" />
     <MESSAGE value="add resolver" />
-    <option name="LAST_COMMIT_MESSAGE" value="add resolver" />
+    <MESSAGE value="add user policy" />
+    <option name="LAST_COMMIT_MESSAGE" value="add user policy" />
   </component>
 </project>
