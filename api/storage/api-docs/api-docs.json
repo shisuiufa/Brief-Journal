@@ -18,8 +18,7 @@
                     "Admin Users"
                 ],
                 "summary": "Get users list",
-                "description": "Display a listing of the resource.",
-                "operationId": "2979f0297ab881ad0b8b86ee613f077b",
+                "operationId": "3b67dba7214776f2327f3f8f91626e13",
                 "responses": {
                     "200": {
                         "description": "Users list",
@@ -92,8 +91,7 @@
                     "Admin Users"
                 ],
                 "summary": "Create a user",
-                "description": "Store a newly created resource in storage.",
-                "operationId": "7601d6cfa9768b3857d0e58d45eb618b",
+                "operationId": "f208078e3872c9941809bdfdf9fdc463",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -226,8 +224,7 @@
                     "Admin Users"
                 ],
                 "summary": "Show a user",
-                "description": "Display the specified resource.",
-                "operationId": "e954c459997eb5a9e074368920b3301b",
+                "operationId": "e74e8a599c456bcc409d8f48233dbff0",
                 "parameters": [
                     {
                         "name": "user",
@@ -318,8 +315,7 @@
                     "Admin Users"
                 ],
                 "summary": "Update a user",
-                "description": "Update the specified resource in storage.",
-                "operationId": "226fd1997d1d92f6816855397a08d1a0",
+                "operationId": "213dfc22c24ccc12f7f1ebe8e3d44930",
                 "parameters": [
                     {
                         "name": "user",
@@ -454,8 +450,7 @@
                     "Admin Users"
                 ],
                 "summary": "Delete a user",
-                "description": "Remove the specified resource from storage.",
-                "operationId": "2aff4ce9fd4bdf50b2c049b7b16fc7cb",
+                "operationId": "9e247d6212f4be0889ae80659ca008ee",
                 "parameters": [
                     {
                         "name": "user",
@@ -758,12 +753,12 @@
     },
     "tags": [
         {
-            "name": "Authentication",
-            "description": "Authentication and Laravel Sanctum session endpoints"
+            "name": "Admin Users",
+            "description": "Administrative user management endpoints"
         },
         {
-            "name": "Admin Users",
-            "description": "Admin Users"
+            "name": "Authentication",
+            "description": "Authentication and Laravel Sanctum session endpoints"
         }
     ]
 }
