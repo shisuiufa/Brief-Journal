@@ -1,6 +1,6 @@
 <?php
 
-use App\Actions\Admin\User\CreateUserAction;
+use App\Contracts\Admin\User\CreateUserActionInterface;
 use App\Data\Admin\CreateUserData;
 use App\Enums\Access\RoleEnum;
 use App\Models\User;
@@ -10,19 +10,16 @@ use Spatie\Permission\Models\Role;
 
 uses(RefreshDatabase::class);
 
-function createRole(): void
-{
+beforeEach(function () {
     Role::findOrCreate(RoleEnum::Admin->value);
-}
+});
 
 function createUser(CreateUserData $createUserData): User
 {
-    $action = app(CreateUserAction::class);
-
-    return $action($createUserData);
+    return app(CreateUserActionInterface::class)->execute($createUserData);
 }
 
-function createData(): CreateUserData
+function createUserData(): CreateUserData
 {
     return new CreateUserData(
         name: 'John Doe',
@@ -32,12 +29,8 @@ function createData(): CreateUserData
     );
 }
 
-test('it creates a user', function () {
-    createRole();
-
-    $data = createData();
-
-    $user = createUser($data);
+it('creates a user', function () {
+    $user = createUser(createUserData());
 
     expect($user->email)->toBe('test@example.com');
 
@@ -46,22 +39,14 @@ test('it creates a user', function () {
     ]);
 });
 
-test('it assigns the admin role', function () {
-    createRole();
-
-    $data = createData();
-
-    $user = createUser($data);
+it('assigns the admin role', function () {
+    $user = createUser(createUserData());
 
     expect($user->hasRole(RoleEnum::Admin->value))->toBeTrue();
 });
 
-test('it hashes the user password', function () {
-    createRole();
-
-    $data = createData();
-
-    $user = createUser($data);
+it('hashes the user password', function () {
+    $user = createUser(createUserData());
 
     expect(Hash::check('password', $user->password))->toBeTrue();
 });
