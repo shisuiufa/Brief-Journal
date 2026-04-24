@@ -2,10 +2,13 @@
 
 namespace App\Providers;
 
-use App\Actions\Auth\AuthenticateUserAction;
+use App\Actions\Auth\AuthUserAction;
 use App\Actions\Auth\LogoutUserAction;
-use App\Contracts\Auth\AuthenticateUserActionInterface;
+use App\Contracts\Auth\AuthStrategyResolverInterface;
+use App\Contracts\Auth\AuthUserActionInterface;
 use App\Contracts\Auth\LogoutUserActionInterface;
+use App\Resolvers\Auth\AuthStrategyResolver;
+use App\Strategies\Auth\PasswordAuthStrategy;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -19,14 +22,27 @@ class AuthServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(
-            AuthenticateUserActionInterface::class,
-            AuthenticateUserAction::class
+            AuthUserActionInterface::class,
+            AuthUserAction::class
         );
 
         $this->app->bind(
             LogoutUserActionInterface::class,
             LogoutUserAction::class
         );
+
+        $this->app->bind(
+            AuthStrategyResolverInterface::class,
+            AuthStrategyResolver::class
+        );
+
+        $this->app->tag([
+            PasswordAuthStrategy::class,
+        ], 'auth.strategies');
+
+        $this->app->when(AuthStrategyResolver::class)
+            ->needs('$strategies')
+            ->giveTagged('auth.strategies');
     }
 
     /**

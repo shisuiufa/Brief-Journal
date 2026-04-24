@@ -4,20 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fcb65b18-4db8-4dd1-9949-4cab72024daf" name="Changes" comment="auth">
-      <change afterPath="$PROJECT_DIR$/api/app/Actions/Admin/User/CreateUserAction.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/api/app/Contracts/Admin/User/CreateUserActionInterface.php" afterDir="false" />
+    <list default="true" id="fcb65b18-4db8-4dd1-9949-4cab72024daf" name="Changes" comment="admin control user">
+      <change afterPath="$PROJECT_DIR$/api/app/Resolvers/Auth/AuthStrategyResolver.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/laravel-idea.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/laravel-idea.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/app/Actions/Auth/CreateUserAction.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/app/Console/Commands/CreateAdminCommand.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/app/Console/Commands/CreateAdminCommand.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/app/Contracts/Auth/CreateUserActionInterface.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/app/Data/CreateUserData.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/app/Data/Admin/CreateUserData.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/app/Enums/Access/RoleEnum.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/app/Enums/Access/RoleEnum.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/app/Models/User.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/app/Models/User.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/app/Actions/Auth/AuthenticateUserAction.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/app/Actions/Auth/AuthUserAction.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/app/Contracts/Auth/AuthenticateUserActionInterface.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/app/Contracts/Auth/AuthUserActionInterface.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/app/Contracts/Auth/AuthenticationStrategyInterface.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/app/Contracts/Auth/AuthStrategyInterface.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/app/Factories/Auth/AuthenticationStrategyFactory.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/app/Http/Controllers/Api/AuthController.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/app/Http/Controllers/Api/AuthController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/api/app/Providers/AuthServiceProvider.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/app/Providers/AuthServiceProvider.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/bootstrap/app.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/bootstrap/app.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/bootstrap/providers.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/bootstrap/providers.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/tests/Feature/CreateUserActionTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/tests/Feature/CreateUserActionTest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/app/Strategies/Auth/PasswordAuthenticationStrategy.php" beforeDir="false" afterPath="$PROJECT_DIR$/api/app/Strategies/Auth/PasswordAuthStrategy.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -182,31 +179,31 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "codeWithMe.voiceChat.enabledByDefault": "false",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "main",
-    "ignore.virus.scanning.warn.message": "true",
-    "javascript.preferred.runtime.type.id": "node",
-    "junie.onboarding.icon.badge.shown": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "php.override.implement.member.chooser.php.doc": "NONE",
-    "prettierjs.PrettierConfiguration.Package": "C:\\Users\\Hacker\\Desktop\\www\\blog\\web\\node_modules\\prettier",
-    "to.speed.mode.migration.done": "true",
-    "ts.external.directory.path": "C:\\Users\\Hacker\\Desktop\\www\\blog\\web\\node_modules\\typescript\\lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;javascript.preferred.runtime.type.id&quot;: &quot;node&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;php.override.implement.member.chooser.php.doc&quot;: &quot;NONE&quot;,
+    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;C:\\Users\\Hacker\\Desktop\\www\\blog\\web\\node_modules\\prettier&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\Hacker\\Desktop\\www\\blog\\web\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Hacker\Desktop\www\blog\api\app\Http\Controllers" />
@@ -245,7 +242,8 @@
       <workItem from="1776846822419" duration="3948000" />
       <workItem from="1776860930874" duration="5865000" />
       <workItem from="1776941018230" duration="8438000" />
-      <workItem from="1776957303663" duration="14160000" />
+      <workItem from="1776957303663" duration="15002000" />
+      <workItem from="1777018787250" duration="5395000" />
     </task>
     <task id="LOCAL-00001" summary="add adaptive">
       <option name="closed" value="true" />
@@ -319,7 +317,55 @@
       <option name="project" value="LOCAL" />
       <updated>1776965861016</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="add soft deletes">
+      <option name="closed" value="true" />
+      <created>1776971553415</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1776971553415</updated>
+    </task>
+    <task id="LOCAL-00011" summary="admin route">
+      <option name="closed" value="true" />
+      <created>1776971592509</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1776971592509</updated>
+    </task>
+    <task id="LOCAL-00012" summary="refactor">
+      <option name="closed" value="true" />
+      <created>1776971613998</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1776971613998</updated>
+    </task>
+    <task id="LOCAL-00013" summary="refactor">
+      <option name="closed" value="true" />
+      <created>1776971649474</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1776971649474</updated>
+    </task>
+    <task id="LOCAL-00014" summary="add user role">
+      <option name="closed" value="true" />
+      <created>1776971659192</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1776971659192</updated>
+    </task>
+    <task id="LOCAL-00015" summary="admin control user">
+      <option name="closed" value="true" />
+      <created>1776971682459</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1776971682459</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -337,6 +383,11 @@
     <MESSAGE value="add sanctum" />
     <MESSAGE value="add roles" />
     <MESSAGE value="auth" />
-    <option name="LAST_COMMIT_MESSAGE" value="auth" />
+    <MESSAGE value="add soft deletes" />
+    <MESSAGE value="admin route" />
+    <MESSAGE value="refactor" />
+    <MESSAGE value="add user role" />
+    <MESSAGE value="admin control user" />
+    <option name="LAST_COMMIT_MESSAGE" value="admin control user" />
   </component>
 </project>

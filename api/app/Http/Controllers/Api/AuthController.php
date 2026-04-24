@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Contracts\Auth\AuthenticateUserActionInterface;
+use App\Contracts\Auth\AuthUserActionInterface;
 use App\Contracts\Auth\LogoutUserActionInterface;
 use App\Data\Auth\AuthData;
 use App\Enums\Auth\AuthDriverEnum;
@@ -13,9 +13,9 @@ use Illuminate\Http\JsonResponse;
 
 class AuthController extends Controller
 {
-    public function login(LoginRequest $request, AuthenticateUserActionInterface $authenticateUser): UserResource
+    public function login(LoginRequest $request, AuthUserActionInterface $authenticateUser): UserResource
     {
-        $user = $authenticateUser->execute(new AuthData(
+        $user = $authenticateUser(new AuthData(
             driver: AuthDriverEnum::Password,
             email: $request->validated('email'),
             password: $request->validated('password')
