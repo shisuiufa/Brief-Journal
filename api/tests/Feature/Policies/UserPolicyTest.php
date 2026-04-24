@@ -13,7 +13,7 @@ beforeEach(function () {
     $this->seed(PermissionsSeeder::class);
     $this->seed(RolesSeeder::class);
 
-    $this->policy = new UserPolicy();
+    $this->policy = new UserPolicy;
 });
 
 function policyUser(RoleEnum $role): User
