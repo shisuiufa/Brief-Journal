@@ -3,7 +3,7 @@
 namespace App\Actions\Admin\Post;
 
 use App\Contracts\Admin\Post\CreatePostActionInterface;
-use App\Data\Post\CreatePostData;
+use App\Data\Admin\Post\CreatePostData;
 use App\Models\Post;
 
 final readonly class CreatePostAction implements CreatePostActionInterface

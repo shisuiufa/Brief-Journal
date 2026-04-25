@@ -12,8 +12,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-#[Fillable([
-    'user_id',
+/**
+ * @mixin IdeHelperPost
+ */
+#[Fillable(['user_id',
     'title',
     'slug',
     'image',
