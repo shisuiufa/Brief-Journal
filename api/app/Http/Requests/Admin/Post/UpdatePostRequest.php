@@ -29,13 +29,13 @@ class UpdatePostRequest extends FormRequest
 
         return [
             'title' => [
-                'sometimes',
+                'required',
                 'string',
                 'max:255',
             ],
 
             'slug' => [
-                'sometimes',
+                'required',
                 'string',
                 'max:255',
                 'alpha_dash',
@@ -56,12 +56,12 @@ class UpdatePostRequest extends FormRequest
             ],
 
             'content' => [
-                'sometimes',
+                'required',
                 'string',
             ],
 
             'status' => [
-                'sometimes',
+                'required',
                 new Enum(PostStatusEnum::class),
             ],
         ];

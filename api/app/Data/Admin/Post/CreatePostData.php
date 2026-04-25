@@ -3,7 +3,6 @@
 namespace App\Data\Admin\Post;
 
 use App\Enums\Post\PostStatusEnum;
-use Carbon\CarbonImmutable;
 use Illuminate\Http\UploadedFile;
 
 final readonly class CreatePostData
@@ -16,7 +15,6 @@ final readonly class CreatePostData
         public ?string $excerpt,
         public string $content,
         public PostStatusEnum $status,
-        public ?CarbonImmutable $publishedAt,
     ) {}
 
     public static function fromArray(array $data): self
@@ -31,9 +29,6 @@ final readonly class CreatePostData
             status: $data['status'] instanceof PostStatusEnum
                 ? $data['status']
                 : PostStatusEnum::from($data['status']),
-            publishedAt: isset($data['published_at'])
-                ? CarbonImmutable::parse($data['published_at'])
-                : null,
         );
     }
 }
