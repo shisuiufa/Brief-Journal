@@ -7,8 +7,9 @@ use App\Contracts\Media\ImageStorageInterface;
 use App\Data\Admin\Post\UpdatePostData;
 use App\Enums\Post\PostStatusEnum;
 use App\Models\Post;
-use Illuminate\Support\Facades\DB;
+use Carbon\CarbonInterface;
 use Illuminate\Validation\ValidationException;
+use Throwable;
 
 final readonly class UpdatePostAction implements UpdatePostActionInterface
 {
@@ -17,39 +18,93 @@ final readonly class UpdatePostAction implements UpdatePostActionInterface
     ) {}
 
     /**
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function execute(Post $post, UpdatePostData $data): Post
     {
-        if ($post->status !== PostStatusEnum::Draft && $post->status !== $data->status) {
-            throw ValidationException::withMessages([
-                'status' => ['You cannot change the status after publication.'],
-            ]);
+        $this->ensureStatusCanBeUpdated($post, $data);
+
+        $oldImage = $post->image;
+        $newImage = null;
+
+        try {
+            $newImage = $this->storeReplacementImage($data);
+
+            $post->updateOrFail($this->buildAttributes($post, $data, $newImage));
+        } catch (Throwable $exception) {
+            $this->cleanupStoredImage($newImage);
+
+            throw $exception;
         }
 
-        return DB::transaction(function () use ($post, $data): Post {
-            $attributes = [
-                'title' => $data->title,
-                'slug' => $data->slug,
-                'excerpt' => $data->excerpt,
-                'content' => $data->content,
-                'status' => $data->status,
-                'published_at' => $data->status === PostStatusEnum::Draft
-                    ? null
-                    : ($post->published_at ?? now()),
-            ];
+        if($newImage !== null) {
+            $this->cleanupStoredImage($oldImage);
+        }
 
-            if ($data->image !== null) {
-                $attributes['image'] = $this->imageStorage->replace(
-                    $post->image,
-                    $data->image,
-                    'posts',
-                );
-            }
+        return $post->refresh();
+    }
 
-            $post->update($attributes);
+    private function buildAttributes(Post $post, UpdatePostData $data, ?string $newImage): array
+    {
+        $attributes = [
+            'title' => $data->title,
+            'slug' => $data->slug,
+            'excerpt' => $data->excerpt,
+            'content' => $data->content,
+            'status' => $data->status,
+            'published_at' => $this->determinePublishedAtForUpdate($post, $data),
+        ];
 
-            return $post->refresh();
-        });
+        if ($newImage !== null) {
+            $attributes['image'] = $newImage;
+        }
+
+        return $attributes;
+    }
+
+    private function ensureStatusCanBeUpdated(Post $post, UpdatePostData $data): void
+    {
+        if ($post->status === PostStatusEnum::Draft || $post->status === $data->status) {
+            return;
+        }
+
+        throw ValidationException::withMessages([
+            'status' => ['You cannot change the status after publication.'],
+        ]);
+    }
+
+    private function storeReplacementImage(UpdatePostData $data): ?string
+    {
+        if ($data->image === null) {
+            return null;
+        }
+
+        return $this->imageStorage->store($data->image, 'posts');
+    }
+
+    private function cleanupStoredImage(?string $imagePath): void
+    {
+        if ($imagePath === null) {
+            return;
+        }
+
+        try {
+            $this->imageStorage->delete($imagePath);
+        } catch (Throwable $exception) {
+            report($exception);
+        }
+    }
+
+    private function determinePublishedAtForUpdate(Post $post, UpdatePostData $data): ?CarbonInterface
+    {
+        if ($post->published_at !== null) {
+            return $post->published_at;
+        }
+
+        if ($data->status === PostStatusEnum::Published) {
+            return now();
+        }
+
+        return null;
     }
 }
