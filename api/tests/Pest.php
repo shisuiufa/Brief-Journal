@@ -1,6 +1,8 @@
 <?php
 
+use App\Contracts\Media\ImageStorageInterface;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Mockery\MockInterface;
 use Tests\TestCase;
 
 /*
@@ -47,4 +49,13 @@ expect()->extend('toBeOne', function () {
 function something()
 {
     // ..
+}
+
+function bindMockImageStorage(): MockInterface
+{
+    $storage = Mockery::mock(ImageStorageInterface::class);
+
+    app()->instance(ImageStorageInterface::class, $storage);
+
+    return $storage;
 }
