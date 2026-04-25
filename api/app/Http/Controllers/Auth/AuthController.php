@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Auth;
 
 use App\Contracts\Auth\AuthUserActionInterface;
 use App\Contracts\Auth\LogoutUserActionInterface;
 use App\Data\Auth\AuthData;
 use App\Enums\Auth\AuthDriverEnum;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\LoginRequest;
+use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\JsonResponse;
 

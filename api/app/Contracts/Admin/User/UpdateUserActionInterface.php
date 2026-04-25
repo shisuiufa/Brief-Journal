@@ -2,7 +2,7 @@
 
 namespace App\Contracts\Admin\User;
 
-use App\Data\Admin\UpdateUserData;
+use App\Data\Admin\User\UpdateUserData;
 use App\Models\User;
 
 interface UpdateUserActionInterface

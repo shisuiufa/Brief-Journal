@@ -2,7 +2,7 @@
 
 namespace App\Contracts\Admin\User;
 
-use App\Data\Admin\CreateUserData;
+use App\Data\Admin\User\CreateUserData;
 use App\Models\User;
 
 interface CreateUserActionInterface

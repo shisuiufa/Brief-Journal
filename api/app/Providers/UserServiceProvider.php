@@ -10,7 +10,7 @@ use App\Contracts\Admin\User\DeleteUserActionInterface;
 use App\Contracts\Admin\User\UpdateUserActionInterface;
 use Illuminate\Support\ServiceProvider;
 
-class AdminServiceProvider extends ServiceProvider
+class UserServiceProvider extends ServiceProvider
 {
     /**
      * Register services.

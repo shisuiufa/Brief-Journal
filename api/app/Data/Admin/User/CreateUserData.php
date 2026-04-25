@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Data\Admin;
+namespace App\Data\Admin\User;
 
 use App\Enums\Access\RoleEnum;
 
-final readonly class UpdateUserData
+final readonly class CreateUserData
 {
     public function __construct(
         public string $name,
         public string $email,
-        public ?RoleEnum $role = null,
+        public string $password,
+        public RoleEnum $role,
     ) {}
 }

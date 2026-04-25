@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Http\Requests\Api;
+namespace App\Http\Requests\Admin\User;
 
+use App\Enums\Access\RoleEnum;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
 
-class LoginRequest extends FormRequest
+class StoreUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,8 +25,10 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'email'],
-            'password' => ['required', 'string'],
+            'name' => ['required', 'string', 'min:3', 'max:255'],
+            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
+            'password' => ['required', 'string', 'min:8'],
+            'role' => ['required', new Enum(RoleEnum::class)],
         ];
     }
 }

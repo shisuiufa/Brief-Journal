@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Contracts\Admin\User\CreateUserActionInterface;
-use App\Data\Admin\CreateUserData;
+use App\Data\Admin\User\CreateUserData;
 use App\Enums\Access\RoleEnum;
 use Illuminate\Console\Attributes\Description;
 use Illuminate\Console\Attributes\Signature;

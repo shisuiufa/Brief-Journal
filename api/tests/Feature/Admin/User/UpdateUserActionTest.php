@@ -1,7 +1,7 @@
 <?php
 
 use App\Contracts\Admin\User\UpdateUserActionInterface;
-use App\Data\Admin\UpdateUserData;
+use App\Data\Admin\User\UpdateUserData;
 use App\Enums\Access\RoleEnum;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;

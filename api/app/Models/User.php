@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -39,11 +40,23 @@ class User extends Authenticatable
      * Scope a query to search users by name or email.
      */
     #[Scope]
-    protected function search(Builder $query, ?string $term = null): Builder
+    protected function search(Builder $query, ?string $term = null): void
     {
-        return $query->when(
-            $term,
-            fn (Builder $q) => $q->whereAny(['name', 'email'], 'like', "%{$term}%")
+        $term = trim((string) $term);
+
+        if ($term === '') {
+            return;
+        }
+
+        $query->whereAny(
+            ['name', 'email'],
+            'ILIKE',
+            "%{$term}%"
         );
+    }
+
+    public function posts(): HasMany
+    {
+        return $this->hasMany(Post::class);
     }
 }
