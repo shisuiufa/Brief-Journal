@@ -57,4 +57,12 @@ class Post extends Model
                 ->orWhere('excerpt', 'ILIKE', "%{$search}%");
         });
     }
+
+    #[Scope]
+    protected function published(Builder $query): void
+    {
+        $query
+            ->where('status', PostStatusEnum::Published)
+            ->whereNotNull('published_at');
+    }
 }
