@@ -26,6 +26,8 @@ class PostResource extends JsonResource
             'image_url' => $this->image
                 ? Storage::url($this->image)
                 : null,
+            'status' => $this->status,
+            'published_at' => $this->published_at,
             'author' => new UserResource($this->author),
             'created_at' => $this->created_at?->toISOString(),
             'updated_at' => $this->updated_at?->toISOString(),
