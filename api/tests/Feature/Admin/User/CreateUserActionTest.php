@@ -14,12 +14,12 @@ beforeEach(function () {
     Role::findOrCreate(RoleEnum::Admin->value);
 });
 
-function createUser(CreateUserData $data): User
+$createUser = function (CreateUserData $data): User
 {
     return app(CreateUserActionInterface::class)->execute($data);
-}
+};
 
-function createUserData(): CreateUserData
+$createUserData = function ():CreateUserData
 {
     return new CreateUserData(
         name: 'John Doe',
@@ -27,10 +27,10 @@ function createUserData(): CreateUserData
         password: 'password',
         role: RoleEnum::Admin,
     );
-}
+};
 
-it('creates a user', function () {
-    $user = createUser(createUserData());
+it('creates a user', function () use ($createUser, $createUserData) {
+    $user = $createUser($createUserData());
 
     expect($user->name)->toBe('John Doe')
         ->and($user->email)->toBe('test@example.com');
@@ -42,14 +42,14 @@ it('creates a user', function () {
     ]);
 });
 
-it('assigns user role', function () {
-    $user = createUser(createUserData());
+it('assigns user role', function () use ($createUser, $createUserData) {
+    $user = $createUser($createUserData());
 
     expect($user->hasRole(RoleEnum::Admin->value))->toBeTrue();
 });
 
-it('stores user password hashed', function () {
-    $user = createUser(createUserData());
+it('stores user password hashed', function () use ($createUserData, $createUser) {
+    $user = $createUser($createUserData());
 
     expect($user->password)->not->toBe('password')
         ->and(Hash::check('password', $user->password))->toBeTrue();

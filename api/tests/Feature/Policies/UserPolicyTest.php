@@ -16,15 +16,6 @@ beforeEach(function () {
     $this->policy = new UserPolicy;
 });
 
-function policyUser(RoleEnum $role): User
-{
-    $user = User::factory()->create();
-
-    $user->assignRole($role->value);
-
-    return $user;
-}
-
 describe('createWithRole', function () {
     it('allows super admin to create admin and editor', function (RoleEnum $role) {
         $superAdmin = policyUser(RoleEnum::SuperAdmin);

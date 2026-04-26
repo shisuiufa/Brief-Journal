@@ -7,31 +7,31 @@ use Illuminate\Validation\ValidationException;
 
 uses(RefreshDatabase::class);
 
-function deleteUser(User $user): void
+$deleteUser = function (User $user): void
 {
     app(DeleteUserActionInterface::class)->execute($user);
-}
+};
 
-it('deletes another user', function () {
+it('deletes another user', function () use ($deleteUser) {
     $authUser = User::factory()->create();
     $user = User::factory()->create();
 
     $this->actingAs($authUser);
 
-    deleteUser($user);
+    $deleteUser($user);
 
     $this->assertSoftDeleted('users', [
         'id' => $user->id,
     ]);
 });
 
-it('cannot delete itself', function () {
+it('cannot delete itself', function () use ($deleteUser) {
     $user = User::factory()->create();
 
     $this->actingAs($user);
 
     try {
-        deleteUser($user);
+        $deleteUser($user);
 
         $this->fail('ValidationException was not thrown.');
     } catch (ValidationException $exception) {

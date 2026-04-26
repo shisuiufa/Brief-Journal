@@ -1,6 +1,9 @@
 <?php
 
 use App\Contracts\Media\ImageStorageInterface;
+use App\Enums\Access\PermissionEnum;
+use App\Enums\Access\RoleEnum;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mockery\MockInterface;
 use Tests\TestCase;
@@ -46,11 +49,6 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
-{
-    // ..
-}
-
 function bindMockImageStorage(): MockInterface
 {
     $storage = Mockery::mock(ImageStorageInterface::class);
@@ -58,4 +56,32 @@ function bindMockImageStorage(): MockInterface
     app()->instance(ImageStorageInterface::class, $storage);
 
     return $storage;
+}
+
+function createUserWithRole(RoleEnum $role): User
+{
+    $user = User::factory()->create();
+
+    $user->assignRole($role->value);
+
+    return $user;
+}
+
+function createUserWithRoleAndPermission(PermissionEnum $permission, RoleEnum $role = RoleEnum::Editor): User
+{
+    $user = User::factory()->create();
+
+    $user->assignRole($role->value);
+    $user->givePermissionTo($permission->value);
+
+    return $user;
+}
+
+function policyUser(RoleEnum $role): User
+{
+    $user = User::factory()->create();
+
+    $user->assignRole($role->value);
+
+    return $user;
 }

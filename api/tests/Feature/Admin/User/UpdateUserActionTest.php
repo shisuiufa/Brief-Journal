@@ -14,29 +14,27 @@ beforeEach(function () {
     Role::findOrCreate(RoleEnum::Editor->value);
 });
 
-function updateUser(User $user, UpdateUserData $updateUserData): User
-{
+$updateUser = function (User $user, UpdateUserData $updateUserData): User {
     return app(UpdateUserActionInterface::class)->execute($user, $updateUserData);
-}
+};
 
-function createUpdateUserData(?RoleEnum $role = null): UpdateUserData
-{
+$createUpdateUserData = function (?RoleEnum $role = null): UpdateUserData {
     return new UpdateUserData(
         name: 'New Name',
         email: 'new@example.com',
         role: $role,
     );
-}
+};
 
-it('updates user name and email', function () {
+it('updates user name and email', function () use ($createUpdateUserData, $updateUser) {
     $user = User::factory()->create([
         'name' => 'Old Name',
         'email' => 'old@example.com',
     ]);
 
-    $updatedUser = updateUser(
+    $updatedUser = $updateUser(
         $user,
-        createUpdateUserData(),
+        $createUpdateUserData(),
     );
 
     expect($updatedUser->name)->toBe('New Name')
@@ -49,26 +47,26 @@ it('updates user name and email', function () {
     ]);
 });
 
-it('replaces user role when role is provided', function () {
+it('replaces user role when role is provided', function () use ($createUpdateUserData, $updateUser) {
     $user = User::factory()->create();
     $user->assignRole(RoleEnum::Editor->value);
 
-    $updatedUser = updateUser(
+    $updatedUser = $updateUser(
         $user,
-        createUpdateUserData(RoleEnum::Admin),
+        $createUpdateUserData(RoleEnum::Admin),
     );
 
     expect($updatedUser->hasRole(RoleEnum::Admin->value))->toBeTrue()
         ->and($updatedUser->hasRole(RoleEnum::Editor->value))->toBeFalse();
 });
 
-it('keeps current user role when role is not provided', function () {
+it('keeps current user role when role is not provided', function () use ($createUpdateUserData, $updateUser) {
     $user = User::factory()->create();
     $user->assignRole(RoleEnum::Editor->value);
 
-    $updatedUser = updateUser(
+    $updatedUser = $updateUser(
         $user,
-        createUpdateUserData(),
+        $createUpdateUserData(),
     );
 
     expect($updatedUser->hasRole(RoleEnum::Editor->value))->toBeTrue()
