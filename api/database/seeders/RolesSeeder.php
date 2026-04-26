@@ -34,6 +34,7 @@ class RolesSeeder extends Seeder
         ]);
 
         $editor->givePermissionTo([
+            PermissionEnum::ViewPosts->value,
             PermissionEnum::CreatePosts->value,
             PermissionEnum::EditPosts->value,
             PermissionEnum::DeletePosts->value,
