@@ -20,7 +20,7 @@ class PermissionsSeeder extends Seeder
             ->all();
 
         foreach ($currentPermissions as $permission) {
-            Permission::findOrCreate($permission);
+            Permission::findOrCreate($permission, 'api');
         }
 
         Permission::whereNotIn('name', $currentPermissions)->delete();
