@@ -34,7 +34,7 @@ class UserPolicy
         }
 
         return match ($role) {
-            RoleEnum::Editor => $user->can(PermissionEnum::CreateEditors->value),
+            RoleEnum::Editor => $user->hasRole(RoleEnum::Admin->value),
             RoleEnum::Admin,
             RoleEnum::SuperAdmin,
             RoleEnum::User => false,
@@ -48,7 +48,7 @@ class UserPolicy
         }
 
         if ($this->isSuperAdmin($model)) {
-            return $this->isSuperAdmin($user);
+            return false;
         }
 
         if ($this->isSuperAdmin($user)) {
@@ -61,6 +61,14 @@ class UserPolicy
     public function changeRole(User $user, User $model, RoleEnum $newRole): bool
     {
         if ($model->is($user)) {
+           return $model->hasRole($newRole->value);
+        }
+
+        if ($user->hasRole(RoleEnum::Admin)) {
+            return $model->hasRole(RoleEnum::Editor) && $model->hasRole($newRole);
+        }
+
+        if (! $this->isSuperAdmin($user)) {
             return false;
         }
 
@@ -68,17 +76,10 @@ class UserPolicy
             return false;
         }
 
-        if ($newRole === RoleEnum::SuperAdmin) {
-            return false;
-        }
-
-        if ($this->isSuperAdmin($user)) {
-            return true;
-        }
-
-        return $user->hasRole(RoleEnum::Admin->value)
-            && $model->hasRole(RoleEnum::Editor->value)
-            && $newRole === RoleEnum::Editor;
+        return in_array($newRole, [
+            RoleEnum::Admin,
+            RoleEnum::Editor,
+        ], true);
     }
 
     public function delete(User $user, User $model): bool
@@ -130,15 +131,9 @@ class UserPolicy
 
     private function canEditTarget(User $user, User $model): bool
     {
-        if ($model->hasRole(RoleEnum::Admin->value)) {
-            return $user->can(PermissionEnum::EditAdmins->value);
-        }
-
-        if ($model->hasRole(RoleEnum::Editor->value)) {
-            return $user->can(PermissionEnum::EditEditors->value);
-        }
-
-        return false;
+        return $user->hasRole(RoleEnum::Admin->value)
+            && $model->hasRole(RoleEnum::Editor->value)
+            && $user->can(PermissionEnum::EditEditors->value);
     }
 
     private function canDeleteTarget(User $user, User $model): bool
