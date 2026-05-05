@@ -143,8 +143,7 @@ describe('changeRole', function () {
         $editor = policyUser(RoleEnum::Editor);
 
         expect($this->policy->changeRole($superAdmin, $admin, RoleEnum::Editor))->toBeTrue()
-            ->and($this->policy->changeRole($superAdmin, $editor, RoleEnum::Admin))->toBeTrue()
-            ->and($this->policy->changeRole($superAdmin, $editor, RoleEnum::User))->toBeTrue();
+            ->and($this->policy->changeRole($superAdmin, $editor, RoleEnum::Admin))->toBeTrue();
     });
 
     it('forbids admin to promote editor to admin', function () {

@@ -193,7 +193,7 @@ it('forbids users without permission from reading and deleting posts', function 
     string $uri,
     PermissionEnum $permission,
 ) {
-    $role = Role::findByName(RoleEnum::Editor->value);
+    $role = Role::findByName(RoleEnum::Editor->value, 'api');
     $role->revokePermissionTo($permission->value);
 
     app(PermissionRegistrar::class)->forgetCachedPermissions();
@@ -216,7 +216,7 @@ it('forbids users without permission from reading and deleting posts', function 
 ]);
 
 it('forbids users without permission from creating posts', function () use ($postPayload) {
-    $role = Role::findByName(RoleEnum::Editor->value);
+    $role = Role::findByName(RoleEnum::Editor->value, 'api');
     $role->revokePermissionTo(PermissionEnum::CreatePosts->value);
 
     app(PermissionRegistrar::class)->forgetCachedPermissions();
@@ -237,7 +237,7 @@ it('forbids users without permission from creating posts', function () use ($pos
 });
 
 it('forbids users without permission from updating posts', function () use ($updatePostPayload) {
-    $role = Role::findByName(RoleEnum::Editor->value);
+    $role = Role::findByName(RoleEnum::Editor->value, 'api');
     $role->revokePermissionTo(PermissionEnum::EditPosts->value);
 
     app(PermissionRegistrar::class)->forgetCachedPermissions();

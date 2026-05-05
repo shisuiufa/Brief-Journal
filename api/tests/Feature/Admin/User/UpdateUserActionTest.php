@@ -10,8 +10,8 @@ use Spatie\Permission\Models\Role;
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
-    Role::findOrCreate(RoleEnum::Admin->value);
-    Role::findOrCreate(RoleEnum::Editor->value);
+    Role::findOrCreate(RoleEnum::Admin->value, 'api');
+    Role::findOrCreate(RoleEnum::Editor->value, 'api');
 });
 
 $updateUser = function (User $user, UpdateUserData $updateUserData): User {

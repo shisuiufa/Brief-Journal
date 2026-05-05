@@ -18,6 +18,7 @@ $userPayload = function (array $overrides = []): array {
         'name' => 'Test User',
         'email' => fake()->unique()->safeEmail(),
         'password' => 'password',
+        'password_confirmation' => 'password',
         'role' => RoleEnum::Editor->value,
     ], $overrides);
 };
@@ -26,6 +27,8 @@ $updateUserPayload = function (array $overrides = []): array {
     return array_merge([
         'name' => 'Updated User',
         'email' => fake()->unique()->safeEmail(),
+        'password' => 'new password',
+        'password_confirmation' => 'new password',
         'role' => RoleEnum::Editor->value,
     ], $overrides);
 };

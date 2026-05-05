@@ -11,7 +11,7 @@ use Spatie\Permission\Models\Role;
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
-    Role::findOrCreate(RoleEnum::Admin->value);
+    Role::findOrCreate(RoleEnum::Admin->value, 'api');
 });
 
 $createUser = function (CreateUserData $data): User {

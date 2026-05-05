@@ -84,11 +84,11 @@ it('replaces the current image when a new image is provided', function () use ($
 
     $storage->shouldReceive('store')
         ->once()
-        ->with($newImage, 'posts', 'public')
+        ->with($newImage, 'posts')
         ->andReturn('posts/new-image.jpg');
     $storage->shouldReceive('delete')
         ->once()
-        ->with('posts/old-image.jpg', 'public')
+        ->with('posts/old-image.jpg')
         ->andReturnNull();
 
     $post = $updatePost($post, $createUpdateData([
@@ -148,11 +148,11 @@ it('reports cleanup failure and rethrows the original update exception', functio
 
     $storage->shouldReceive('store')
         ->once()
-        ->with($newImage, 'posts', 'public')
+        ->with($newImage, 'posts')
         ->andReturn('posts/new-image.jpg');
     $storage->shouldReceive('delete')
         ->once()
-        ->with('posts/new-image.jpg', 'public')
+        ->with('posts/new-image.jpg')
         ->andThrow(new RuntimeException('cleanup failed'));
 
     Post::saving(function (Post $model) use ($post, $originalException): void {
@@ -182,12 +182,12 @@ it('deletes only the newly stored image when update fails and keeps old image un
 
     $storage->shouldReceive('store')
         ->once()
-        ->with($newImage, 'posts', 'public')
+        ->with($newImage, 'posts')
         ->andReturn('posts/new-image.jpg');
 
     $storage->shouldReceive('delete')
         ->once()
-        ->with('posts/new-image.jpg', 'public');
+        ->with('posts/new-image.jpg');
 
     $storage->shouldNotReceive('delete', 'posts/old-image.jpg');
 
