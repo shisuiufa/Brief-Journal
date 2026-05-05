@@ -27,7 +27,7 @@ class User extends Authenticatable implements OAuthenticatable
     /** @use HasFactory<UserFactory> */
     use HasApiTokens, HasFactory, HasRoles, Notifiable, SoftDeletes;
 
-    protected string $guard_name = 'web';
+    protected string $guard_name = 'api';
 
     /**
      * Get the attributes that should be cast.
