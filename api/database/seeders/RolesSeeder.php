@@ -14,10 +14,10 @@ class RolesSeeder extends Seeder
      */
     public function run(): void
     {
-        $superAdmin = Role::findOrCreate(RoleEnum::SuperAdmin->value);
-        $admin = Role::findOrCreate(RoleEnum::Admin->value);
-        $editor = Role::findOrCreate(RoleEnum::Editor->value);
-        $user = Role::findOrCreate(RoleEnum::User->value);
+        $superAdmin = Role::findOrCreate(RoleEnum::SuperAdmin->value, 'api');
+        $admin = Role::findOrCreate(RoleEnum::Admin->value, 'api');
+        $editor = Role::findOrCreate(RoleEnum::Editor->value, 'api');
+        $user = Role::findOrCreate(RoleEnum::User->value, 'api');
 
         $superAdmin->syncPermissions(array_column(PermissionEnum::cases(), 'value'));
 
