@@ -35,6 +35,7 @@ class UpdateUserRequest extends FormRequest
                 'max:255',
                 Rule::unique('users', 'email')->ignore($user->id),
             ],
+            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
             'role' => ['nullable', new Enum(RoleEnum::class)],
         ];
     }

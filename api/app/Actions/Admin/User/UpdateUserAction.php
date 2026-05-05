@@ -12,10 +12,16 @@ final readonly class UpdateUserAction implements UpdateUserActionInterface
     public function execute(User $user, UpdateUserData $data): User
     {
         return DB::transaction(function () use ($user, $data): User {
-            $user->update([
+            $attributes = [
                 'name' => $data->name,
                 'email' => $data->email,
-            ]);
+            ];
+
+            if (! blank($data->password)) {
+                $attributes['password'] = $data->password;
+            }
+
+            $user->update($attributes);
 
             if ($data->role) {
                 $user->syncRoles([$data->role->value]);

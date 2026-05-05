@@ -9,6 +9,7 @@ final readonly class UpdateUserData
     public function __construct(
         public string $name,
         public string $email,
+        public ?string $password = null,
         public ?RoleEnum $role = null,
     ) {}
 }

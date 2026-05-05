@@ -86,6 +86,7 @@ class UserController extends Controller
             new UpdateUserData(
                 name: $validated['name'],
                 email: $validated['email'],
+                password: $validated['password'] ?? null,
                 role: $role,
             )
         );
