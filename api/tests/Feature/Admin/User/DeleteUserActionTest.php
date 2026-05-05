@@ -7,8 +7,7 @@ use Illuminate\Validation\ValidationException;
 
 uses(RefreshDatabase::class);
 
-$deleteUser = function (User $user): void
-{
+$deleteUser = function (User $user): void {
     app(DeleteUserActionInterface::class)->execute($user);
 };
 
@@ -16,7 +15,7 @@ it('deletes another user', function () use ($deleteUser) {
     $authUser = User::factory()->create();
     $user = User::factory()->create();
 
-    $this->actingAs($authUser);
+    $this->actingAs($authUser, 'api');
 
     $deleteUser($user);
 
@@ -28,7 +27,7 @@ it('deletes another user', function () use ($deleteUser) {
 it('cannot delete itself', function () use ($deleteUser) {
     $user = User::factory()->create();
 
-    $this->actingAs($user);
+    $this->actingAs($user, 'api');
 
     try {
         $deleteUser($user);

@@ -3,8 +3,9 @@
 namespace App\Providers;
 
 use App\Contracts\Media\ImageStorageInterface;
-use App\Services\Media\ImageStorageService;
+use App\Services\Image\ImageStorageService;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Passport\Passport;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,6 +22,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Passport::enablePasswordGrant();
+
+        $passportKeyPath = config('passport.key_path');
+
+        if (is_string($passportKeyPath) && $passportKeyPath !== '' && is_dir($passportKeyPath)) {
+            Passport::loadKeysFrom($passportKeyPath);
+        }
     }
 }

@@ -11,15 +11,14 @@ use Illuminate\Http\UploadedFile;
 
 uses(RefreshDatabase::class);
 
-
 $createPost = function (CreatePostData $data): Post {
     return app(CreatePostActionInterface::class)->execute($data);
 };
 
 $createPostData = function (
-    User           $user,
+    User $user,
     PostStatusEnum $status = PostStatusEnum::Draft,
-    array          $overrides = [],
+    array $overrides = [],
 ): CreatePostData {
     return new CreatePostData(
         userId: $user->id,
@@ -96,7 +95,7 @@ it('deletes stored image when post creation fails', function () use ($createPost
         ->once()
         ->with('posts/test.jpg');
 
-    expect(fn() => $createPost($createPostData($user)))
+    expect(fn () => $createPost($createPostData($user)))
         ->toThrow(QueryException::class);
 
     $this->assertDatabaseCount('posts', 1);
@@ -105,4 +104,3 @@ it('deletes stored image when post creation fails', function () use ($createPost
         'image' => 'posts/test.jpg',
     ]);
 });
-

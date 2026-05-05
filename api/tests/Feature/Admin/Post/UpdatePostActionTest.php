@@ -10,7 +10,6 @@ use Illuminate\Validation\ValidationException;
 
 uses(RefreshDatabase::class);
 
-
 $updatePost = function (Post $post, UpdatePostData $data): Post {
     return app(UpdatePostActionInterface::class)->execute($post, $data);
 };
@@ -27,7 +26,6 @@ $createUpdateData = function (
         status: $overrides['status'] ?? null,
     );
 };
-
 
 it('updates a draft post', function () use ($createUpdateData, $updatePost) {
     $post = Post::factory()->create([
@@ -133,7 +131,7 @@ it('prevents changing the status of a published post', function () use ($createU
     $storage->shouldNotReceive('store');
     $storage->shouldNotReceive('delete');
 
-    expect(fn() => $updatePost($post, $createUpdateData([
+    expect(fn () => $updatePost($post, $createUpdateData([
         'status' => PostStatusEnum::Draft,
     ])))->toThrow(ValidationException::class);
 });
@@ -163,10 +161,10 @@ it('reports cleanup failure and rethrows the original update exception', functio
         }
     });
 
-    expect(fn() => $updatePost($post, $createUpdateData([
+    expect(fn () => $updatePost($post, $createUpdateData([
         'status' => PostStatusEnum::Published,
         'image' => $newImage,
-    ])))->toThrow(fn(RuntimeException $exception) => $exception->getMessage() === 'update failed');
+    ])))->toThrow(fn (RuntimeException $exception) => $exception->getMessage() === 'update failed');
 });
 
 it('deletes only the newly stored image when update fails and keeps old image untouched', function () use ($createUpdateData, $updatePost) {
@@ -199,7 +197,7 @@ it('deletes only the newly stored image when update fails and keeps old image un
         }
     });
 
-    expect(fn() => $updatePost($post, $createUpdateData([
+    expect(fn () => $updatePost($post, $createUpdateData([
         'title' => 'New title',
         'slug' => 'new-title',
         'status' => PostStatusEnum::Published,

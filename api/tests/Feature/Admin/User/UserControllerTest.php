@@ -34,7 +34,7 @@ it('gets users list', function () {
     $superAdmin = createUserWithRole(RoleEnum::SuperAdmin);
     User::factory()->count(3)->create();
 
-    $this->actingAs($superAdmin)
+    $this->actingAs($superAdmin, 'api')
         ->getJson('/api/admin/users')
         ->assertOk()
         ->assertJsonStructure(['data']);
@@ -44,7 +44,7 @@ it('shows user', function () {
     $superAdmin = createUserWithRole(RoleEnum::SuperAdmin);
     $user = createUserWithRole(RoleEnum::Editor);
 
-    $this->actingAs($superAdmin)
+    $this->actingAs($superAdmin, 'api')
         ->getJson("/api/admin/users/{$user->id}")
         ->assertOk()
         ->assertJsonPath('data.id', $user->id);
@@ -53,7 +53,7 @@ it('shows user', function () {
 it('creates user', function () use ($userPayload) {
     $superAdmin = createUserWithRole(RoleEnum::SuperAdmin);
 
-    $this->actingAs($superAdmin)
+    $this->actingAs($superAdmin, 'api')
         ->postJson('/api/admin/users', $userPayload([
             'email' => 'editor@example.com',
             'role' => RoleEnum::Editor->value,
@@ -70,7 +70,7 @@ it('updates user', function () use ($updateUserPayload) {
     $superAdmin = createUserWithRole(RoleEnum::SuperAdmin);
     $editor = createUserWithRole(RoleEnum::Editor);
 
-    $this->actingAs($superAdmin)
+    $this->actingAs($superAdmin, 'api')
         ->putJson("/api/admin/users/{$editor->id}", $updateUserPayload([
             'name' => 'Updated Editor',
             'email' => 'updated-editor@example.com',
@@ -89,7 +89,7 @@ it('deletes user', function () {
     $superAdmin = createUserWithRole(RoleEnum::SuperAdmin);
     $editor = createUserWithRole(RoleEnum::Editor);
 
-    $this->actingAs($superAdmin)
+    $this->actingAs($superAdmin, 'api')
         ->deleteJson("/api/admin/users/{$editor->id}")
         ->assertOk();
 
@@ -102,7 +102,7 @@ it('forbids changing another user role when not allowed', function (RoleEnum $ac
     $actor = createUserWithRole($actorRole);
     $target = createUserWithRole($targetRole);
 
-    $this->actingAs($actor)
+    $this->actingAs($actor, 'api')
         ->putJson("/api/admin/users/{$target->id}", $updateUserPayload([
             'name' => 'Updated User',
             'email' => 'updated-user@example.com',
@@ -125,7 +125,7 @@ it('forbids creating forbidden roles', function (RoleEnum $actorRole, RoleEnum $
 
     $email = fake()->unique()->safeEmail();
 
-    $this->actingAs($actor)
+    $this->actingAs($actor, 'api')
         ->postJson('/api/admin/users', $userPayload([
             'email' => $email,
             'role' => $targetRole->value,
@@ -147,7 +147,7 @@ it('forbids creating forbidden roles', function (RoleEnum $actorRole, RoleEnum $
 it('forbids changing own role', function (RoleEnum $currentRole, RoleEnum $newRole) use ($updateUserPayload) {
     $user = createUserWithRole($currentRole);
 
-    $this->actingAs($user)
+    $this->actingAs($user, 'api')
         ->putJson("/api/admin/users/{$user->id}", $updateUserPayload([
             'name' => 'Updated Self',
             'email' => 'updated-self@example.com',
@@ -170,7 +170,7 @@ it('updates user without changing role', function () {
     $superAdmin = createUserWithRole(RoleEnum::SuperAdmin);
     $editor = createUserWithRole(RoleEnum::Editor);
 
-    $this->actingAs($superAdmin)
+    $this->actingAs($superAdmin, 'api')
         ->putJson("/api/admin/users/{$editor->id}", [
             'name' => 'Updated Without Role',
             'email' => 'updated-without-role@example.com',
@@ -183,4 +183,3 @@ it('updates user without changing role', function () {
         ->and($editor->email)->toBe('updated-without-role@example.com')
         ->and($editor->hasRole(RoleEnum::Editor->value))->toBeTrue();
 });
-

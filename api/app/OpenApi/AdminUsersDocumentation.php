@@ -13,7 +13,7 @@ class AdminUsersDocumentation
     #[OA\Get(
         path: '/api/admin/users',
         summary: 'Get users list',
-        security: [['sanctumBearer' => []], ['sanctumCookie' => []]],
+        security: [['passportBearer' => []]],
         tags: ['Admin Users'],
         responses: [
             new OA\Response(
@@ -63,7 +63,7 @@ class AdminUsersDocumentation
     #[OA\Post(
         path: '/api/admin/users',
         summary: 'Create a user',
-        security: [['sanctumBearer' => []], ['sanctumCookie' => [], 'xsrfToken' => []]],
+        security: [['passportBearer' => []]],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
@@ -136,7 +136,7 @@ class AdminUsersDocumentation
     #[OA\Get(
         path: '/api/admin/users/{user}',
         summary: 'Show a user',
-        security: [['sanctumBearer' => []], ['sanctumCookie' => []]],
+        security: [['passportBearer' => []]],
         tags: ['Admin Users'],
         parameters: [
             new OA\Parameter(
@@ -199,7 +199,7 @@ class AdminUsersDocumentation
     #[OA\Put(
         path: '/api/admin/users/{user}',
         summary: 'Update a user',
-        security: [['sanctumBearer' => []], ['sanctumCookie' => [], 'xsrfToken' => []]],
+        security: [['passportBearer' => []]],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
@@ -281,7 +281,7 @@ class AdminUsersDocumentation
     #[OA\Delete(
         path: '/api/admin/users/{user}',
         summary: 'Delete a user',
-        security: [['sanctumBearer' => []], ['sanctumCookie' => [], 'xsrfToken' => []]],
+        security: [['passportBearer' => []]],
         tags: ['Admin Users'],
         parameters: [
             new OA\Parameter(

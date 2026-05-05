@@ -3,8 +3,26 @@
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
+use Laravel\Passport\ClientRepository;
 
 uses(RefreshDatabase::class);
+
+beforeEach(function () {
+    $passwordClient = app(ClientRepository::class)->createPasswordGrantClient(
+        name: 'Test Password Client',
+        provider: 'users',
+    );
+
+    app(ClientRepository::class)->createPersonalAccessGrantClient(
+        name: 'Test Personal Access Client',
+        provider: 'users',
+    );
+
+    config([
+        'passport.password_id' => (string) $passwordClient->getKey(),
+        'passport.password_secret' => null,
+    ]);
+});
 
 it('logs in a user', function () {
     $user = User::factory()->create([
@@ -13,15 +31,26 @@ it('logs in a user', function () {
         'password' => Hash::make('password'),
     ]);
 
-    $this->postJson('/api/auth/login', [
+    $response = $this->postJson('/api/auth/login', [
         'email' => 'test@example.com',
         'password' => 'password',
     ])
         ->assertOk()
-        ->assertJsonPath('data.name', 'Test User')
-        ->assertJsonPath('data.email', 'test@example.com');
+        ->assertJsonPath('data.user.name', 'Test User')
+        ->assertJsonPath('data.user.email', 'test@example.com')
+        ->assertJsonPath('data.token.token_type', 'Bearer')
+        ->assertJsonPath('data.token.refresh_token', null)
+        ->assertJsonStructure([
+            'data' => [
+                'user' => ['id', 'name', 'email', 'roles'],
+                'token' => ['access_token', 'token_type', 'expires_in'],
+            ],
+        ]);
 
-    $this->assertAuthenticatedAs($user);
+    $this->withToken($response->json('data.token.access_token'))
+        ->getJson('/api/user')
+        ->assertOk()
+        ->assertJsonPath('data.id', $user->id);
 });
 
 it('does not log in with invalid credentials', function () {
@@ -47,12 +76,19 @@ it('requires authentication to log out', function () {
 
 it('logs out an authenticated user', function () {
     $user = User::factory()->create();
+    $token = $user->createToken('test-login');
 
-    $this->actingAs($user, 'web')
+    $this->withToken($token->accessToken)
         ->postJson('/api/auth/logout')
         ->assertOk()
         ->assertJsonPath('message', 'Logged out successfully.');
 
-    $this->assertGuest('web');
-});
+    $this->assertDatabaseHas('oauth_access_tokens', [
+        'id' => $token->accessTokenId,
+        'revoked' => true,
+    ]);
 
+    $this->withToken($token->accessToken)
+        ->getJson('/api/user')
+        ->assertUnauthorized();
+});

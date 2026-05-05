@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Media;
+namespace App\Services\Image;
 
 use App\Contracts\Media\ImageStorageInterface;
 use Illuminate\Contracts\Filesystem\Factory as FilesystemFactory;

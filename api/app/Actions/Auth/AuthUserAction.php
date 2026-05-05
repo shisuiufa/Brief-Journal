@@ -5,7 +5,7 @@ namespace App\Actions\Auth;
 use App\Contracts\Auth\AuthStrategyResolverInterface;
 use App\Contracts\Auth\AuthUserActionInterface;
 use App\Data\Auth\AuthData;
-use App\Models\User;
+use App\Data\Auth\AuthResultData;
 
 readonly class AuthUserAction implements AuthUserActionInterface
 {
@@ -13,7 +13,7 @@ readonly class AuthUserAction implements AuthUserActionInterface
         private AuthStrategyResolverInterface $resolver,
     ) {}
 
-    public function __invoke(AuthData $data): User
+    public function __invoke(AuthData $data): AuthResultData
     {
         $strategy = $this->resolver->resolve($data->driver);
 

@@ -79,10 +79,7 @@
                 },
                 "security": [
                     {
-                        "sanctumBearer": []
-                    },
-                    {
-                        "sanctumCookie": []
+                        "passportBearer": []
                     }
                 ]
             },
@@ -209,11 +206,7 @@
                 },
                 "security": [
                     {
-                        "sanctumBearer": []
-                    },
-                    {
-                        "sanctumCookie": [],
-                        "xsrfToken": []
+                        "passportBearer": []
                     }
                 ]
             }
@@ -303,10 +296,7 @@
                 },
                 "security": [
                     {
-                        "sanctumBearer": []
-                    },
-                    {
-                        "sanctumCookie": []
+                        "passportBearer": []
                     }
                 ]
             },
@@ -437,11 +427,7 @@
                 },
                 "security": [
                     {
-                        "sanctumBearer": []
-                    },
-                    {
-                        "sanctumCookie": [],
-                        "xsrfToken": []
+                        "passportBearer": []
                     }
                 ]
             },
@@ -514,28 +500,9 @@
                 },
                 "security": [
                     {
-                        "sanctumBearer": []
-                    },
-                    {
-                        "sanctumCookie": [],
-                        "xsrfToken": []
+                        "passportBearer": []
                     }
                 ]
-            }
-        },
-        "/sanctum/csrf-cookie": {
-            "get": {
-                "tags": [
-                    "Authentication"
-                ],
-                "summary": "Initialize Sanctum CSRF protection",
-                "description": "Call this endpoint before /api/auth/login when authenticating a stateful SPA client with Sanctum.",
-                "operationId": "0863fb9241bea36db145bfc037a55ea0",
-                "responses": {
-                    "204": {
-                        "description": "CSRF cookie initialized"
-                    }
-                }
             }
         },
         "/api/auth/login": {
@@ -543,9 +510,9 @@
                 "tags": [
                     "Authentication"
                 ],
-                "summary": "Authenticate with Sanctum session",
-                "description": "Authenticates the user with email and password and starts a stateful Sanctum session.",
-                "operationId": "7c02e1375941381f120258ffdc81c106",
+                "summary": "Authenticate with Passport token",
+                "description": "Authenticates the user with email and password and returns a Laravel Passport bearer token.",
+                "operationId": "6bc80e918ea65a103a01c71fd3025460",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -580,7 +547,15 @@
                                 "schema": {
                                     "properties": {
                                         "data": {
-                                            "$ref": "#/components/schemas/UserResource"
+                                            "properties": {
+                                                "user": {
+                                                    "$ref": "#/components/schemas/UserResource"
+                                                },
+                                                "token": {
+                                                    "$ref": "#/components/schemas/PassportToken"
+                                                }
+                                            },
+                                            "type": "object"
                                         }
                                     },
                                     "type": "object"
@@ -626,14 +601,89 @@
                 }
             }
         },
+        "/api/auth/refresh": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Refresh Passport token",
+                "description": "Issues a new Laravel Passport bearer token using the httpOnly refresh token cookie.",
+                "operationId": "761bcbdab804931783a502788a0cb394",
+                "responses": {
+                    "200": {
+                        "description": "Token refreshed successfully",
+                        "headers": {
+                            "Set-Cookie": {
+                                "description": "Updated httpOnly refresh_token cookie",
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "token": {
+                                                    "$ref": "#/components/schemas/PassportToken"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Missing or invalid refresh token",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Too many refresh attempts",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Too Many Attempts."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/auth/logout": {
             "post": {
                 "tags": [
                     "Authentication"
                 ],
                 "summary": "Logout the authenticated user",
-                "description": "Ends the current authenticated session. For SPA requests, send the Sanctum session cookie and X-XSRF-TOKEN header.",
-                "operationId": "427ebe6200bf72d27893b7cb2e2d6b2d",
+                "description": "Revokes the current Laravel Passport bearer token.",
+                "operationId": "6c3fd877d0b992a113b6e790200f5eaa",
                 "responses": {
                     "200": {
                         "description": "Logged out successfully",
@@ -666,16 +716,182 @@
                                 }
                             }
                         }
+                    }
+                },
+                "security": [
+                    {
+                        "passportBearer": []
+                    }
+                ]
+            }
+        },
+        "/api/posts": {
+            "get": {
+                "tags": [
+                    "Posts"
+                ],
+                "summary": "Get published posts",
+                "operationId": "0e58abcd7ce1653562ad3823477b6d66",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search posts by title or excerpt",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Published posts list",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/PostResource"
+                                            }
+                                        },
+                                        "links": {
+                                            "type": "object"
+                                        },
+                                        "meta": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/posts/{slug}": {
+            "get": {
+                "tags": [
+                    "Posts"
+                ],
+                "summary": "Show a published post",
+                "operationId": "54cbd7304a0255424a53b8aba3ce8b84",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "Post slug",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Published post details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/PostResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
-                    "419": {
-                        "description": "CSRF token mismatch",
+                    "404": {
+                        "description": "Post not found",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "CSRF token mismatch."
+                                            "example": "No query results for model."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/admin/posts": {
+            "get": {
+                "tags": [
+                    "Admin Posts"
+                ],
+                "summary": "Get posts list",
+                "operationId": "76479dad9af8f2396cf44f3b0b748f17",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search posts by title or excerpt",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Posts list",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/PostResource"
+                                            }
+                                        },
+                                        "links": {
+                                            "type": "object"
+                                        },
+                                        "meta": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "This action is unauthorized."
                                         }
                                     },
                                     "type": "object"
@@ -686,11 +902,369 @@
                 },
                 "security": [
                     {
-                        "sanctumBearer": []
+                        "passportBearer": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Admin Posts"
+                ],
+                "summary": "Create a post",
+                "operationId": "830ab3550d1158d1971b8c9fcc4b5e70",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PostStoreRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Post created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Post created successfully."
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/PostResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "This action is unauthorized."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
                     {
-                        "sanctumCookie": [],
-                        "xsrfToken": []
+                        "passportBearer": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/posts/{post}": {
+            "get": {
+                "tags": [
+                    "Admin Posts"
+                ],
+                "summary": "Show a post",
+                "operationId": "699d90215404f56c60777db3ebee57f3",
+                "parameters": [
+                    {
+                        "name": "post",
+                        "in": "path",
+                        "description": "Post ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Post details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/PostResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "This action is unauthorized."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Post not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No query results for model."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "passportBearer": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Admin Posts"
+                ],
+                "summary": "Update a post",
+                "operationId": "0e1d988efb501c670460d670fdd0ab38",
+                "parameters": [
+                    {
+                        "name": "post",
+                        "in": "path",
+                        "description": "Post ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PostUpdateRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Post updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Post updated successfully."
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/PostResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "This action is unauthorized."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "passportBearer": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Admin Posts"
+                ],
+                "summary": "Delete a post",
+                "operationId": "bcc0c08d53263281fb9414a8aa8185ce",
+                "parameters": [
+                    {
+                        "name": "post",
+                        "in": "path",
+                        "description": "Post ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Post deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Post deleted successfully."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "This action is unauthorized."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "passportBearer": []
                     }
                 ]
             }
@@ -698,6 +1272,71 @@
     },
     "components": {
         "schemas": {
+            "PostResource": {
+                "required": [
+                    "id",
+                    "title",
+                    "slug",
+                    "content",
+                    "status",
+                    "author"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "title": {
+                        "type": "string",
+                        "example": "Building APIs with Laravel Passport"
+                    },
+                    "slug": {
+                        "type": "string",
+                        "example": "building-apis-with-laravel-passport"
+                    },
+                    "excerpt": {
+                        "type": "string",
+                        "example": "Short post summary.",
+                        "nullable": true
+                    },
+                    "content": {
+                        "type": "string",
+                        "example": "Post body content."
+                    },
+                    "image_url": {
+                        "type": "string",
+                        "example": "/storage/posts/example.jpg",
+                        "nullable": true
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "published",
+                        "enum": [
+                            "draft",
+                            "published"
+                        ]
+                    },
+                    "published_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "author": {
+                        "$ref": "#/components/schemas/UserResource"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
             "UserResource": {
                 "required": [
                     "id",
@@ -728,26 +1367,129 @@
                     }
                 },
                 "type": "object"
+            },
+            "PassportToken": {
+                "required": [
+                    "access_token",
+                    "token_type",
+                    "expires_in"
+                ],
+                "properties": {
+                    "access_token": {
+                        "type": "string",
+                        "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9..."
+                    },
+                    "refresh_token": {
+                        "type": "string",
+                        "example": null,
+                        "nullable": true
+                    },
+                    "token_type": {
+                        "type": "string",
+                        "example": "Bearer"
+                    },
+                    "expires_in": {
+                        "type": "integer",
+                        "example": 31536000
+                    }
+                },
+                "type": "object"
+            },
+            "PostStoreRequest": {
+                "required": [
+                    "title",
+                    "slug",
+                    "image",
+                    "content",
+                    "status"
+                ],
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "example": "Building APIs with Laravel Passport",
+                        "maxLength": 255
+                    },
+                    "slug": {
+                        "type": "string",
+                        "example": "building-apis-with-laravel-passport",
+                        "maxLength": 255
+                    },
+                    "image": {
+                        "type": "string",
+                        "format": "binary"
+                    },
+                    "excerpt": {
+                        "type": "string",
+                        "example": "Short post summary.",
+                        "nullable": true,
+                        "maxLength": 1000
+                    },
+                    "content": {
+                        "type": "string",
+                        "example": "Post body content."
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "published",
+                        "enum": [
+                            "draft",
+                            "published"
+                        ]
+                    }
+                },
+                "type": "object"
+            },
+            "PostUpdateRequest": {
+                "required": [
+                    "title",
+                    "slug",
+                    "content",
+                    "status"
+                ],
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "example": "Building APIs with Laravel Passport",
+                        "maxLength": 255
+                    },
+                    "slug": {
+                        "type": "string",
+                        "example": "building-apis-with-laravel-passport",
+                        "maxLength": 255
+                    },
+                    "image": {
+                        "type": "string",
+                        "format": "binary",
+                        "nullable": true
+                    },
+                    "excerpt": {
+                        "type": "string",
+                        "example": "Short post summary.",
+                        "nullable": true,
+                        "maxLength": 1000
+                    },
+                    "content": {
+                        "type": "string",
+                        "example": "Post body content."
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "published",
+                        "enum": [
+                            "draft",
+                            "published"
+                        ]
+                    }
+                },
+                "type": "object"
             }
         },
         "securitySchemes": {
-            "sanctumBearer": {
+            "passportBearer": {
                 "type": "http",
-                "description": "Use a Laravel Sanctum personal access token in the Authorization header.",
+                "description": "Use a Laravel Passport bearer token in the Authorization header.",
                 "scheme": "bearer",
-                "bearerFormat": "Token"
-            },
-            "sanctumCookie": {
-                "type": "apiKey",
-                "description": "Laravel Sanctum SPA session cookie.",
-                "name": "laravel_session",
-                "in": "cookie"
-            },
-            "xsrfToken": {
-                "type": "apiKey",
-                "description": "CSRF token header required for stateful Sanctum SPA requests.",
-                "name": "X-XSRF-TOKEN",
-                "in": "header"
+                "bearerFormat": "JWT"
             }
         }
     },
@@ -758,7 +1500,15 @@
         },
         {
             "name": "Authentication",
-            "description": "Authentication and Laravel Sanctum session endpoints"
+            "description": "Authentication endpoints protected by Laravel Passport"
+        },
+        {
+            "name": "Posts",
+            "description": "Public post endpoints"
+        },
+        {
+            "name": "Admin Posts",
+            "description": "Administrative post management endpoints"
         }
     ]
 }

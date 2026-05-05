@@ -14,9 +14,9 @@ use Database\Seeders\RolesSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Mockery\MockInterface;
-
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
+
 use function Pest\Laravel\mock;
 
 uses(RefreshDatabase::class);
@@ -56,7 +56,7 @@ it('returns paginated posts list', function () {
         ->for(User::factory(), 'author')
         ->create();
 
-    $this->actingAs($user)
+    $this->actingAs($user, 'api')
         ->getJson('/api/admin/posts')
         ->assertOk()
         ->assertJsonStructure([
@@ -96,7 +96,7 @@ it('creates a post and returns a response', function () use ($postPayload) {
             ->andReturn($post);
     });
 
-    $this->actingAs($user)
+    $this->actingAs($user, 'api')
         ->post('/api/admin/posts', $payload, ['Accept' => 'application/json'])
         ->assertCreated()
         ->assertJsonPath('message', 'Post created successfully.')
@@ -112,7 +112,7 @@ it('shows a post', function () {
         ->for(User::factory(), 'author')
         ->create();
 
-    $this->actingAs($user)
+    $this->actingAs($user, 'api')
         ->getJson("/api/admin/posts/{$post->id}")
         ->assertOk()
         ->assertJsonPath('data.id', $post->id)
@@ -161,7 +161,7 @@ it('updates a post and returns a response', function () use ($postPayload, $upda
             ->andReturn($updatedPost);
     });
 
-    $this->actingAs($user)
+    $this->actingAs($user, 'api')
         ->post("/api/admin/posts/{$post->id}", [
             ...$updatePayload,
             '_method' => 'PUT',
@@ -180,7 +180,7 @@ it('soft deletes a post', function () {
         ->for(User::factory(), 'author')
         ->create();
 
-    $this->actingAs($user)
+    $this->actingAs($user, 'api')
         ->deleteJson("/api/admin/posts/{$post->id}")
         ->assertOk()
         ->assertJsonPath('message', 'Post deleted successfully.');
@@ -206,7 +206,7 @@ it('forbids users without permission from reading and deleting posts', function 
 
     $uri = str_replace('{post}', (string) $post->id, $uri);
 
-    $this->actingAs($user)
+    $this->actingAs($user, 'api')
         ->json($method, $uri)
         ->assertForbidden();
 })->with([
@@ -227,7 +227,7 @@ it('forbids users without permission from creating posts', function () use ($pos
         $mock->shouldNotReceive('execute');
     });
 
-    $this->actingAs($user)
+    $this->actingAs($user, 'api')
         ->post('/api/admin/posts', $postPayload(), ['Accept' => 'application/json'])
         ->assertForbidden();
 
@@ -257,7 +257,7 @@ it('forbids users without permission from updating posts', function () use ($upd
         $mock->shouldNotReceive('execute');
     });
 
-    $this->actingAs($user)
+    $this->actingAs($user, 'api')
         ->post("/api/admin/posts/{$post->id}", [
             ...$updatePostPayload(),
             '_method' => 'PUT',
@@ -275,5 +275,3 @@ it('requires authentication to access admin posts', function () {
     $this->getJson('/api/admin/posts')
         ->assertUnauthorized();
 });
-
-

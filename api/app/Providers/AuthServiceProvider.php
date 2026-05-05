@@ -4,9 +4,11 @@ namespace App\Providers;
 
 use App\Actions\Auth\AuthUserAction;
 use App\Actions\Auth\LogoutUserAction;
+use App\Actions\Auth\RefreshTokenAction;
 use App\Contracts\Auth\AuthStrategyResolverInterface;
 use App\Contracts\Auth\AuthUserActionInterface;
 use App\Contracts\Auth\LogoutUserActionInterface;
+use App\Contracts\Auth\RefreshTokenActionInterface;
 use App\Resolvers\Auth\AuthStrategyResolver;
 use App\Strategies\Auth\PasswordAuthStrategy;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -32,6 +34,11 @@ class AuthServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
+            RefreshTokenActionInterface::class,
+            RefreshTokenAction::class
+        );
+
+        $this->app->bind(
             AuthStrategyResolverInterface::class,
             AuthStrategyResolver::class
         );
@@ -52,6 +59,10 @@ class AuthServiceProvider extends ServiceProvider
     {
         RateLimiter::for('login', function (Request $request) {
             return Limit::perMinute(5)->by($request->ip());
+        });
+
+        RateLimiter::for('refresh', function (Request $request) {
+            return Limit::perMinute(10)->by($request->ip());
         });
     }
 }

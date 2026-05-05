@@ -25,7 +25,7 @@ class PostFactory extends Factory
         return [
             'user_id' => User::factory(),
             'title' => $title,
-            'slug' => Str::slug($title) . '-' . fake()->unique()->numberBetween(1000, 9999),
+            'slug' => Str::slug($title).'-'.fake()->unique()->numberBetween(1000, 9999),
             'image' => 'posts/example.jpg',
             'excerpt' => fake()->paragraph(),
             'content' => fake()->paragraphs(5, true),

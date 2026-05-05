@@ -14,24 +14,21 @@ use OpenApi\Attributes as OA;
     description: 'API Server'
 )]
 #[OA\SecurityScheme(
-    securityScheme: 'sanctumBearer',
+    securityScheme: 'passportBearer',
     type: 'http',
-    description: 'Use a Laravel Sanctum personal access token in the Authorization header.',
-    bearerFormat: 'Token',
+    description: 'Use a Laravel Passport bearer token in the Authorization header.',
+    bearerFormat: 'JWT',
     scheme: 'bearer'
 )]
-#[OA\SecurityScheme(
-    securityScheme: 'sanctumCookie',
-    type: 'apiKey',
-    description: 'Laravel Sanctum SPA session cookie.',
-    name: 'laravel_session',
-    in: 'cookie'
-)]
-#[OA\SecurityScheme(
-    securityScheme: 'xsrfToken',
-    type: 'apiKey',
-    description: 'CSRF token header required for stateful Sanctum SPA requests.',
-    name: 'X-XSRF-TOKEN',
-    in: 'header'
+#[OA\Schema(
+    schema: 'PassportToken',
+    required: ['access_token', 'token_type', 'expires_in'],
+    properties: [
+        new OA\Property(property: 'access_token', type: 'string', example: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9...'),
+        new OA\Property(property: 'refresh_token', type: 'string', nullable: true, example: null),
+        new OA\Property(property: 'token_type', type: 'string', example: 'Bearer'),
+        new OA\Property(property: 'expires_in', type: 'integer', example: 31536000),
+    ],
+    type: 'object'
 )]
 class OpenApi {}

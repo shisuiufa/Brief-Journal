@@ -14,13 +14,11 @@ beforeEach(function () {
     Role::findOrCreate(RoleEnum::Admin->value);
 });
 
-$createUser = function (CreateUserData $data): User
-{
+$createUser = function (CreateUserData $data): User {
     return app(CreateUserActionInterface::class)->execute($data);
 };
 
-$createUserData = function ():CreateUserData
-{
+$createUserData = function (): CreateUserData {
     return new CreateUserData(
         name: 'John Doe',
         email: 'test@example.com',

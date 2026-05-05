@@ -37,6 +37,8 @@ services:
     container_name: brief_journal_api
     restart: unless-stopped
     working_dir: /var/www
+    environment:
+      PASSPORT_KEY_PATH: /tmp/passport-keys
     volumes:
       - ../../api:/var/www
     depends_on:
@@ -68,6 +70,21 @@ services:
       - /app/node_modules
     ports:
       - "5173:5173"
+    depends_on:
+      - api
+
+  admin:
+    build:
+      context: ../../admin
+      dockerfile: ../docker/local/admin/Dockerfile
+    container_name: brief_journal_admin
+    restart: unless-stopped
+    working_dir: /app
+    volumes:
+      - ../../admin:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
     depends_on:
       - api
 

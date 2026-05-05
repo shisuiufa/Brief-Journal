@@ -173,23 +173,11 @@ return [
         */
         'securityDefinitions' => [
             'securitySchemes' => [
-                'sanctumBearer' => [
+                'passportBearer' => [
                     'type' => 'http',
-                    'description' => 'Use a Laravel Sanctum personal access token in the Authorization header.',
+                    'description' => 'Use a Laravel Passport bearer token in the Authorization header.',
                     'scheme' => 'bearer',
-                    'bearerFormat' => 'Token',
-                ],
-                'sanctumCookie' => [
-                    'type' => 'apiKey',
-                    'description' => 'Laravel Sanctum SPA session cookie.',
-                    'name' => 'laravel_session',
-                    'in' => 'cookie',
-                ],
-                'xsrfToken' => [
-                    'type' => 'apiKey',
-                    'description' => 'CSRF token header required for stateful Sanctum SPA requests.',
-                    'name' => 'X-XSRF-TOKEN',
-                    'in' => 'header',
+                    'bearerFormat' => 'JWT',
                 ],
             ],
             'security' => [

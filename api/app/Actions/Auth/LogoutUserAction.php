@@ -9,9 +9,7 @@ readonly class LogoutUserAction implements LogoutUserActionInterface
 {
     public function execute(): void
     {
-        Auth::guard('web')->logout();
-
-        session()->invalidate();
-        session()->regenerateToken();
+        Auth::guard('api')->user()?->token()?->revoke();
+        Auth::forgetGuards();
     }
 }

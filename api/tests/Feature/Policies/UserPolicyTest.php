@@ -1,7 +1,6 @@
 <?php
 
 use App\Enums\Access\RoleEnum;
-use App\Models\User;
 use App\Policies\UserPolicy;
 use Database\Seeders\PermissionsSeeder;
 use Database\Seeders\RolesSeeder;

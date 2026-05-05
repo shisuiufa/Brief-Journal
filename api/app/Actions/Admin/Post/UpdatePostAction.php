@@ -37,7 +37,7 @@ final readonly class UpdatePostAction implements UpdatePostActionInterface
             throw $exception;
         }
 
-        if($newImage !== null) {
+        if ($newImage !== null) {
             $this->cleanupStoredImage($oldImage);
         }
 

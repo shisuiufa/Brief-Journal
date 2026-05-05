@@ -4,27 +4,50 @@ namespace App\Strategies\Auth;
 
 use App\Contracts\Auth\AuthStrategyInterface;
 use App\Data\Auth\AuthData;
+use App\Data\Auth\AuthResultData;
 use App\Enums\Auth\AuthDriverEnum;
 use App\Models\User;
+use App\Services\Auth\PassportTokenService;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
-class PasswordAuthStrategy implements AuthStrategyInterface
+readonly class PasswordAuthStrategy implements AuthStrategyInterface
 {
-    public function authenticate(AuthData $data): User
+    public function __construct(
+        private PassportTokenService $passportTokenService,
+    ) {}
+
+    /**
+     * @throws ConnectionException
+     */
+    public function authenticate(AuthData $data): AuthResultData
     {
-        if (! Auth::attempt([
+        if (! Auth::guard('web')->validate([
             'email' => $data->email,
             'password' => $data->password,
         ])) {
             throw ValidationException::withMessages([
-                'email' => ['The provided credentials are incorrect.'],
+                'email' => [__('auth.failed')],
             ]);
         }
 
-        session()->regenerate();
+        $user = User::query()
+            ->where('email', $data->email)
+            ->firstOrFail();
 
-        return Auth::user();
+        $token = $this->passportTokenService->issuePasswordToken(
+            email: $data->email,
+            password: $data->password,
+        );
+
+        return new AuthResultData(
+            user: $user,
+            accessToken: $token->accessToken,
+            refreshToken: $token->refreshToken,
+            tokenType: $token->tokenType,
+            expiresIn: $token->expiresIn,
+        );
     }
 
     public function driver(): AuthDriverEnum

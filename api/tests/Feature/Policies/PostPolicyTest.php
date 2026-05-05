@@ -12,7 +12,7 @@ uses(RefreshDatabase::class);
 beforeEach(function () {
     $this->seed(PermissionsSeeder::class);
 
-    $this->policy = new PostPolicy();
+    $this->policy = new PostPolicy;
     $this->post = Post::factory()
         ->for(User::factory(), 'author')
         ->create();
