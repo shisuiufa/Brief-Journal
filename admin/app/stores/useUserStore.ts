@@ -1,6 +1,6 @@
 import {defineStore} from "pinia";
 import type {ResourceCollection, ResourceCollectionMeta, ResourceItem, ResourcePagination} from "~/types/api";
-import type { UserResource } from "~/resources/user";
+import type {CreateUserCredentials, UpdateUserCredentials, UserResource} from "~/resources/user";
 import { RoleFilter } from "~/resources/role";
 import { useApi } from "~/composables/useApi";
 import {watchDebounced} from "@vueuse/core";
@@ -35,6 +35,22 @@ export const useUserStore = defineStore("user", () => {
         });
     }
 
+    const create = async (credentials: CreateUserCredentials) => {
+        const { password_confirmation, ...payload } = credentials
+
+        return await useApi('/api/admin/users', {
+            method: 'POST',
+            body: payload,
+        });
+    }
+
+    const update = async (id: string | number, credentials: UpdateUserCredentials) => {
+        return await useApi(`/api/admin/users/${id}`, {
+            method: 'PUT',
+            body: credentials,
+        });
+    }
+
     watch(role, async () => {
         await fetchUsers()
     })
@@ -57,6 +73,8 @@ export const useUserStore = defineStore("user", () => {
         search,
         role,
         fetchUsers,
-        fetchUser
+        fetchUser,
+        create,
+        update
     }
 })
