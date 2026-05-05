@@ -28,6 +28,6 @@ final readonly class ImageStorageService implements ImageStorageInterface
 
     private function resolveDisk(?string $disk): string
     {
-        return $disk ?? config('filesystems.default');
+        return $disk ?? 'public';
     }
 }

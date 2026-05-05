@@ -13,6 +13,7 @@
     "@nuxt/ui": "^4.7.1",
     "@pinia/nuxt": "^0.11.3",
     "@types/node": "^25.6.0",
+    "@vueuse/core": "^14.3.0",
     "nuxt": "^4.4.2",
     "pinia": "^3.0.4",
     "tailwindcss": "^4.2.4",

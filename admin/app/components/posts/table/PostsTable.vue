@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
 import type {PostResource} from "~/resources/post";
+import {getPostStatusColor, getPostStatusLabel} from "~/utils/postStatus";
 
 defineProps<{
   loading?: boolean
   posts: PostResource[]
 }>()
-const columns: TableColumn<Post>[] = [
+
+const columns: TableColumn<PostResource>[] = [
   {
     accessorKey: 'title',
     header: 'Title',
@@ -41,25 +43,29 @@ const columns: TableColumn<Post>[] = [
           <p class="font-medium">
             {{ row.original.title }}
           </p>
+        </div>
+      </template>
 
-          <p class="text-sm text-muted">
-            #{{ row.original.id }}
+      <template #author-cell="{ row }">
+        <div>
+          <p class="font-medium first-letter:uppercase">
+            {{ row.original.author.name }}
           </p>
         </div>
       </template>
 
       <template #status-cell="{ row }">
         <UBadge
-            :color="row.original.status === 'Published' ? 'success' : 'warning'"
+            :color="getPostStatusColor(row.original.status)"
             variant="soft"
         >
-          {{ row.original.status }}
+          {{ getPostStatusLabel(row.original.status) }}
         </UBadge>
       </template>
 
       <template #publishedAt-cell="{ row }">
         <span class="text-muted">
-          {{ row.original.publishedAt ?? 'Not published' }}
+          {{ row.original.published_at ? formatDate(row.original.published_at) : 'Not published' }}
         </span>
       </template>
 

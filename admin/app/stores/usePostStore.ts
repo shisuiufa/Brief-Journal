@@ -1,16 +1,34 @@
 import {defineStore} from "pinia";
 import {useApi} from "~/composables/useApi";
-import type {ResourceCollection, ResourceCollectionMeta, ResourcePagination} from "~/types/api";
-import type {CreatePostCredentials, PostResource} from "~/resources/post";
+import type {
+    ResourceCollection,
+    ResourceCollectionMeta,
+    ResourceItem,
+    ResourcePagination
+} from "~/types/api";
+import {
+    type CreatePostCredentials,
+    type PostResource,
+    PostStatusFilter,
+    type UpdatePostCredentials
+} from "~/resources/post";
+import { watchDebounced } from '@vueuse/core'
 
 export const usePostStore = defineStore("post", () => {
     const list = ref<PostResource[]>()
     const meta = ref<ResourceCollectionMeta>();
     const links = ref<ResourcePagination>();
 
+    const search = ref<string>('');
+    const status = ref<PostStatusFilter>(PostStatusFilter.All)
+
     const fetchPosts = async () => {
         const response = await useApi<ResourceCollection<PostResource>>('/api/admin/posts', {
             method: 'GET',
+            query: {
+                search: search.value || undefined,
+                status: status.value === PostStatusFilter.All ? undefined : status.value,
+            },
         });
 
         list.value = response.data;
@@ -27,11 +45,45 @@ export const usePostStore = defineStore("post", () => {
         });
     }
 
+    const fetchPost = async (id: string | number) => {
+        return await useApi<ResourceItem<PostResource>>(`/api/admin/posts/${id}`, {
+            method: 'GET',
+        });
+    }
+
+    const update = async (id: string | number, credentials: UpdatePostCredentials) => {
+        return await useApi(`/api/admin/posts/${id}`, {
+            method: 'PUT',
+            body: objectToFormData({
+                ...credentials,
+            }),
+        });
+    }
+
+    watch(status, async () => {
+        await fetchPosts()
+    })
+
+    watchDebounced(
+        search,
+        async () => {
+            await fetchPosts()
+        },
+        {
+            debounce: 400,
+            maxWait: 1000,
+        },
+    )
+
     return {
         fetchPosts,
+        fetchPost,
         create,
+        update,
         meta,
         list,
-        links
+        links,
+        search,
+        status
     }
 })

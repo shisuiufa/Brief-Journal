@@ -1,7 +1,8 @@
 import { useApiPath } from '~/config/entrypoint';
-import {ApiError, type ApiRequestOptions} from '~/types/api'
+import {ApiError, type ApiRequestOptions, type ResourceItem} from '~/types/api'
 import {useUserSession} from "~/composables/useUserSession";
 import type { FetchError } from 'ofetch'
+import type {TokenResource} from "~/resources/user";
 
 export default defineNuxtPlugin(() => {
   const { clearUser } = useUserSession();
@@ -14,11 +15,17 @@ export default defineNuxtPlugin(() => {
     '/api/auth/refresh',
   ])
 
-  const setClientHeaders = async (clientHeaders?: HeadersInit): Promise<HeadersInit> => {
+  const setClientHeaders = (
+      clientHeaders?: HeadersInit,
+      body?: unknown,
+  ): HeadersInit => {
     const headers = new Headers(clientHeaders)
 
     headers.set('Accept', 'application/json')
-    headers.set('Content-Type', 'application/json')
+
+    if (!(body instanceof FormData)) {
+      headers.set('Content-Type', 'application/json')
+    }
 
     if (bearerToken.value) {
       headers.set('Authorization', bearerToken.value)
@@ -41,10 +48,13 @@ export default defineNuxtPlugin(() => {
       headers: setClientHeaders(),
     })
         .then((response) => {
-          setToken(
-              response.data.token.access_token,
-              response.data.token.expires_in
-          )
+          const token = response.data?.token
+          if (token) {
+            setToken(
+                token.access_token,
+               token.expires_in
+            )
+          }
         })
         .finally(() => {
           refreshRequest = null
@@ -80,7 +90,7 @@ export default defineNuxtPlugin(() => {
     try {
       await ensureFreshToken(url)
 
-      const clientHeaders = await setClientHeaders(headers)
+      const clientHeaders = setClientHeaders(headers, fetchOptions.body)
 
       return await $fetch<TResponse>(`${useApiPath()}${url}`, {
         ...fetchOptions,

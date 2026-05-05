@@ -1,6 +1,15 @@
 <script setup lang="ts">
 import UsersFilters from '~/components/users/UsersFilters.vue'
 import UsersTable from "~/components/users/table/UsersTable.vue";
+
+const userStore = useUserStore();
+
+const { list } = storeToRefs(userStore);
+
+const { pending } = await useLazyAsyncData(
+    'users',
+    () => userStore.fetchUsers(),
+)
 </script>
 
 <template>
@@ -22,7 +31,10 @@ import UsersTable from "~/components/users/table/UsersTable.vue";
     <UPageBody>
       <div class="space-y-4">
         <UsersFilters />
-        <UsersTable />
+        <UsersTable
+            :users="list ?? []"
+            :loading="pending"
+        />
       </div>
     </UPageBody>
   </UPage>

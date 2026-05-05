@@ -5,7 +5,6 @@ namespace App\Http\Resources;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Storage;
 use OpenApi\Attributes as OA;
 
 /**
@@ -44,9 +43,7 @@ class PostResource extends JsonResource
             'slug' => $this->slug,
             'excerpt' => $this->excerpt,
             'content' => $this->content,
-            'image_url' => $this->image
-                ? Storage::url($this->image)
-                : null,
+            'image_url' => asset($this->image),
             'status' => $this->status,
             'published_at' => $this->published_at,
             'author' => new UserResource($this->author),

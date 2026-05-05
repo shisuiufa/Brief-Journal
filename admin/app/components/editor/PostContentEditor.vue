@@ -1,7 +1,11 @@
 <script setup lang="ts">
-import type { Editor } from '@tiptap/vue-3'
-import type { EditorCustomHandlers, EditorToolbarItem } from '@nuxt/ui'
+import type {Editor} from '@tiptap/vue-3'
+import type {EditorCustomHandlers, EditorToolbarItem} from '@nuxt/ui'
 import EditorImageUploadExtension from './extensions/EditorImageUploadExtension'
+
+defineProps<{
+  error?: boolean
+}>()
 
 const model = defineModel<string>({
   default: '',
@@ -10,7 +14,7 @@ const model = defineModel<string>({
 const customHandlers = {
   imageUpload: {
     canExecute: (editor: Editor) => {
-      return editor.can().insertContent({ type: 'imageUpload' })
+      return editor.can().insertContent({type: 'imageUpload'})
     },
     execute: (editor: Editor) => {
       return editor.chain().focus().insertImageUpload().run()
@@ -102,10 +106,15 @@ const items = [
       :extensions="[EditorImageUploadExtension]"
       :handlers="customHandlers"
       content-type="html"
+      :class="[
+    'w-full overflow-hidden rounded-xl border-0 bg-default transition-colors',
+    error
+      ? 'ring ring-inset ring-error focus-within:ring-2 focus-within:ring-inset focus-within:ring-error'
+      : 'ring ring-inset ring-default focus-within:ring-2 focus-within:ring-inset focus-within:ring-primary'
+  ]"
       :ui="{
-      base: 'min-h-74 p-6 sm:px-10 focus:outline-none'
-    }"
-      class="w-full overflow-hidden rounded-xl border border-default bg-default"
+    base: 'min-h-74 p-6 sm:px-10'
+  }"
   >
     <UEditorToolbar
         :editor="editor"

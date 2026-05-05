@@ -9,22 +9,28 @@ use App\Data\Admin\User\CreateUserData;
 use App\Data\Admin\User\UpdateUserData;
 use App\Enums\Access\RoleEnum;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\User\IndexUserRequest;
 use App\Http\Requests\Admin\User\StoreUserRequest;
 use App\Http\Requests\Admin\User\UpdateUserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Routing\Attributes\Controllers\Authorize;
 
 class UserController extends Controller
 {
     #[Authorize('viewAny', User::class)]
-    public function index(Request $request): ResourceCollection
+    public function index(IndexUserRequest $request): ResourceCollection
     {
+        $role = $request->role();
+
         $users = User::query()
-            ->search($request->string('search')->toString())
+            ->search($request->search())
+            ->when(
+                $role !== null,
+                fn ($query) => $query->role($role->value),
+            )
             ->with('roles')
             ->latest()
             ->paginate(15)

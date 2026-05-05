@@ -4,14 +4,12 @@ import PostsTable from '~/components/posts/table/PostsTable.vue'
 
 const postStore = usePostStore();
 
-const { data: postsResponse, pending } = await useLazyAsyncData(
+const { list } = storeToRefs(postStore)
+
+const { pending } = await useLazyAsyncData(
     'posts',
     () => postStore.fetchPosts(),
 )
-
-const posts = computed(() => {
-  return postsResponse.value?.data ?? []
-})
 </script>
 
 <template>
@@ -34,7 +32,7 @@ const posts = computed(() => {
       <div class="space-y-4">
         <PostsFilters />
         <PostsTable
-            :posts="posts"
+            :posts="list ?? []"
             :loading="pending"
         />
       </div>

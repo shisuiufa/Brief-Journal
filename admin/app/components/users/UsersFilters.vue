@@ -1,27 +1,30 @@
 <script setup lang="ts">
-const search = ref('')
-const role = ref('all')
+import {RoleFilter} from "~/resources/role";
+
+const userStore = useUserStore();
+
+const { search, role } = storeToRefs(userStore);
 
 const roleItems = [
   {
     label: 'All roles',
-    value: 'all',
+    value: RoleFilter.All,
   },
   {
     label: 'Super admin',
-    value: 'super-admin',
+    value: RoleFilter.SuperAdmin,
   },
   {
     label: 'Admin',
-    value: 'admin',
+    value: RoleFilter.Admin,
   },
   {
     label: 'Editor',
-    value: 'editor',
+    value: RoleFilter.Editor,
   },
   {
     label: 'User',
-    value: 'user',
+    value: RoleFilter.User,
   },
 ]
 </script>

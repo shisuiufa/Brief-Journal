@@ -1,72 +1,32 @@
 <script setup lang="ts">
 import type { DropdownMenuItem, TableColumn } from '@nuxt/ui'
+import type {UserResource} from "~/resources/user";
+import {getRoleColor} from "~/utils/role";
 
-type UserRole = 'Super admin' | 'Admin' | 'Editor' | 'User'
+defineProps<{
+  users: UserResource[],
+  loading?: boolean
+}>()
 
-type User = {
-  id: number
-  name: string
-  email: string
-  role: UserRole
-  createdAt: string
-}
-
-const users = ref<User[]>([
-  {
-    id: 1,
-    name: 'Admin',
-    email: 'admin@example.com',
-    role: 'Super admin',
-    createdAt: 'Apr 30, 2026',
-  },
-  {
-    id: 2,
-    name: 'Editor',
-    email: 'editor@example.com',
-    role: 'Editor',
-    createdAt: 'Apr 29, 2026',
-  },
-  {
-    id: 3,
-    name: 'John Doe',
-    email: 'john@example.com',
-    role: 'User',
-    createdAt: 'Apr 26, 2026',
-  },
-])
-
-const columns: TableColumn<User>[] = [
+const columns: TableColumn<UserResource>[] = [
   {
     accessorKey: 'name',
     header: 'User',
   },
   {
-    accessorKey: 'role',
-    header: 'Role',
+    accessorKey: 'email',
+    header: 'Email',
   },
   {
-    accessorKey: 'createdAt',
-    header: 'Created',
+    accessorKey: 'roles',
+    header: 'Roles',
   },
   {
     id: 'actions',
   },
 ]
 
-const getRoleColor = (role: UserRole) => {
-  switch (role) {
-    case 'Super admin':
-      return 'error'
-    case 'Admin':
-      return 'primary'
-    case 'Editor':
-      return 'info'
-    case 'User':
-      return 'neutral'
-  }
-}
-
-const getUserActions = (user: User): DropdownMenuItem[][] => [
+const getUserActions = (user: UserResource): DropdownMenuItem[][] => [
   [
     {
       label: 'Edit',
@@ -114,19 +74,17 @@ const getUserActions = (user: User): DropdownMenuItem[][] => [
         </div>
       </template>
 
-      <template #role-cell="{ row }">
-        <UBadge
-            :color="getRoleColor(row.original.role)"
-            variant="soft"
-        >
-          {{ row.original.role }}
-        </UBadge>
-      </template>
-
-      <template #createdAt-cell="{ row }">
-        <span class="text-muted">
-          {{ row.original.createdAt }}
-        </span>
+      <template #roles-cell="{ row }">
+        <div class="flex flex-wrap gap-1">
+          <UBadge
+              v-for="role in row.original.roles"
+              :key="role"
+              :color="getRoleColor(role)"
+              variant="soft"
+          >
+            {{ role }}
+          </UBadge>
+        </div>
       </template>
 
       <template #actions-cell="{ row }">

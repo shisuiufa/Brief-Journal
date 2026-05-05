@@ -1,23 +1,45 @@
 <script setup lang="ts">
 import PostContentEditor from "~/components/editor/PostContentEditor.vue";
 import {generateSlug} from "~/utils/slug";
-import {type CreatePostCredentials, createPostSchema, PostStatus} from "~/resources/post";
-import type { FormSubmitEvent } from '#ui/types'
+import {
+  type CreatePostCredentials,
+  createPostSchema,
+  type PostResource,
+  PostStatus,
+  type UpdatePostCredentials,
+  updatePostSchema,
+} from "~/resources/post";
+import type {FormSubmitEvent} from '#ui/types'
+import ImageUploadField from "~/components/ImageUploadField.vue";
+
+type PostFormMode = 'create' | 'edit'
+type PostFormState = CreatePostCredentials | UpdatePostCredentials
+
+const props = withDefaults(defineProps<{
+  mode?: PostFormMode
+  post?: PostResource
+}>(), {
+  mode: 'create',
+  post: undefined,
+})
 
 const toast = useToast()
 
 const postStore = usePostStore();
 
-const state = reactive<CreatePostCredentials>({
-  title: '',
-  slug: '',
-  excerpt: '',
-  content: '',
-  status: PostStatus.Draft,
+const isEditMode = computed(() => props.mode === 'edit')
+const formSchema = computed(() => isEditMode.value ? updatePostSchema : createPostSchema)
+
+const form = ref()
+
+const state = reactive<PostFormState>({
+  title: props.post?.title ?? '',
+  slug: props.post?.slug ?? '',
+  excerpt: props.post?.excerpt ?? '',
+  content: props.post?.content ?? '',
+  status: props.post?.status ?? PostStatus.Draft,
   image: null,
 })
-
-const imagePreview = ref<string | null>(null)
 
 const statusItems = [
   {
@@ -32,6 +54,14 @@ const statusItems = [
   },
 ]
 
+const submitLabel = computed(() => {
+  if (isEditMode.value) {
+    return 'Update post'
+  }
+
+  return state.status === PostStatus.Published ? 'Publish post' : 'Save draft'
+})
+
 watch(
     () => state.title,
     (title) => {
@@ -39,41 +69,31 @@ watch(
     },
 )
 
-const handleImageChange = (event: Event) => {
-  const input = event.target as HTMLInputElement
-  const file = input.files?.[0] ?? null
-
-  state.image = file
-
-  if (imagePreview.value) {
-    URL.revokeObjectURL(imagePreview.value)
-  }
-
-  imagePreview.value = file ? URL.createObjectURL(file) : null
-}
-
-const removeImage = () => {
-  state.image = null
-
-  if (imagePreview.value) {
-    URL.revokeObjectURL(imagePreview.value)
-    imagePreview.value = null
-  }
-}
-
-onBeforeUnmount(() => {
-  if (imagePreview.value) {
-    URL.revokeObjectURL(imagePreview.value)
-  }
-})
-
-const handleSubmit = async (event: FormSubmitEvent<CreatePostCredentials>) => {
+const validateContent = async () => {
   try {
-    await postStore.create(event.data);
+    await form.value?.validate({
+      name: 'content',
+    })
+  } catch {
+  }
+}
+
+const handleSubmit = async (event: FormSubmitEvent<PostFormState>) => {
+  try {
+
+    if (isEditMode.value) {
+      const post = props.post!;
+
+      await postStore.update(post.id, event.data)
+    } else {
+      await postStore.create(event.data as CreatePostCredentials)
+    }
 
     toast.add({
-      title: 'Post created',
-      description: 'The post has been created successfully.',
+      title: isEditMode.value ? 'Post updated' : 'Post created',
+      description: isEditMode.value
+          ? 'The post has been updated successfully.'
+          : 'The post has been created successfully.',
       color: 'success',
     })
 
@@ -81,7 +101,9 @@ const handleSubmit = async (event: FormSubmitEvent<CreatePostCredentials>) => {
   } catch {
     toast.add({
       title: 'Something went wrong',
-      description: 'Failed to create post.',
+      description: isEditMode.value
+          ? 'Failed to update post.'
+          : 'Failed to create post.',
       color: 'error',
     })
   }
@@ -90,7 +112,8 @@ const handleSubmit = async (event: FormSubmitEvent<CreatePostCredentials>) => {
 
 <template>
   <UForm
-      :schema="createPostSchema"
+      ref="form"
+      :schema="formSchema"
       :state="state"
       class="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]"
       @submit="handleSubmit"
@@ -105,7 +128,7 @@ const handleSubmit = async (event: FormSubmitEvent<CreatePostCredentials>) => {
               </h2>
 
               <p class="mt-1 text-sm text-muted">
-                Write the main information for the article.
+                {{ isEditMode ? 'Update the main information for the article.' : 'Write the main information for the article.' }}
               </p>
             </div>
 
@@ -162,11 +185,17 @@ const handleSubmit = async (event: FormSubmitEvent<CreatePostCredentials>) => {
           </UFormField>
 
           <UFormField
+              v-slot="{ error }"
               label="Content"
               name="content"
               required
           >
-            <PostContentEditor v-model="state.content" />
+            <PostContentEditor
+                :error="Boolean(error)"
+                v-model="state.content"
+                @blur="validateContent"
+                @update:model-value="validateContent"
+            />
           </UFormField>
         </div>
       </UCard>
@@ -193,7 +222,7 @@ const handleSubmit = async (event: FormSubmitEvent<CreatePostCredentials>) => {
             />
           </UFormField>
 
-          <USeparator />
+          <USeparator/>
 
           <div class="flex flex-col gap-3">
             <UButton
@@ -201,7 +230,7 @@ const handleSubmit = async (event: FormSubmitEvent<CreatePostCredentials>) => {
                 icon="i-lucide-save"
                 block
             >
-              {{ state.status === PostStatus.Published ? 'Publish post' : 'Save draft' }}
+              {{ submitLabel }}
             </UButton>
 
             <UButton
@@ -223,66 +252,21 @@ const handleSubmit = async (event: FormSubmitEvent<CreatePostCredentials>) => {
           </h2>
         </template>
 
-        <div class="space-y-4">
-          <div
-              v-if="imagePreview"
-              class="relative overflow-hidden rounded-xl border border-default"
-          >
-            <img
-                :src="imagePreview"
-                alt="Cover preview"
-                class="h-48 w-full object-cover"
-            >
-
-            <UButton
-                icon="i-lucide-x"
-                color="error"
-                variant="solid"
-                size="xs"
-                square
-                class="absolute right-2 top-2"
-                @click="removeImage"
-            />
-          </div>
-
-          <label
-              v-else
-              class="flex min-h-48 cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed border-default bg-elevated/30 px-4 py-6 text-center transition hover:bg-elevated/60"
-          >
-            <UIcon
-                name="i-lucide-image-plus"
-                class="size-8 text-muted"
-            />
-
-            <span class="mt-3 text-sm font-medium">
-              Upload cover image
-            </span>
-
-            <span class="mt-1 text-xs text-muted">
-              PNG, JPG, WEBP up to your backend limit
-            </span>
-
-            <input
-                type="file"
-                accept="image/*"
-                class="sr-only"
-                @change="handleImageChange"
-            >
-          </label>
-
-          <div
-              v-if="state.image"
-              class="rounded-lg bg-elevated/50 p-3 text-sm"
-          >
-            <p class="truncate font-medium">
-              {{ state.image.name }}
-            </p>
-
-            <p class="text-muted">
-              {{ Math.round(state.image.size / 1024) }} KB
-            </p>
-          </div>
-        </div>
+        <UFormField
+            v-slot="{ error }"
+            label="Image"
+            name="image"
+            :required="!isEditMode"
+        >
+          <ImageUploadField
+              v-model="state.image"
+              :error="Boolean(error)"
+              label="Upload cover image"
+              :hint="isEditMode ? 'Upload a new image to replace the current cover' : 'PNG, JPG, WEBP up to your backend limit'"
+              preview-alt="Cover preview"
+              :preview-url="props.post?.image_url"
+          />
+        </UFormField>
       </UCard>
     </aside>
   </UForm>

@@ -1,19 +1,22 @@
 <script setup lang="ts">
-const search = ref('')
-const status = ref('all')
+import {PostStatusFilter} from "~/resources/post";
+
+const postStore = usePostStore();
+
+const { search, status } = storeToRefs(postStore)
 
 const statusItems = [
   {
     label: 'All',
-    value: 'all',
+    value: PostStatusFilter.All,
   },
   {
     label: 'Published',
-    value: 'published',
+    value: PostStatusFilter.Published,
   },
   {
     label: 'Draft',
-    value: 'draft',
+    value: PostStatusFilter.Draft,
   },
 ]
 </script>

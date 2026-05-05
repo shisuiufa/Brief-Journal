@@ -6,23 +6,28 @@ use App\Contracts\Admin\Post\CreatePostActionInterface;
 use App\Contracts\Admin\Post\UpdatePostActionInterface;
 use App\Data\Admin\Post\CreatePostData;
 use App\Data\Admin\Post\UpdatePostData;
+use App\Enums\Post\PostStatusEnum;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\Post\IndexPostRequest;
 use App\Http\Requests\Admin\Post\StorePostRequest;
 use App\Http\Requests\Admin\Post\UpdatePostRequest;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Routing\Attributes\Controllers\Authorize;
 
 class PostController extends Controller
 {
     #[Authorize('viewAny', Post::class)]
-    public function index(Request $request): ResourceCollection
+    public function index(IndexPostRequest $request): ResourceCollection
     {
         $posts = Post::query()
-            ->search($request->string('search')->toString())
+            ->search($request->search())
+            ->when(
+                $request->status(),
+                fn ($query, PostStatusEnum $status) => $query->where('status', $status),
+            )
             ->with('author')
             ->latest()
             ->paginate(15);
