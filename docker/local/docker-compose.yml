@@ -65,6 +65,10 @@ services:
     container_name: brief_journal_web
     restart: unless-stopped
     working_dir: /app
+    environment:
+      CHOKIDAR_USEPOLLING: "true"
+      CHOKIDAR_INTERVAL: "500"
+      WATCHPACK_POLLING: "true"
     volumes:
       - ../../web:/app
       - /app/node_modules
@@ -80,6 +84,10 @@ services:
     container_name: brief_journal_admin
     restart: unless-stopped
     working_dir: /app
+    environment:
+      CHOKIDAR_USEPOLLING: "true"
+      CHOKIDAR_INTERVAL: "500"
+      WATCHPACK_POLLING: "true"
     volumes:
       - ../../admin:/app
       - /app/node_modules
