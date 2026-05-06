@@ -31,4 +31,39 @@ use OpenApi\Attributes as OA;
     ],
     type: 'object'
 )]
+#[OA\Schema(
+    schema: 'UserResource',
+    required: ['id', 'name', 'email', 'roles'],
+    properties: [
+        new OA\Property(property: 'id', type: 'integer', example: 1),
+        new OA\Property(property: 'name', type: 'string', example: 'Jane Doe'),
+        new OA\Property(property: 'email', type: 'string', format: 'email', example: 'jane@example.com'),
+        new OA\Property(
+            property: 'roles',
+            type: 'array',
+            items: new OA\Items(type: 'string', example: 'editor')
+        ),
+        new OA\Property(property: 'created_at', type: 'string', format: 'date-time', nullable: true),
+        new OA\Property(property: 'updated_at', type: 'string', format: 'date-time', nullable: true),
+    ],
+    type: 'object'
+)]
+#[OA\Schema(
+    schema: 'PostResource',
+    required: ['id', 'title', 'slug', 'excerpt', 'content', 'image_url', 'status', 'published_at', 'author'],
+    properties: [
+        new OA\Property(property: 'id', type: 'integer', example: 1),
+        new OA\Property(property: 'title', type: 'string', example: 'Building APIs with Laravel Passport'),
+        new OA\Property(property: 'slug', type: 'string', example: 'building-apis-with-laravel-passport'),
+        new OA\Property(property: 'excerpt', type: 'string', nullable: true, example: 'Short post summary.'),
+        new OA\Property(property: 'content', type: 'string', example: 'Post body content.'),
+        new OA\Property(property: 'image_url', type: 'string', example: 'http://localhost/storage/posts/example.jpg'),
+        new OA\Property(property: 'status', type: 'string', enum: ['draft', 'published'], example: 'published'),
+        new OA\Property(property: 'published_at', type: 'string', format: 'date-time', nullable: true),
+        new OA\Property(property: 'author', ref: '#/components/schemas/UserResource'),
+        new OA\Property(property: 'created_at', type: 'string', format: 'date-time', nullable: true),
+        new OA\Property(property: 'updated_at', type: 'string', format: 'date-time', nullable: true),
+    ],
+    type: 'object'
+)]
 class OpenApi {}

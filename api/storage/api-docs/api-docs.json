@@ -12,6 +12,159 @@
         }
     ],
     "paths": {
+        "/api/admin/profile": {
+            "patch": {
+                "tags": [
+                    "Admin Profile"
+                ],
+                "summary": "Update authenticated user profile",
+                "operationId": "79db8064e7ba25e8c569e90f390f5dd4",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ProfileUpdateRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Profile updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/UserResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "passportBearer": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/profile/password": {
+            "patch": {
+                "tags": [
+                    "Admin Profile"
+                ],
+                "summary": "Update authenticated user password",
+                "operationId": "c6ae6b0f71067ba167aa28261c7ecc42",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ProfilePasswordUpdateRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Password updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Password updated successfully."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "passportBearer": []
+                    }
+                ]
+            }
+        },
         "/api/admin/users": {
             "get": {
                 "tags": [
@@ -19,6 +172,33 @@
                 ],
                 "summary": "Get users list",
                 "operationId": "3b67dba7214776f2327f3f8f91626e13",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search users by name or email",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 255
+                        }
+                    },
+                    {
+                        "name": "role",
+                        "in": "query",
+                        "description": "Filter users by role",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "super-admin",
+                                "admin",
+                                "editor",
+                                "user"
+                            ]
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Users list",
@@ -94,43 +274,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "required": [
-                                    "name",
-                                    "email",
-                                    "password",
-                                    "role"
-                                ],
-                                "properties": {
-                                    "name": {
-                                        "type": "string",
-                                        "example": "Jane Doe",
-                                        "maxLength": 255,
-                                        "minLength": 3
-                                    },
-                                    "email": {
-                                        "type": "string",
-                                        "format": "email",
-                                        "example": "jane@example.com",
-                                        "maxLength": 255
-                                    },
-                                    "password": {
-                                        "type": "string",
-                                        "format": "password",
-                                        "example": "password123",
-                                        "minLength": 8
-                                    },
-                                    "role": {
-                                        "type": "string",
-                                        "example": "editor",
-                                        "enum": [
-                                            "super-admin",
-                                            "admin",
-                                            "editor",
-                                            "user"
-                                        ]
-                                    }
-                                },
-                                "type": "object"
+                                "$ref": "#/components/schemas/AdminUserStoreRequest"
                             }
                         }
                     }
@@ -322,36 +466,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "required": [
-                                    "name",
-                                    "email"
-                                ],
-                                "properties": {
-                                    "name": {
-                                        "type": "string",
-                                        "example": "Jane Doe",
-                                        "maxLength": 255,
-                                        "minLength": 3
-                                    },
-                                    "email": {
-                                        "type": "string",
-                                        "format": "email",
-                                        "example": "jane@example.com",
-                                        "maxLength": 255
-                                    },
-                                    "role": {
-                                        "type": "string",
-                                        "example": "editor",
-                                        "nullable": true,
-                                        "enum": [
-                                            "super-admin",
-                                            "admin",
-                                            "editor",
-                                            "user"
-                                        ]
-                                    }
-                                },
-                                "type": "object"
+                                "$ref": "#/components/schemas/AdminUserUpdateRequest"
                             }
                         }
                     }
@@ -739,7 +854,8 @@
                         "description": "Search posts by title or excerpt",
                         "required": false,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "maxLength": 255
                         }
                     }
                 ],
@@ -785,7 +901,8 @@
                         "description": "Post slug",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "maxLength": 255
                         }
                     }
                 ],
@@ -838,7 +955,21 @@
                         "description": "Search posts by title or excerpt",
                         "required": false,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "maxLength": 255
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Filter posts by status",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "draft",
+                                "published"
+                            ]
                         }
                     }
                 ],
@@ -1268,71 +1399,220 @@
                     }
                 ]
             }
+        },
+        "/api/user": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Get authenticated user",
+                "operationId": "de40c266eda76785eb527e32e7a24e4a",
+                "responses": {
+                    "200": {
+                        "description": "Authenticated user details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/UserResource"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "passportBearer": []
+                    }
+                ]
+            }
         }
     },
     "components": {
         "schemas": {
-            "PostResource": {
+            "ProfileUpdateRequest": {
                 "required": [
-                    "id",
-                    "title",
-                    "slug",
-                    "content",
-                    "status",
-                    "author"
+                    "name",
+                    "email"
                 ],
                 "properties": {
-                    "id": {
-                        "type": "integer",
-                        "example": 1
-                    },
-                    "title": {
+                    "name": {
                         "type": "string",
-                        "example": "Building APIs with Laravel Passport"
+                        "example": "Jane Doe",
+                        "maxLength": 255,
+                        "minLength": 3
                     },
-                    "slug": {
+                    "email": {
                         "type": "string",
-                        "example": "building-apis-with-laravel-passport"
+                        "format": "email",
+                        "example": "jane@example.com",
+                        "maxLength": 255
+                    }
+                },
+                "type": "object"
+            },
+            "ProfilePasswordUpdateRequest": {
+                "required": [
+                    "current_password"
+                ],
+                "properties": {
+                    "current_password": {
+                        "type": "string",
+                        "format": "password",
+                        "example": "current-password"
                     },
-                    "excerpt": {
+                    "password": {
                         "type": "string",
-                        "example": "Short post summary.",
-                        "nullable": true
+                        "format": "password",
+                        "example": "new-password123",
+                        "nullable": true,
+                        "minLength": 8
                     },
-                    "content": {
+                    "password_confirmation": {
                         "type": "string",
-                        "example": "Post body content."
+                        "format": "password",
+                        "example": "new-password123",
+                        "nullable": true,
+                        "minLength": 8
+                    }
+                },
+                "type": "object"
+            },
+            "AdminUserStoreRequest": {
+                "required": [
+                    "name",
+                    "email",
+                    "password",
+                    "password_confirmation",
+                    "role"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Jane Doe",
+                        "maxLength": 255,
+                        "minLength": 3
                     },
-                    "image_url": {
+                    "email": {
                         "type": "string",
-                        "example": "/storage/posts/example.jpg",
-                        "nullable": true
+                        "format": "email",
+                        "example": "jane@example.com",
+                        "maxLength": 255
                     },
-                    "status": {
+                    "password": {
                         "type": "string",
-                        "example": "published",
+                        "format": "password",
+                        "example": "password123",
+                        "minLength": 8
+                    },
+                    "password_confirmation": {
+                        "type": "string",
+                        "format": "password",
+                        "example": "password123",
+                        "minLength": 8
+                    },
+                    "role": {
+                        "type": "string",
+                        "example": "editor",
                         "enum": [
-                            "draft",
-                            "published"
+                            "super-admin",
+                            "admin",
+                            "editor",
+                            "user"
                         ]
-                    },
-                    "published_at": {
+                    }
+                },
+                "type": "object"
+            },
+            "AdminUserUpdateRequest": {
+                "required": [
+                    "name",
+                    "email"
+                ],
+                "properties": {
+                    "name": {
                         "type": "string",
-                        "format": "date-time",
+                        "example": "Jane Doe",
+                        "maxLength": 255,
+                        "minLength": 3
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "jane@example.com",
+                        "maxLength": 255
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password",
+                        "example": "new-password123",
+                        "nullable": true,
+                        "minLength": 8
+                    },
+                    "password_confirmation": {
+                        "type": "string",
+                        "format": "password",
+                        "example": "new-password123",
+                        "nullable": true,
+                        "minLength": 8
+                    },
+                    "role": {
+                        "type": "string",
+                        "example": "editor",
+                        "nullable": true,
+                        "enum": [
+                            "super-admin",
+                            "admin",
+                            "editor",
+                            "user"
+                        ]
+                    }
+                },
+                "type": "object"
+            },
+            "PassportToken": {
+                "required": [
+                    "access_token",
+                    "token_type",
+                    "expires_in"
+                ],
+                "properties": {
+                    "access_token": {
+                        "type": "string",
+                        "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9..."
+                    },
+                    "refresh_token": {
+                        "type": "string",
+                        "example": null,
                         "nullable": true
                     },
-                    "author": {
-                        "$ref": "#/components/schemas/UserResource"
-                    },
-                    "created_at": {
+                    "token_type": {
                         "type": "string",
-                        "format": "date-time",
-                        "nullable": true
+                        "example": "Bearer"
                     },
-                    "updated_at": {
-                        "type": "string",
-                        "format": "date-time",
-                        "nullable": true
+                    "expires_in": {
+                        "type": "integer",
+                        "example": 31536000
                     }
                 },
                 "type": "object"
@@ -1364,33 +1644,83 @@
                             "type": "string",
                             "example": "editor"
                         }
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
                     }
                 },
                 "type": "object"
             },
-            "PassportToken": {
+            "PostResource": {
                 "required": [
-                    "access_token",
-                    "token_type",
-                    "expires_in"
+                    "id",
+                    "title",
+                    "slug",
+                    "excerpt",
+                    "content",
+                    "image_url",
+                    "status",
+                    "published_at",
+                    "author"
                 ],
                 "properties": {
-                    "access_token": {
-                        "type": "string",
-                        "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9..."
+                    "id": {
+                        "type": "integer",
+                        "example": 1
                     },
-                    "refresh_token": {
+                    "title": {
                         "type": "string",
-                        "example": null,
+                        "example": "Building APIs with Laravel Passport"
+                    },
+                    "slug": {
+                        "type": "string",
+                        "example": "building-apis-with-laravel-passport"
+                    },
+                    "excerpt": {
+                        "type": "string",
+                        "example": "Short post summary.",
                         "nullable": true
                     },
-                    "token_type": {
+                    "content": {
                         "type": "string",
-                        "example": "Bearer"
+                        "example": "Post body content."
                     },
-                    "expires_in": {
-                        "type": "integer",
-                        "example": 31536000
+                    "image_url": {
+                        "type": "string",
+                        "example": "http://localhost/storage/posts/example.jpg"
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "published",
+                        "enum": [
+                            "draft",
+                            "published"
+                        ]
+                    },
+                    "published_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "author": {
+                        "$ref": "#/components/schemas/UserResource"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
                     }
                 },
                 "type": "object"
@@ -1495,6 +1825,10 @@
     },
     "tags": [
         {
+            "name": "Admin Profile",
+            "description": "Authenticated administrator profile endpoints"
+        },
+        {
             "name": "Admin Users",
             "description": "Administrative user management endpoints"
         },
@@ -1509,6 +1843,10 @@
         {
             "name": "Admin Posts",
             "description": "Administrative post management endpoints"
+        },
+        {
+            "name": "User",
+            "description": "Authenticated user endpoints"
         }
     ]
 }

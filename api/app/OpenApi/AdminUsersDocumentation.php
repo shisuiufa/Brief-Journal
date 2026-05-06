@@ -8,6 +8,30 @@ use OpenApi\Attributes as OA;
     name: 'Admin Users',
     description: 'Administrative user management endpoints'
 )]
+#[OA\Schema(
+    schema: 'AdminUserStoreRequest',
+    required: ['name', 'email', 'password', 'password_confirmation', 'role'],
+    properties: [
+        new OA\Property(property: 'name', type: 'string', maxLength: 255, minLength: 3, example: 'Jane Doe'),
+        new OA\Property(property: 'email', type: 'string', format: 'email', maxLength: 255, example: 'jane@example.com'),
+        new OA\Property(property: 'password', type: 'string', format: 'password', minLength: 8, example: 'password123'),
+        new OA\Property(property: 'password_confirmation', type: 'string', format: 'password', minLength: 8, example: 'password123'),
+        new OA\Property(property: 'role', type: 'string', enum: ['super-admin', 'admin', 'editor', 'user'], example: 'editor'),
+    ],
+    type: 'object'
+)]
+#[OA\Schema(
+    schema: 'AdminUserUpdateRequest',
+    required: ['name', 'email'],
+    properties: [
+        new OA\Property(property: 'name', type: 'string', maxLength: 255, minLength: 3, example: 'Jane Doe'),
+        new OA\Property(property: 'email', type: 'string', format: 'email', maxLength: 255, example: 'jane@example.com'),
+        new OA\Property(property: 'password', type: 'string', format: 'password', minLength: 8, nullable: true, example: 'new-password123'),
+        new OA\Property(property: 'password_confirmation', type: 'string', format: 'password', minLength: 8, nullable: true, example: 'new-password123'),
+        new OA\Property(property: 'role', type: 'string', enum: ['super-admin', 'admin', 'editor', 'user'], nullable: true, example: 'editor'),
+    ],
+    type: 'object'
+)]
 class AdminUsersDocumentation
 {
     #[OA\Get(
@@ -15,6 +39,22 @@ class AdminUsersDocumentation
         summary: 'Get users list',
         security: [['passportBearer' => []]],
         tags: ['Admin Users'],
+        parameters: [
+            new OA\Parameter(
+                name: 'search',
+                description: 'Search users by name or email',
+                in: 'query',
+                required: false,
+                schema: new OA\Schema(type: 'string', maxLength: 255)
+            ),
+            new OA\Parameter(
+                name: 'role',
+                description: 'Filter users by role',
+                in: 'query',
+                required: false,
+                schema: new OA\Schema(type: 'string', enum: ['super-admin', 'admin', 'editor', 'user'])
+            ),
+        ],
         responses: [
             new OA\Response(
                 response: 200,
@@ -66,21 +106,7 @@ class AdminUsersDocumentation
         security: [['passportBearer' => []]],
         requestBody: new OA\RequestBody(
             required: true,
-            content: new OA\JsonContent(
-                required: ['name', 'email', 'password', 'role'],
-                properties: [
-                    new OA\Property(property: 'name', type: 'string', example: 'Jane Doe', maxLength: 255, minLength: 3),
-                    new OA\Property(property: 'email', type: 'string', format: 'email', example: 'jane@example.com', maxLength: 255),
-                    new OA\Property(property: 'password', type: 'string', format: 'password', example: 'password123', minLength: 8),
-                    new OA\Property(
-                        property: 'role',
-                        type: 'string',
-                        example: 'editor',
-                        enum: ['super-admin', 'admin', 'editor', 'user']
-                    ),
-                ],
-                type: 'object'
-            )
+            content: new OA\JsonContent(ref: '#/components/schemas/AdminUserStoreRequest')
         ),
         tags: ['Admin Users'],
         responses: [
@@ -202,21 +228,7 @@ class AdminUsersDocumentation
         security: [['passportBearer' => []]],
         requestBody: new OA\RequestBody(
             required: true,
-            content: new OA\JsonContent(
-                required: ['name', 'email'],
-                properties: [
-                    new OA\Property(property: 'name', type: 'string', example: 'Jane Doe', maxLength: 255, minLength: 3),
-                    new OA\Property(property: 'email', type: 'string', format: 'email', example: 'jane@example.com', maxLength: 255),
-                    new OA\Property(
-                        property: 'role',
-                        type: 'string',
-                        example: 'editor',
-                        nullable: true,
-                        enum: ['super-admin', 'admin', 'editor', 'user']
-                    ),
-                ],
-                type: 'object'
-            )
+            content: new OA\JsonContent(ref: '#/components/schemas/AdminUserUpdateRequest')
         ),
         tags: ['Admin Users'],
         parameters: [

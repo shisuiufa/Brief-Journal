@@ -50,7 +50,7 @@ class PostsDocumentation
                 description: 'Search posts by title or excerpt',
                 in: 'query',
                 required: false,
-                schema: new OA\Schema(type: 'string')
+                schema: new OA\Schema(type: 'string', maxLength: 255)
             ),
         ],
         responses: [
@@ -84,7 +84,7 @@ class PostsDocumentation
                 description: 'Post slug',
                 in: 'path',
                 required: true,
-                schema: new OA\Schema(type: 'string')
+                schema: new OA\Schema(type: 'string', maxLength: 255)
             ),
         ],
         responses: [
@@ -123,7 +123,14 @@ class PostsDocumentation
                 description: 'Search posts by title or excerpt',
                 in: 'query',
                 required: false,
-                schema: new OA\Schema(type: 'string')
+                schema: new OA\Schema(type: 'string', maxLength: 255)
+            ),
+            new OA\Parameter(
+                name: 'status',
+                description: 'Filter posts by status',
+                in: 'query',
+                required: false,
+                schema: new OA\Schema(type: 'string', enum: ['draft', 'published'])
             ),
         ],
         responses: [
