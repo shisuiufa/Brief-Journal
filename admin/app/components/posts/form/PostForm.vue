@@ -11,6 +11,7 @@ import {
 } from "~/resources/post";
 import type {FormSubmitEvent} from '#ui/types'
 import ImageUploadField from "~/components/ImageUploadField.vue";
+import {FetchError} from "ofetch";
 
 type PostFormMode = 'create' | 'edit'
 type PostFormState = CreatePostCredentials | UpdatePostCredentials
@@ -100,12 +101,16 @@ const handleSubmit = async (event: FormSubmitEvent<PostFormState>) => {
     })
 
     await navigateTo('/posts')
-  } catch {
+  } catch (error) {
+    const fetchError = error as FetchError<{ message?: string }>
+
+    const fallbackMessage = isEditMode.value
+        ? 'Failed to update post.'
+        : 'Failed to create post.'
+
     toast.add({
       title: 'Something went wrong',
-      description: isEditMode.value
-          ? 'Failed to update post.'
-          : 'Failed to create post.',
+      description: fetchError.data?.message ?? fallbackMessage,
       color: 'error',
     })
   }

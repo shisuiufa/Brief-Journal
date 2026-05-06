@@ -29,14 +29,6 @@ const customHandlers = {
 const items = [
   [
     {
-      kind: 'imageUpload',
-      icon: 'i-lucide-image',
-      label: 'Add image',
-      variant: 'soft',
-    },
-  ],
-  [
-    {
       icon: 'i-lucide-heading',
       content: {
         align: 'start',
