@@ -28,7 +28,7 @@ class PostController extends Controller
                 $request->status(),
                 fn ($query, PostStatusEnum $status) => $query->where('status', $status),
             )
-            ->with('author')
+            ->with(['author', 'categories', 'tags'])
             ->latest()
             ->paginate(15);
 
@@ -46,14 +46,16 @@ class PostController extends Controller
 
         return response()->json([
             'message' => 'Post created successfully.',
-            'data' => new PostResource($post),
+            'data' => new PostResource($post->load(['author', 'categories', 'tags'])),
         ], 201);
     }
 
     #[Authorize('view', 'post')]
     public function show(Post $post): PostResource
     {
-        return new PostResource($post);
+        return new PostResource(
+            $post->load(['author', 'categories', 'tags'])
+        );
     }
 
     #[Authorize('update', 'post')]
@@ -69,7 +71,7 @@ class PostController extends Controller
 
         return response()->json([
             'message' => 'Post updated successfully.',
-            'data' => new PostResource($post->load('author')),
+            'data' => new PostResource($post->load(['author', 'categories', 'tags'])),
         ]);
     }
 

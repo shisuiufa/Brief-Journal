@@ -3,7 +3,9 @@
 use App\Contracts\Admin\Post\UpdatePostActionInterface;
 use App\Data\Admin\Post\UpdatePostData;
 use App\Enums\Post\PostStatusEnum;
+use App\Models\Category;
 use App\Models\Post;
+use App\Models\Tag;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Validation\ValidationException;
@@ -24,6 +26,8 @@ $createUpdateData = function (
         excerpt: $overrides['excerpt'] ?? 'Short excerpt',
         content: $overrides['content'] ?? 'Post content',
         status: $overrides['status'] ?? null,
+        categoryIds: $overrides['category_ids'] ?? [],
+        tagIds: $overrides['tag_ids'] ?? [],
     );
 };
 
@@ -71,6 +75,29 @@ it('updates a published post without changing its publication timestamp', functi
     expect($post->title)->toBe('new title')
         ->and($post->published_at->toDateTimeString())
         ->toBe($originalPublishedAt->toDateTimeString());
+});
+
+it('syncs categories and tags while updating a post', function () use ($createUpdateData, $updatePost) {
+    $post = Post::factory()->create([
+        'status' => PostStatusEnum::Draft,
+    ]);
+
+    $oldCategory = Category::factory()->create();
+    $oldTag = Tag::factory()->create();
+    $newCategories = Category::factory()->count(2)->create();
+    $newTags = Tag::factory()->count(2)->create();
+
+    $post->categories()->sync([$oldCategory->id]);
+    $post->tags()->sync([$oldTag->id]);
+
+    $updated = $updatePost($post, $createUpdateData([
+        'status' => PostStatusEnum::Published,
+        'category_ids' => $newCategories->pluck('id')->all(),
+        'tag_ids' => $newTags->pluck('id')->all(),
+    ]));
+
+    expect($updated->categories()->pluck('categories.id')->all())->toEqualCanonicalizing($newCategories->pluck('id')->all())
+        ->and($updated->tags()->pluck('tags.id')->all())->toEqualCanonicalizing($newTags->pluck('id')->all());
 });
 
 it('replaces the current image when a new image is provided', function () use ($createUpdateData, $updatePost) {

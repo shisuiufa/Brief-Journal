@@ -7,7 +7,9 @@ use App\Data\Admin\Post\UpdatePostData;
 use App\Enums\Access\PermissionEnum;
 use App\Enums\Access\RoleEnum;
 use App\Enums\Post\PostStatusEnum;
+use App\Models\Category;
 use App\Models\Post;
+use App\Models\Tag;
 use App\Models\User;
 use Database\Seeders\PermissionsSeeder;
 use Database\Seeders\RolesSeeder;
@@ -69,7 +71,13 @@ it('returns paginated posts list', function () {
 
 it('creates a post and returns a response', function () use ($postPayload) {
     $user = createUserWithRoleAndPermission(PermissionEnum::CreatePosts);
-    $payload = $postPayload();
+    $categories = Category::factory()->count(2)->create();
+    $tags = Tag::factory()->count(2)->create();
+
+    $payload = $postPayload([
+        'category_ids' => $categories->pluck('id')->all(),
+        'tag_ids' => $tags->pluck('id')->all(),
+    ]);
 
     $post = Post::factory()
         ->for($user, 'author')
@@ -91,7 +99,9 @@ it('creates a post and returns a response', function () use ($postPayload) {
                     && $data->content === $payload['content']
                     && $data->userId === $user->id
                     && $data->status === PostStatusEnum::Draft
-                    && $data->image instanceof UploadedFile;
+                    && $data->image instanceof UploadedFile
+                    && $data->categoryIds === $payload['category_ids']
+                    && $data->tagIds === $payload['tag_ids'];
             })
             ->andReturn($post);
     });
@@ -123,7 +133,13 @@ it('shows a post', function () {
 it('updates a post and returns a response', function () use ($postPayload, $updatePostPayload) {
     $user = createUserWithRoleAndPermission(PermissionEnum::EditPosts);
     $payload = $postPayload();
-    $updatePayload = $updatePostPayload();
+    $categories = Category::factory()->count(2)->create();
+    $tags = Tag::factory()->count(2)->create();
+
+    $updatePayload = $updatePostPayload([
+        'category_ids' => $categories->pluck('id')->all(),
+        'tag_ids' => $tags->pluck('id')->all(),
+    ]);
 
     $post = Post::factory()
         ->for($user, 'author')
@@ -156,7 +172,9 @@ it('updates a post and returns a response', function () use ($postPayload, $upda
                     && $data->excerpt === $updatePayload['excerpt']
                     && $data->content === $updatePayload['content']
                     && $data->status === PostStatusEnum::Published
-                    && $data->image instanceof UploadedFile;
+                    && $data->image instanceof UploadedFile
+                    && $data->categoryIds === $updatePayload['category_ids']
+                    && $data->tagIds === $updatePayload['tag_ids'];
             })
             ->andReturn($updatedPost);
     });

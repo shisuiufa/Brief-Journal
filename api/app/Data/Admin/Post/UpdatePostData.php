@@ -14,6 +14,8 @@ final readonly class UpdatePostData
         public ?string $excerpt,
         public string $content,
         public PostStatusEnum $status,
+        public array $categoryIds,
+        public array $tagIds,
     ) {}
 
     public static function fromArray(array $data): self
@@ -27,6 +29,8 @@ final readonly class UpdatePostData
             status: $data['status'] instanceof PostStatusEnum
                 ? $data['status']
                 : PostStatusEnum::from($data['status']),
+            categoryIds: $data['category_ids'] ?? [],
+            tagIds: $data['tag_ids'] ?? [],
         );
     }
 }

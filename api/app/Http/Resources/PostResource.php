@@ -27,7 +27,9 @@ class PostResource extends JsonResource
             'image_url' => asset($this->image),
             'status' => $this->status,
             'published_at' => $this->published_at,
-            'author' => new UserResource($this->author),
+            'author' => new UserResource($this->whenLoaded('author')),
+            'categories' => CategoryResource::collection($this->whenLoaded('categories')),
+            'tags' => TagResource::collection($this->whenLoaded('tags')),
             'created_at' => $this->created_at?->toISOString(),
             'updated_at' => $this->updated_at?->toISOString(),
         ];

@@ -8,6 +8,7 @@ use App\Data\Admin\Post\UpdatePostData;
 use App\Enums\Post\PostStatusEnum;
 use App\Models\Post;
 use Carbon\CarbonInterface;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Throwable;
 
@@ -30,7 +31,12 @@ final readonly class UpdatePostAction implements UpdatePostActionInterface
         try {
             $newImage = $this->storeReplacementImage($data);
 
-            $post->updateOrFail($this->buildAttributes($post, $data, $newImage));
+            DB::transaction(function () use ($post, $data, $newImage): void {
+                $post->updateOrFail($this->buildAttributes($post, $data, $newImage));
+
+                $post->categories()->sync($data->categoryIds);
+                $post->tags()->sync($data->tagIds);
+            });
         } catch (Throwable $exception) {
             $this->cleanupStoredImage($newImage);
 

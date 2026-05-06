@@ -57,6 +57,12 @@ class StorePostRequest extends FormRequest
                 'required',
                 new Enum(PostStatusEnum::class),
             ],
+
+            'category_ids' => ['array'],
+            'category_ids.*' => ['integer', 'exists:categories,id'],
+
+            'tag_ids' => ['array'],
+            'tag_ids.*' => ['integer', 'exists:tags,id'],
         ];
     }
 }

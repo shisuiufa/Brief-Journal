@@ -3,7 +3,9 @@
 use App\Contracts\Admin\Post\CreatePostActionInterface;
 use App\Data\Admin\Post\CreatePostData;
 use App\Enums\Post\PostStatusEnum;
+use App\Models\Category;
 use App\Models\Post;
+use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -30,6 +32,8 @@ $createPostData = function (
         excerpt: $overrides['excerpt'] ?? 'Short excerpt',
         content: $overrides['content'] ?? 'Post content',
         status: $overrides['status'] ?? $status,
+        categoryIds: $overrides['category_ids'] ?? [],
+        tagIds: $overrides['tag_ids'] ?? [],
     );
 };
 
@@ -77,6 +81,26 @@ it('creates a published post and sets published_at', function () use ($createPos
         'id' => $post->id,
         'status' => PostStatusEnum::Published->value,
     ]);
+});
+
+it('creates a post with categories and tags', function () use ($createPostData, $createPost) {
+    $user = User::factory()->create();
+    $categories = Category::factory()->count(2)->create();
+    $tags = Tag::factory()->count(2)->create();
+
+    $storage = bindMockImageStorage();
+
+    $storage->shouldReceive('store')
+        ->once()
+        ->andReturn('posts/test.jpg');
+
+    $post = $createPost($createPostData($user, PostStatusEnum::Draft, [
+        'category_ids' => $categories->pluck('id')->all(),
+        'tag_ids' => $tags->pluck('id')->all(),
+    ]));
+
+    expect($post->categories()->pluck('categories.id')->all())->toEqualCanonicalizing($categories->pluck('id')->all())
+        ->and($post->tags()->pluck('tags.id')->all())->toEqualCanonicalizing($tags->pluck('id')->all());
 });
 
 it('deletes stored image when post creation fails', function () use ($createPostData, $createPost) {

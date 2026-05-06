@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -42,6 +43,16 @@ class Post extends Model
         return $this->belongsTo(User::class, 'user_id')->withTrashed();
     }
 
+    public function categories(): BelongsToMany
+    {
+        return $this->belongsToMany(Category::class)->withTimestamps();
+    }
+
+    public function tags(): BelongsToMany
+    {
+        return $this->belongsToMany(Tag::class)->withTimestamps();
+    }
+
     #[Scope]
     protected function search(Builder $query, ?string $search): void
     {
@@ -64,5 +75,33 @@ class Post extends Model
         $query
             ->where('status', PostStatusEnum::Published)
             ->whereNotNull('published_at');
+    }
+
+    #[Scope]
+    protected function category(Builder $query, ?string $slug): void
+    {
+        $slug = trim((string) $slug);
+
+        if ($slug === '') {
+            return;
+        }
+
+        $query->whereHas('categories', function (Builder $query) use ($slug): void {
+            $query->where('slug', $slug);
+        });
+    }
+
+    #[Scope]
+    protected function tag(Builder $query, ?string $slug): void
+    {
+        $slug = trim((string) $slug);
+
+        if ($slug === '') {
+            return;
+        }
+
+        $query->whereHas('tags', function (Builder $query) use ($slug): void {
+            $query->where('slug', $slug);
+        });
     }
 }
