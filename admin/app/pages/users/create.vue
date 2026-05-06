@@ -1,5 +1,11 @@
 <script setup lang="ts">
 import UserForm from '~/components/users/form/UserForm.vue'
+import {Roles} from "~/resources/role";
+
+definePageMeta({
+  middleware: 'role',
+  roles: [Roles.Admin, Roles.SuperAdmin],
+})
 </script>
 
 <template>

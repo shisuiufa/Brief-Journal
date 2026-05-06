@@ -1,22 +1,24 @@
 <script setup lang="ts">
 
 import UserProfileCard from "~/components/users/UserProfileCard.vue";
+import {Roles} from "~/resources/role";
+
+definePageMeta({
+  middleware: 'role',
+  roles: [Roles.Admin, Roles.SuperAdmin],
+})
 
 const route = useRoute()
+const userStore = useUserStore()
 
 const userId = computed(() => String(route.params.id))
 
-// Потом заменишь на API:
-// const { data: user } = await useFetch(`/api/admin/users/${userId.value}`)
+const { data: userResponse } = await useAsyncData(
+    () => `user-${userId.value}`,
+    () => userStore.fetchUser(userId.value),
+)
 
-const user = {
-  id: userId.value,
-  name: 'John Doe',
-  email: 'john@example.com',
-  role: 'editor' as const,
-  createdAt: 'Apr 26, 2026',
-  updatedAt: 'Apr 30, 2026',
-}
+const user = computed(() => userResponse.value?.data ?? null)
 </script>
 
 <template>
@@ -34,18 +36,11 @@ const user = {
         >
           Back to users
         </UButton>
-
-        <UButton
-            :to="`/users/${userId}/edit`"
-            icon="i-lucide-pencil"
-        >
-          Edit user
-        </UButton>
       </template>
     </UPageHeader>
 
     <UPageBody>
-      <UserProfileCard :user="user" />
+      <UserProfileCard v-if="user" :user="user" />
     </UPageBody>
   </UPage>
 </template>

@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import type { DropdownMenuItem, NavigationMenuItem } from '@nuxt/ui'
+import {Roles} from "~/resources/role";
 
 const open = defineModel<boolean>('open', {
   default: false
 })
 
+const { user } = useUserSession()
+const { hasAnyRole } = useUserAccess()
 const profileStore = useProfileStore()
 const colorMode = useColorMode()
 
@@ -14,7 +17,7 @@ const logout = async () => {
 }
 
 function getItems(state: 'collapsed' | 'expanded') {
-  return [
+  const items: NavigationMenuItem[] = [
     {
       label: 'Dashboard',
       icon: 'i-lucide-layout-dashboard',
@@ -40,7 +43,10 @@ function getItems(state: 'collapsed' | 'expanded') {
               ]
               : [],
     },
-    {
+  ]
+
+  if (hasAnyRole([Roles.Admin, Roles.SuperAdmin])) {
+    items.push({
       label: 'Users',
       icon: 'i-lucide-users',
       defaultOpen: true,
@@ -59,17 +65,11 @@ function getItems(state: 'collapsed' | 'expanded') {
                 },
               ]
               : [],
-    },
-  ] satisfies NavigationMenuItem[]
-}
-
-const user = ref({
-  name: 'Benjamin Canac',
-  avatar: {
-    src: 'https://github.com/benjamincanac.png',
-    alt: 'Benjamin Canac'
+    })
   }
-})
+
+  return items
+}
 
 const userItems = computed<DropdownMenuItem[][]>(() => [
   [
@@ -182,7 +182,7 @@ const userItems = computed<DropdownMenuItem[][]>(() => [
       >
         <UButton
             v-bind="user"
-            :label="user?.name"
+            :label="user?.email"
             trailing-icon="i-lucide-chevrons-up-down"
             color="neutral"
             variant="ghost"

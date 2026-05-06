@@ -8,6 +8,12 @@ defineProps<{
   loading?: boolean
 }>()
 
+const emit = defineEmits<{
+  'delete-user': [id: UserResource['id']]
+}>()
+
+const { canEditUser, canDeleteUser } = useUserPolicy()
+
 const columns: TableColumn<UserResource>[] = [
   {
     accessorKey: 'name',
@@ -26,27 +32,40 @@ const columns: TableColumn<UserResource>[] = [
   },
 ]
 
-const getUserActions = (user: UserResource): DropdownMenuItem[][] => [
-  [
-    {
-      label: 'Edit',
-      icon: 'i-lucide-pencil',
-      to: `/users/${user.id}/edit`,
-    },
+const getUserActions = (user: UserResource): DropdownMenuItem[][] => {
+  const mainActions: DropdownMenuItem[] = [
     {
       label: 'View profile',
       icon: 'i-lucide-user',
       to: `/users/${user.id}`,
     },
-  ],
-  [
-    {
-      label: 'Delete',
-      icon: 'i-lucide-trash',
-      color: 'error',
-    },
-  ],
-]
+  ]
+
+  if (canEditUser(user)) {
+    mainActions.unshift({
+      label: 'Edit',
+      icon: 'i-lucide-pencil',
+      to: `/users/${user.id}/edit`,
+    })
+  }
+
+  const actions: DropdownMenuItem[][] = [mainActions]
+
+  if (canDeleteUser(user)) {
+    actions.push([
+      {
+        label: 'Delete',
+        icon: 'i-lucide-trash',
+        color: 'error',
+        onSelect(){
+          emit('delete-user', user.id)
+        }
+      },
+    ])
+  }
+
+  return actions
+}
 </script>
 
 <template>

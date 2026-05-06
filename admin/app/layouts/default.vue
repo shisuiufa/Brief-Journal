@@ -7,14 +7,14 @@ const openSidebar = ref(true);
 </script>
 
 <template>
-  <div class="flex flex-1">
+  <div class="flex flex-1 h-screen">
     <AppSidebar v-model:open="openSidebar" />
 
     <div class="flex-1 flex flex-col">
       <AppHeader @toggle="openSidebar = !openSidebar"/>
-      <div class="flex-1 p-4">
+      <main class="flex-1 grow overflow-auto p-4">
         <slot />
-      </div>
+      </main>
     </div>
   </div>
 </template>

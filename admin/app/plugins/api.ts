@@ -106,7 +106,6 @@ export default defineNuxtPlugin(() => {
 
       if (
           status === ApiError.Unauthorized ||
-          status === ApiError.Forbidden ||
           status === ApiError.PageExpired
       ) {
          logoutLocally();

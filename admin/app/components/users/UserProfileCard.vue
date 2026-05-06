@@ -1,48 +1,37 @@
 <script setup lang="ts">
-type UserRole = 'super-admin' | 'admin' | 'editor' | 'user'
+import type {UserResource} from "~/resources/user";
 
-type UserProfile = {
-  id: string | number
-  name: string
-  email: string
-  role: UserRole
-  createdAt: string
-  updatedAt: string
-}
-
-defineProps<{
-  user: UserProfile
+const props = defineProps<{
+  user: UserResource
 }>()
 
-const getRoleLabel = (role: UserRole) => {
-  switch (role) {
-    case 'super-admin':
-      return 'Super admin'
-    case 'admin':
-      return 'Admin'
-    case 'editor':
-      return 'Editor'
-    case 'user':
-      return 'User'
-  }
-}
+const toast = useToast()
+const userStore = useUserStore();
 
-const getRoleColor = (role: UserRole) => {
-  switch (role) {
-    case 'super-admin':
-      return 'error'
-    case 'admin':
-      return 'primary'
-    case 'editor':
-      return 'info'
-    case 'user':
-      return 'neutral'
+const { loading } = storeToRefs(userStore);
+const { canEditUser, canDeleteUser } = useUserPolicy()
+
+const handleDelete = async () => {
+  try {
+    await userStore.destroy(props.user.id);
+    toast.add({
+      title: 'User deleted',
+      description: 'The account has been removed.',
+      color: 'success',
+    })
+    navigateTo('/users')
+  } catch {
+    toast.add({
+      title: 'Failed to delete user',
+      description: 'Please try again.',
+      color: 'error',
+    })
   }
 }
 </script>
 
 <template>
-  <div class="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
+  <div :class="{'grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]' : canEditUser(user) || canDeleteUser(user)}">
     <div class="space-y-6">
       <UCard>
         <template #header>
@@ -61,12 +50,14 @@ const getRoleColor = (role: UserRole) => {
                 {{ user.email }}
               </p>
 
-              <div class="mt-3">
+              <div class="mt-3 flex items-center gap-2">
                 <UBadge
-                    :color="getRoleColor(user.role)"
+                    v-for="(role, idx) in user.roles"
+                    :key="idx"
+                    :color="getRoleColor(role)"
                     variant="soft"
                 >
-                  {{ getRoleLabel(user.role) }}
+                  {{ user.roles[0] }}
                 </UBadge>
               </div>
             </div>
@@ -115,7 +106,7 @@ const getRoleColor = (role: UserRole) => {
             </div>
 
             <p class="mt-2 font-medium">
-              {{ user.createdAt }}
+              {{ formatDate(user.created_at) }}
             </p>
           </div>
 
@@ -130,7 +121,7 @@ const getRoleColor = (role: UserRole) => {
             </div>
 
             <p class="mt-2 font-medium">
-              {{ user.updatedAt }}
+              {{ formatDate(user.updated_at) }}
             </p>
           </div>
         </div>
@@ -159,7 +150,7 @@ const getRoleColor = (role: UserRole) => {
       </UCard>
     </div>
 
-    <aside class="space-y-6 xl:sticky xl:top-6 xl:self-start">
+    <aside v-if="canEditUser(user) || canDeleteUser(user)" class="space-y-6 xl:sticky xl:top-6 xl:self-start">
       <UCard>
         <template #header>
           <h2 class="text-base font-semibold">
@@ -169,6 +160,7 @@ const getRoleColor = (role: UserRole) => {
 
         <div class="flex flex-col gap-3">
           <UButton
+              v-if="canEditUser(user)"
               :to="`/users/${user.id}/edit`"
               icon="i-lucide-pencil"
               block
@@ -177,42 +169,16 @@ const getRoleColor = (role: UserRole) => {
           </UButton>
 
           <UButton
+              v-if="canDeleteUser(user)"
               color="error"
               variant="soft"
               icon="i-lucide-trash"
+              @click="handleDelete"
+              :loading="loading"
               block
           >
             Delete user
           </UButton>
-        </div>
-      </UCard>
-
-      <UCard>
-        <template #header>
-          <h2 class="text-base font-semibold">
-            Access
-          </h2>
-        </template>
-
-        <div class="space-y-3">
-          <div class="flex items-center justify-between gap-4">
-            <span class="text-sm text-muted">
-              Current role
-            </span>
-
-            <UBadge
-                :color="getRoleColor(user.role)"
-                variant="soft"
-            >
-              {{ getRoleLabel(user.role) }}
-            </UBadge>
-          </div>
-
-          <USeparator />
-
-          <p class="text-sm text-muted">
-            Permissions are resolved by the backend through the assigned role.
-          </p>
         </div>
       </UCard>
     </aside>

@@ -1,24 +1,35 @@
 <script setup lang="ts">
-const quickActions = [
-  {
-    label: 'Create post',
-    description: 'Write a new article',
-    icon: 'i-lucide-circle-plus',
-    to: '/posts/create',
-  },
-  {
-    label: 'Manage posts',
-    description: 'Edit drafts and published posts',
-    icon: 'i-lucide-newspaper',
-    to: '/posts',
-  },
-  {
-    label: 'Manage users',
-    description: 'Control admin access',
-    icon: 'i-lucide-users',
-    to: '/users',
-  },
-]
+import {Roles} from "~/resources/role";
+
+const { hasAnyRole } = useUserAccess()
+
+const quickActions = computed(() => {
+  const actions = [
+    {
+      label: 'Create post',
+      description: 'Write a new article',
+      icon: 'i-lucide-circle-plus',
+      to: '/posts/create',
+    },
+    {
+      label: 'Manage posts',
+      description: 'Edit drafts and published posts',
+      icon: 'i-lucide-newspaper',
+      to: '/posts',
+    },
+  ]
+
+  if (hasAnyRole([Roles.SuperAdmin, Roles.Admin])) {
+    actions.push({
+      label: 'Manage users',
+      description: 'Control admin access',
+      icon: 'i-lucide-users',
+      to: '/users',
+    })
+  }
+
+  return actions
+})
 </script>
 
 <template>

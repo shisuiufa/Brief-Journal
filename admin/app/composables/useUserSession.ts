@@ -62,7 +62,6 @@ export const useUserSession = () => {
     return {
         user,
         setUser,
-        clearUser,
-        hydrateUser
+        clearUser
     }
 }

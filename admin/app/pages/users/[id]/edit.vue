@@ -1,18 +1,26 @@
 <script setup lang="ts">
 import UserForm from '~/components/users/form/UserForm.vue'
+import {Roles} from "~/resources/role";
+
+definePageMeta({
+  middleware: 'role',
+  roles: [Roles.Admin, Roles.SuperAdmin],
+})
 
 const route = useRoute()
+const userStore = useUserStore()
 
 const userId = computed(() => String(route.params.id))
 
-// Потом заменишь на API:
-// const { data: user } = await useFetch(`/api/admin/users/${userId.value}`)
+const { data: userResponse, error } = await useAsyncData(
+    () => `user-${userId.value}`,
+    () => userStore.fetchUser(userId.value),
+)
 
-const user = {
-  id: userId.value,
-  name: 'John Doe',
-  email: 'john@example.com',
-  role: 'editor' as const,
+const user = computed(() => userResponse.value?.data ?? null)
+
+if (error.value || !user.value) {
+  await navigateTo('/users')
 }
 </script>
 
@@ -36,9 +44,9 @@ const user = {
 
     <UPageBody>
       <UserForm
+          v-if="user"
           mode="edit"
-          :user-id="userId"
-          :initial-state="user"
+          :user="user"
       />
     </UPageBody>
   </UPage>
