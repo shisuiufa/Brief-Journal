@@ -1,31 +1,28 @@
 <script setup lang="ts">
+import type { FormSubmitEvent } from "#ui/types";
+import {
+  type UpdateProfilePasswordCredentials,
+  updateProfilePasswordSchema,
+} from "~/resources/profile";
+import type { FetchError } from "ofetch";
+
+const profileStore = useProfileStore();
+
+const { loading } = storeToRefs(profileStore);
+
 const toast = useToast();
 
-const state = reactive({
+const state = reactive<UpdateProfilePasswordCredentials>({
   currentPassword: "",
   password: "",
   passwordConfirmation: "",
 });
 
-const isSubmitting = ref(false);
-
-const handleSubmit = async () => {
-  isSubmitting.value = true;
-
+const handleSubmit = async (
+  event: FormSubmitEvent<UpdateProfilePasswordCredentials>,
+) => {
   try {
-    const payload = {
-      current_password: state.currentPassword,
-      password: state.password,
-      password_confirmation: state.passwordConfirmation,
-    };
-
-    // TODO: заменить на свой API клиент
-    // await $fetch('/api/admin/profile/password', {
-    //   method: 'PUT',
-    //   body: payload,
-    // })
-
-    console.log("update password", payload);
+    await profileStore.updatePassword(event.data);
 
     state.currentPassword = "";
     state.password = "";
@@ -36,14 +33,14 @@ const handleSubmit = async () => {
       description: "Your password has been changed successfully.",
       color: "success",
     });
-  } catch {
+  } catch (error) {
+    const fetchError = error as FetchError<{ message?: string }>;
+
     toast.add({
       title: "Something went wrong",
-      description: "Failed to update password.",
+      description: fetchError.data?.message ?? "Failed to update password.",
       color: "error",
     });
-  } finally {
-    isSubmitting.value = false;
   }
 };
 </script>
@@ -59,7 +56,12 @@ const handleSubmit = async () => {
         </div>
       </template>
 
-      <UForm :state="state" class="space-y-5" @submit="handleSubmit">
+      <UForm
+        :schema="updateProfilePasswordSchema"
+        :state="state"
+        class="space-y-5"
+        @submit="handleSubmit"
+      >
         <UFormField label="Current password" name="currentPassword" required>
           <UInput
             v-model="state.currentPassword"
@@ -94,12 +96,7 @@ const handleSubmit = async () => {
           />
         </UFormField>
 
-        <UButton
-          type="submit"
-          icon="i-lucide-save"
-          :loading="isSubmitting"
-          block
-        >
+        <UButton type="submit" icon="i-lucide-save" :loading="loading" block>
           Update password
         </UButton>
       </UForm>

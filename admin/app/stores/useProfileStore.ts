@@ -7,9 +7,13 @@ import type {
 } from "~/resources/user";
 import { useApi } from "~/composables/useApi";
 import type { ResourceItem } from "~/types/api";
+import type {
+  UpdateProfileCredentials,
+  UpdateProfilePasswordCredentials,
+} from "~/resources/profile";
 
 export const useProfileStore = defineStore("profile", () => {
-  const { user, setUser, clearUser } = useUserSession();
+  const { setUser, clearUser } = useUserSession();
   const { setToken, clearToken } = useBearerToken();
   const loading = ref(false);
 
@@ -58,10 +62,55 @@ export const useProfileStore = defineStore("profile", () => {
     }
   };
 
+  const updateProfile = async (credentials: UpdateProfileCredentials) => {
+    try {
+      if (loading.value) return;
+
+      loading.value = true;
+
+      const res = await useApi<ResourceItem<UserResource>>(
+        "/api/admin/profile",
+        {
+          method: "PATCH",
+          body: credentials,
+        },
+      );
+
+      if (res.data) {
+        setUser(res.data);
+      }
+    } finally {
+      loading.value = false;
+    }
+  };
+
+  const updatePassword = async (
+    credentials: UpdateProfilePasswordCredentials,
+  ) => {
+    try {
+      if (loading.value) return;
+
+      loading.value = true;
+
+      await useApi("/api/admin/profile/password", {
+        method: "PATCH",
+        body: {
+          current_password: credentials.currentPassword,
+          password: credentials.password,
+          password_confirmation: credentials.passwordConfirmation,
+        },
+      });
+    } finally {
+      loading.value = false;
+    }
+  };
+
   return {
-    user,
     loading,
     login,
     logout,
+    fetch,
+    updateProfile,
+    updatePassword,
   };
 });
