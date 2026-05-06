@@ -10,7 +10,7 @@ import type { TokenResource } from "~/resources/user";
 
 export default defineNuxtPlugin(() => {
   const { clearUser } = useUserSession();
-  const { bearerToken, needsRefresh, setToken, clearToken } = useBearerToken();
+  const { bearerToken, shouldRefresh, setToken, clearToken } = useBearerToken();
 
   let refreshRequest: Promise<void> | null = null;
 
@@ -69,7 +69,7 @@ export default defineNuxtPlugin(() => {
       return;
     }
 
-    if (!bearerToken.value || !needsRefresh.value) {
+    if (!bearerToken.value || !shouldRefresh()) {
       return;
     }
 

@@ -11,6 +11,14 @@ export function useBearerToken() {
     return value ? Number(value) : null;
   });
 
+  const shouldRefresh = () => {
+    if (!expiresAt.value) {
+      return false;
+    }
+
+    return Date.now() >= expiresAt.value - REFRESH_BEFORE_EXPIRES_MS;
+  };
+
   const setToken = (value: string, expiresIn?: number) => {
     token.value = value;
     localStorage.setItem("bearer_token", value);
@@ -35,20 +43,12 @@ export function useBearerToken() {
     return token.value ? `Bearer ${token.value}` : null;
   });
 
-  const needsRefresh = computed(() => {
-    if (!expiresAt.value) {
-      return false;
-    }
-
-    return Date.now() >= expiresAt.value - REFRESH_BEFORE_EXPIRES_MS;
-  });
-
   return {
     token,
     expiresAt,
     setToken,
     clearToken,
-    needsRefresh,
+    shouldRefresh,
     bearerToken,
   };
 }
