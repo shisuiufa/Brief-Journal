@@ -8,7 +8,6 @@ use App\Models\User;
 
 final readonly class UpdateProfileAction implements UpdateProfileActionInterface
 {
-
     public function execute(User $user, ProfileData $data): User
     {
         $user->update([

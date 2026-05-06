@@ -61,7 +61,7 @@ class UserPolicy
     public function changeRole(User $user, User $model, RoleEnum $newRole): bool
     {
         if ($model->is($user)) {
-           return $model->hasRole($newRole->value);
+            return $model->hasRole($newRole->value);
         }
 
         if ($user->hasRole(RoleEnum::Admin)) {
