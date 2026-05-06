@@ -10,21 +10,6 @@ use OpenApi\Attributes as OA;
 /**
  * @mixin User
  */
-#[OA\Schema(
-    schema: 'UserResource',
-    required: ['id', 'name', 'email', 'roles'],
-    properties: [
-        new OA\Property(property: 'id', type: 'integer', example: 1),
-        new OA\Property(property: 'name', type: 'string', example: 'Jane Doe'),
-        new OA\Property(property: 'email', type: 'string', format: 'email', example: 'jane@example.com'),
-        new OA\Property(
-            property: 'roles',
-            type: 'array',
-            items: new OA\Items(type: 'string', example: 'editor')
-        ),
-    ],
-    type: 'object'
-)]
 class UserResource extends JsonResource
 {
     /**
@@ -39,6 +24,8 @@ class UserResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'roles' => $this->roles->pluck('name')->values()->all(),
+            'created_at' => $this->created_at?->toISOString(),
+            'updated_at' => $this->updated_at?->toISOString(),
         ];
     }
 }
