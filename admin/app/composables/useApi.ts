@@ -1,10 +1,10 @@
-import type { ApiRequestOptions } from '~/types/api'
+import type { ApiRequestOptions } from "~/types/api";
 
 export const useApi = <TResponse>(
   request: string,
-  options?: ApiRequestOptions<TResponse>
+  options?: ApiRequestOptions<TResponse>,
 ) => {
   const { $api } = useNuxtApp();
 
-  return $api<TResponse>(request, options)
-}
+  return $api<TResponse>(request, options);
+};

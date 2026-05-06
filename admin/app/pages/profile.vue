@@ -7,18 +7,18 @@ import ProfilePasswordForm from "~/components/profile/form/ProfilePasswordForm.v
 
 const profile = {
   id: 1,
-  name: 'Admin',
-  email: 'admin@example.com',
-  role: 'super-admin' as const,
-  createdAt: 'Apr 30, 2026',
-}
+  name: "Admin",
+  email: "admin@example.com",
+  role: "super-admin" as const,
+  createdAt: "Apr 30, 2026",
+};
 </script>
 
 <template>
   <UPage>
     <UPageHeader
-        title="Profile"
-        description="Manage your account information and password."
+      title="Profile"
+      description="Manage your account information and password."
     />
 
     <UPageBody>

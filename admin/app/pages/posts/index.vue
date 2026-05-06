@@ -1,47 +1,43 @@
 <script setup lang="ts">
-import PostsFilters from '~/components/posts/PostsFilters.vue'
-import PostsTable from '~/components/posts/table/PostsTable.vue'
+import PostsFilters from "~/components/posts/PostsFilters.vue";
+import PostsTable from "~/components/posts/table/PostsTable.vue";
 
 const postStore = usePostStore();
-const toast = useToast()
+const toast = useToast();
 
-const { list } = storeToRefs(postStore)
+const { list } = storeToRefs(postStore);
 
-const { pending, refresh } = await useLazyAsyncData(
-    'posts',
-    () => postStore.fetchPosts(),
-)
+const { pending, refresh } = await useLazyAsyncData("posts", () =>
+  postStore.fetchPosts(),
+);
 
 const handleDelete = async (id: number) => {
   try {
-    await postStore.destroy(id)
+    await postStore.destroy(id);
     await refresh();
     toast.add({
-      title: 'Post deleted',
-      description: 'The post could not be deleted. Please try again.',
-      color: 'success',
-    })
+      title: "Post deleted",
+      description: "The post could not be deleted. Please try again.",
+      color: "success",
+    });
   } catch {
     toast.add({
-      title: 'Failed to delete post',
-      description: 'Please try again.',
-      color: 'error',
-    })
+      title: "Failed to delete post",
+      description: "Please try again.",
+      color: "error",
+    });
   }
-}
+};
 </script>
 
 <template>
   <UPage>
     <UPageHeader
-        title="Posts"
-        description="Create, edit and publish blog posts."
+      title="Posts"
+      description="Create, edit and publish blog posts."
     >
       <template #links>
-        <UButton
-            to="/posts/create"
-            icon="i-lucide-circle-plus"
-        >
+        <UButton to="/posts/create" icon="i-lucide-circle-plus">
           Create post
         </UButton>
       </template>
@@ -51,9 +47,9 @@ const handleDelete = async (id: number) => {
       <div class="space-y-4">
         <PostsFilters />
         <PostsTable
-            :posts="list ?? []"
-            :loading="pending"
-            @delete-post="handleDelete"
+          :posts="list ?? []"
+          :loading="pending"
+          @delete-post="handleDelete"
         />
       </div>
     </UPageBody>

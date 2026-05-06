@@ -1,23 +1,23 @@
-import {Roles} from "~/resources/role";
+import type { Role } from "~/resources/role";
 
 export const useUserAccess = () => {
-    const { user } = useUserSession()
+  const { user } = useUserSession();
 
-    const roles = computed(() => {
-        return user.value?.roles ?? []
-    })
+  const roles = computed(() => {
+    return user.value?.roles ?? [];
+  });
 
-    const hasRole = (role: Roles) => {
-        return roles.value.includes(role)
-    }
+  const hasRole = (role: Role) => {
+    return roles.value.includes(role);
+  };
 
-    const hasAnyRole = (requiredRoles: Roles[]) => {
-        return requiredRoles.some(role => roles.value.includes(role))
-    }
+  const hasAnyRole = (requiredRoles: Role[]) => {
+    return requiredRoles.some((role) => roles.value.includes(role));
+  };
 
-    return {
-        roles,
-        hasRole,
-        hasAnyRole
-    }
-}
+  return {
+    roles,
+    hasRole,
+    hasAnyRole,
+  };
+};

@@ -2,9 +2,8 @@
 import DashboardRecentPostList from "~/components/dashboard/DashboardRecentPostList.vue";
 
 defineProps<{
-  loading?: boolean
-}>()
-
+  loading?: boolean;
+}>();
 </script>
 
 <template>
@@ -12,20 +11,16 @@ defineProps<{
     <template #header>
       <div class="flex items-center justify-between gap-4">
         <div>
-          <h2 class="font-semibold">
-            Recent posts
-          </h2>
+          <h2 class="font-semibold">Recent posts</h2>
 
-          <p class="text-sm text-muted">
-            Latest content activity.
-          </p>
+          <p class="text-sm text-muted">Latest content activity.</p>
         </div>
 
         <UButton
-            to="/posts"
-            color="neutral"
-            variant="ghost"
-            trailing-icon="i-lucide-arrow-right"
+          to="/posts"
+          color="neutral"
+          variant="ghost"
+          trailing-icon="i-lucide-arrow-right"
         >
           View all
         </UButton>

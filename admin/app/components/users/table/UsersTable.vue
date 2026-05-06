@@ -1,85 +1,79 @@
 <script setup lang="ts">
-import type { DropdownMenuItem, TableColumn } from '@nuxt/ui'
-import type {UserResource} from "~/resources/user";
-import {getRoleColor} from "~/utils/role";
+import type { DropdownMenuItem, TableColumn } from "@nuxt/ui";
+import type { UserResource } from "~/resources/user";
+import { getRoleColor } from "~/utils/role";
 
 defineProps<{
-  users: UserResource[],
-  loading?: boolean
-}>()
+  users: UserResource[];
+  loading?: boolean;
+}>();
 
 const emit = defineEmits<{
-  'delete-user': [id: UserResource['id']]
-}>()
+  "delete-user": [id: UserResource["id"]];
+}>();
 
-const { canEditUser, canDeleteUser } = useUserPolicy()
+const { canEditUser, canDeleteUser } = useUserPolicy();
 
 const columns: TableColumn<UserResource>[] = [
   {
-    accessorKey: 'name',
-    header: 'User',
+    accessorKey: "name",
+    header: "User",
   },
   {
-    accessorKey: 'email',
-    header: 'Email',
+    accessorKey: "email",
+    header: "Email",
   },
   {
-    accessorKey: 'roles',
-    header: 'Roles',
+    accessorKey: "roles",
+    header: "Roles",
   },
   {
-    id: 'actions',
+    id: "actions",
   },
-]
+];
 
 const getUserActions = (user: UserResource): DropdownMenuItem[][] => {
   const mainActions: DropdownMenuItem[] = [
     {
-      label: 'View profile',
-      icon: 'i-lucide-user',
+      label: "View profile",
+      icon: "i-lucide-user",
       to: `/users/${user.id}`,
     },
-  ]
+  ];
 
   if (canEditUser(user)) {
     mainActions.unshift({
-      label: 'Edit',
-      icon: 'i-lucide-pencil',
+      label: "Edit",
+      icon: "i-lucide-pencil",
       to: `/users/${user.id}/edit`,
-    })
+    });
   }
 
-  const actions: DropdownMenuItem[][] = [mainActions]
+  const actions: DropdownMenuItem[][] = [mainActions];
 
   if (canDeleteUser(user)) {
     actions.push([
       {
-        label: 'Delete',
-        icon: 'i-lucide-trash',
-        color: 'error',
-        onSelect(){
-          emit('delete-user', user.id)
-        }
+        label: "Delete",
+        icon: "i-lucide-trash",
+        color: "error",
+        onSelect() {
+          emit("delete-user", user.id);
+        },
       },
-    ])
+    ]);
   }
 
-  return actions
-}
+  return actions;
+};
 </script>
 
 <template>
   <UCard>
-    <UTable
-        :data="users"
-        :columns="columns"
-    >
+    <UTable :data="users" :columns="columns">
       <template #name-cell="{ row }">
         <div class="flex items-center gap-3">
-          <UAvatar
-              :alt="row.original.name"
-              size="md"
-          />
+          <UAvatar :alt="row.original.name" size="md" />
 
           <div class="min-w-0">
             <p class="font-medium truncate">
@@ -96,10 +90,10 @@ const getUserActions = (user: UserResource): DropdownMenuItem[][] => {
       <template #roles-cell="{ row }">
         <div class="flex flex-wrap gap-1">
           <UBadge
-              v-for="role in row.original.roles"
-              :key="role"
-              :color="getRoleColor(role)"
-              variant="soft"
+            v-for="role in row.original.roles"
+            :key="role"
+            :color="getRoleColor(role)"
+            variant="soft"
           >
             {{ role }}
           </UBadge>
@@ -110,10 +104,10 @@ const getUserActions = (user: UserResource): DropdownMenuItem[][] => {
         <div class="flex justify-end">
           <UDropdownMenu :items="getUserActions(row.original)">
             <UButton
-                icon="i-lucide-ellipsis"
-                color="neutral"
-                variant="ghost"
-                square
+              icon="i-lucide-ellipsis"
+              color="neutral"
+              variant="ghost"
+              square
             />
           </UDropdownMenu>
         </div>

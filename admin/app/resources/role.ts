@@ -1,19 +1,22 @@
-import { z } from 'zod';
+import { z } from "zod";
 
-export enum Roles {
-    SuperAdmin = 'super-admin',
-    Admin = 'admin',
-    Editor = 'editor',
-    User = 'user',
-}
+export const Roles = {
+  SuperAdmin: "super-admin",
+  Admin: "admin",
+  Editor: "editor",
+  User: "user",
+} as const;
 
-export enum RoleFilter {
-    All = 'all',
-    SuperAdmin = Roles.SuperAdmin,
-    Admin = Roles.Admin,
-    Editor = Roles.Editor,
-    User = Roles.User,
-}
+export type Role = (typeof Roles)[keyof typeof Roles];
 
-export const roleSchema = z.enum(Roles)
-export const roleFilterSchema = z.enum(RoleFilter)
+export const RoleFilter = {
+  All: "all",
+  SuperAdmin: Roles.SuperAdmin,
+  Admin: Roles.Admin,
+  Editor: Roles.Editor,
+  User: Roles.User,
+} as const;
+
+export type RoleFilter = (typeof RoleFilter)[keyof typeof RoleFilter];
+
+export const roleSchema = z.enum(Roles);
