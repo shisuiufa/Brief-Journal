@@ -22,6 +22,18 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'excerpt', type: 'string', maxLength: 1000, nullable: true, example: 'Short post summary.'),
         new OA\Property(property: 'content', type: 'string', example: 'Post body content.'),
         new OA\Property(property: 'status', type: 'string', enum: ['draft', 'published'], example: 'published'),
+        new OA\Property(
+            property: 'category_ids',
+            type: 'array',
+            items: new OA\Items(type: 'integer'),
+            example: [1, 2]
+        ),
+        new OA\Property(
+            property: 'tag_ids',
+            type: 'array',
+            items: new OA\Items(type: 'integer'),
+            example: [1, 2]
+        ),
     ],
     type: 'object'
 )]
@@ -35,6 +47,18 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'excerpt', type: 'string', maxLength: 1000, nullable: true, example: 'Short post summary.'),
         new OA\Property(property: 'content', type: 'string', example: 'Post body content.'),
         new OA\Property(property: 'status', type: 'string', enum: ['draft', 'published'], example: 'published'),
+        new OA\Property(
+            property: 'category_ids',
+            type: 'array',
+            items: new OA\Items(type: 'integer'),
+            example: [1, 2]
+        ),
+        new OA\Property(
+            property: 'tag_ids',
+            type: 'array',
+            items: new OA\Items(type: 'integer'),
+            example: [1, 2]
+        ),
     ],
     type: 'object'
 )]
@@ -48,6 +72,20 @@ class PostsDocumentation
             new OA\Parameter(
                 name: 'search',
                 description: 'Search posts by title or excerpt',
+                in: 'query',
+                required: false,
+                schema: new OA\Schema(type: 'string', maxLength: 255)
+            ),
+            new OA\Parameter(
+                name: 'category',
+                description: 'Filter posts by category slug',
+                in: 'query',
+                required: false,
+                schema: new OA\Schema(type: 'string', maxLength: 255)
+            ),
+            new OA\Parameter(
+                name: 'tag',
+                description: 'Filter posts by tag slug',
                 in: 'query',
                 required: false,
                 schema: new OA\Schema(type: 'string', maxLength: 255)

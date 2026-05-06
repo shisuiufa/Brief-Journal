@@ -50,7 +50,7 @@ use OpenApi\Attributes as OA;
 )]
 #[OA\Schema(
     schema: 'PostResource',
-    required: ['id', 'title', 'slug', 'excerpt', 'content', 'image_url', 'status', 'published_at', 'author'],
+    required: ['id', 'title', 'slug', 'excerpt', 'content', 'image_url', 'status', 'published_at', 'views_count'],
     properties: [
         new OA\Property(property: 'id', type: 'integer', example: 1),
         new OA\Property(property: 'title', type: 'string', example: 'Building APIs with Laravel Passport'),
@@ -61,6 +61,41 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'status', type: 'string', enum: ['draft', 'published'], example: 'published'),
         new OA\Property(property: 'published_at', type: 'string', format: 'date-time', nullable: true),
         new OA\Property(property: 'author', ref: '#/components/schemas/UserResource'),
+        new OA\Property(
+            property: 'categories',
+            type: 'array',
+            items: new OA\Items(ref: '#/components/schemas/CategoryResource')
+        ),
+        new OA\Property(
+            property: 'tags',
+            type: 'array',
+            items: new OA\Items(ref: '#/components/schemas/TagResource')
+        ),
+        new OA\Property(property: 'views_count', type: 'integer', example: 42),
+        new OA\Property(property: 'created_at', type: 'string', format: 'date-time', nullable: true),
+        new OA\Property(property: 'updated_at', type: 'string', format: 'date-time', nullable: true),
+    ],
+    type: 'object'
+)]
+#[OA\Schema(
+    schema: 'CategoryResource',
+    required: ['id', 'name', 'slug'],
+    properties: [
+        new OA\Property(property: 'id', type: 'integer', example: 1),
+        new OA\Property(property: 'name', type: 'string', example: 'Laravel'),
+        new OA\Property(property: 'slug', type: 'string', example: 'laravel'),
+        new OA\Property(property: 'created_at', type: 'string', format: 'date-time', nullable: true),
+        new OA\Property(property: 'updated_at', type: 'string', format: 'date-time', nullable: true),
+    ],
+    type: 'object'
+)]
+#[OA\Schema(
+    schema: 'TagResource',
+    required: ['id', 'name', 'slug'],
+    properties: [
+        new OA\Property(property: 'id', type: 'integer', example: 1),
+        new OA\Property(property: 'name', type: 'string', example: 'Passport'),
+        new OA\Property(property: 'slug', type: 'string', example: 'passport'),
         new OA\Property(property: 'created_at', type: 'string', format: 'date-time', nullable: true),
         new OA\Property(property: 'updated_at', type: 'string', format: 'date-time', nullable: true),
     ],
