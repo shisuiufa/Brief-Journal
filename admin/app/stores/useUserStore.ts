@@ -1,8 +1,8 @@
 import {defineStore} from "pinia";
 import type {ResourceCollection, ResourceCollectionMeta, ResourceItem, ResourcePagination} from "~/types/api";
 import type {CreateUserCredentials, UpdateUserCredentials, UserResource} from "~/resources/user";
-import { RoleFilter } from "~/resources/role";
-import { useApi } from "~/composables/useApi";
+import {RoleFilter} from "~/resources/role";
+import {useApi} from "~/composables/useApi";
 import {watchDebounced} from "@vueuse/core";
 
 export const useUserStore = defineStore("user", () => {
@@ -12,6 +12,8 @@ export const useUserStore = defineStore("user", () => {
 
     const search = ref<string>('');
     const role = ref<RoleFilter>(RoleFilter.All);
+
+    const loading = ref<boolean>(false);
 
     const fetchUsers = async () => {
         const response = await useApi<ResourceCollection<UserResource>>('/api/admin/users', {
@@ -36,19 +38,48 @@ export const useUserStore = defineStore("user", () => {
     }
 
     const create = async (credentials: CreateUserCredentials) => {
-        const { password_confirmation, ...payload } = credentials
+        try {
+            if (loading.value) return;
 
-        return await useApi('/api/admin/users', {
-            method: 'POST',
-            body: payload,
-        });
+            loading.value = true;
+
+            return await useApi('/api/admin/users', {
+                method: 'POST',
+                body: credentials,
+            });
+        } finally {
+            loading.value = false;
+        }
     }
 
     const update = async (id: string | number, credentials: UpdateUserCredentials) => {
-        return await useApi(`/api/admin/users/${id}`, {
-            method: 'PUT',
-            body: credentials,
-        });
+        try {
+            if (loading.value) return;
+
+            loading.value = true;
+
+            return await useApi(`/api/admin/users/${id}`, {
+                method: 'PUT',
+                body: credentials,
+            });
+        } finally {
+            loading.value = false;
+        }
+    }
+
+    const destroy = async (id: string | number) => {
+        try {
+            if (loading.value) return;
+
+            loading.value = true;
+
+            return await useApi(`/api/admin/users/${id}`, {
+                method: 'DELETE',
+            })
+        } finally {
+            loading.value = false;
+        }
+
     }
 
     watch(role, async () => {
@@ -72,9 +103,11 @@ export const useUserStore = defineStore("user", () => {
         links,
         search,
         role,
+        loading,
         fetchUsers,
         fetchUser,
         create,
-        update
+        update,
+        destroy
     }
 })

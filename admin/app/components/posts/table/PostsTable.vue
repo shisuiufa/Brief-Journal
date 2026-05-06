@@ -8,6 +8,10 @@ defineProps<{
   posts: PostResource[]
 }>()
 
+const emit = defineEmits<{
+  'delete-post': [id: PostResource['id']]
+}>()
+
 const columns: TableColumn<PostResource>[] = [
   {
     accessorKey: 'title',
@@ -22,7 +26,7 @@ const columns: TableColumn<PostResource>[] = [
     header: 'Status',
   },
   {
-    accessorKey: 'publishedAt',
+    accessorKey: 'published_at',
     header: 'Published',
   },
   {
@@ -49,7 +53,7 @@ const columns: TableColumn<PostResource>[] = [
       <template #author-cell="{ row }">
         <div>
           <p class="font-medium first-letter:uppercase">
-            {{ row.original.author.name }}
+            {{ row.original.author?.name ?? 'unknown' }}
           </p>
         </div>
       </template>
@@ -63,7 +67,7 @@ const columns: TableColumn<PostResource>[] = [
         </UBadge>
       </template>
 
-      <template #publishedAt-cell="{ row }">
+      <template #published_at-cell="{ row }">
         <span class="text-muted">
           {{ row.original.published_at ? formatDate(row.original.published_at) : 'Not published' }}
         </span>
@@ -82,6 +86,9 @@ const columns: TableColumn<PostResource>[] = [
                 label: 'Delete',
                 icon: 'i-lucide-trash',
                 color: 'error',
+                onSelect() {
+                  emit('delete-post', row.original.id);
+                }
               },
             ],
           ]"

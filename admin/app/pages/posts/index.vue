@@ -3,13 +3,32 @@ import PostsFilters from '~/components/posts/PostsFilters.vue'
 import PostsTable from '~/components/posts/table/PostsTable.vue'
 
 const postStore = usePostStore();
+const toast = useToast()
 
 const { list } = storeToRefs(postStore)
 
-const { pending } = await useLazyAsyncData(
+const { pending, refresh } = await useLazyAsyncData(
     'posts',
     () => postStore.fetchPosts(),
 )
+
+const handleDelete = async (id: number) => {
+  try {
+    await postStore.destroy(id)
+    await refresh();
+    toast.add({
+      title: 'Post deleted',
+      description: 'The post could not be deleted. Please try again.',
+      color: 'success',
+    })
+  } catch {
+    toast.add({
+      title: 'Failed to delete post',
+      description: 'Please try again.',
+      color: 'error',
+    })
+  }
+}
 </script>
 
 <template>
@@ -34,6 +53,7 @@ const { pending } = await useLazyAsyncData(
         <PostsTable
             :posts="list ?? []"
             :loading="pending"
+            @delete-post="handleDelete"
         />
       </div>
     </UPageBody>

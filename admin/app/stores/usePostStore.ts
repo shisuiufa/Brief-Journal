@@ -22,6 +22,8 @@ export const usePostStore = defineStore("post", () => {
     const search = ref<string>('');
     const status = ref<PostStatusFilter>(PostStatusFilter.All)
 
+    const loading = ref<boolean>(false);
+
     const fetchPosts = async () => {
         const response = await useApi<ResourceCollection<PostResource>>('/api/admin/posts', {
             method: 'GET',
@@ -39,10 +41,18 @@ export const usePostStore = defineStore("post", () => {
     }
 
     const create = async (credentials: CreatePostCredentials) => {
-       return await useApi('/api/admin/posts', {
-            method: 'POST',
-            body: objectToFormData(credentials),
-        });
+        try {
+            if(loading.value) return;
+
+            loading.value = true;
+
+            return await useApi('/api/admin/posts', {
+                method: 'POST',
+                body: objectToFormData(credentials),
+            });
+        } finally {
+            loading.value = false;
+        }
     }
 
     const fetchPost = async (id: string | number) => {
@@ -52,12 +62,34 @@ export const usePostStore = defineStore("post", () => {
     }
 
     const update = async (id: string | number, credentials: UpdatePostCredentials) => {
-        return await useApi(`/api/admin/posts/${id}`, {
-            method: 'PUT',
-            body: objectToFormData({
-                ...credentials,
-            }),
-        });
+        try {
+            if(loading.value) return;
+
+            loading.value = true;
+
+            return await useApi(`/api/admin/posts/${id}`, {
+                method: 'PUT',
+                body: objectToFormData({
+                    ...credentials,
+                }),
+            });
+        } finally {
+            loading.value = false;
+        }
+    }
+
+    const destroy =async (id: string | number) => {
+        try {
+            if(loading.value) return;
+
+            loading.value = true;
+
+            return await useApi(`/api/admin/posts/${id}`, {
+                method: 'DELETE',
+            })
+        } finally {
+            loading.value = false;
+        }
     }
 
     watch(status, async () => {
@@ -80,10 +112,12 @@ export const usePostStore = defineStore("post", () => {
         fetchPost,
         create,
         update,
+        destroy,
         meta,
         list,
         links,
         search,
-        status
+        status,
+        loading
     }
 })

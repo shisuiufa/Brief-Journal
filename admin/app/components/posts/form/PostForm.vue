@@ -27,6 +27,8 @@ const toast = useToast()
 
 const postStore = usePostStore();
 
+const { loading } = storeToRefs(postStore);
+
 const isEditMode = computed(() => props.mode === 'edit')
 const formSchema = computed(() => isEditMode.value ? updatePostSchema : createPostSchema)
 
@@ -228,6 +230,7 @@ const handleSubmit = async (event: FormSubmitEvent<PostFormState>) => {
             <UButton
                 type="submit"
                 icon="i-lucide-save"
+                :loading="loading"
                 block
             >
               {{ submitLabel }}

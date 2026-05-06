@@ -1,68 +1,71 @@
 <script setup lang="ts">
-type UserRole = 'super-admin' | 'admin' | 'editor' | 'user'
+import type {FormSubmitEvent} from '#ui/types'
+import {Roles} from '~/resources/role'
+import {
+  type CreateUserCredentials,
+  createUserSchema,
+  type UpdateUserCredentials,
+  updateUserSchema,
+  type UserResource,
+} from '~/resources/user'
+import {FetchError} from "ofetch";
 
-type UserFormMode = 'create' | 'edit'
-
-type UserFormInitialState = {
-  name: string
-  email: string
-  role: UserRole
-}
-
-type UserFormState = {
-  name: string
-  email: string
-  password: string
-  passwordConfirmation: string
-  role: UserRole
-}
+type UserFormState = CreateUserCredentials | UpdateUserCredentials
 
 const props = withDefaults(defineProps<{
-  mode?: UserFormMode
-  userId?: string | number
-  initialState?: UserFormInitialState
+  mode?: 'create' | 'edit'
+  user?: UserResource
 }>(), {
   mode: 'create',
-  userId: undefined,
-  initialState: undefined,
+  user: undefined,
 })
 
 const toast = useToast()
+const userStore = useUserStore()
+
+const { loading } = storeToRefs(userStore);
+const { hasRole  } = useUserAccess();
+const { user: userSession } = useUserSession();
 
 const isEditMode = computed(() => props.mode === 'edit')
+const formSchema = computed(() => isEditMode.value ? updateUserSchema : createUserSchema)
 
 const state = reactive<UserFormState>({
-  name: props.initialState?.name ?? '',
-  email: props.initialState?.email ?? '',
+  name: props.user?.name ?? '',
+  email: props.user?.email ?? '',
   password: '',
-  passwordConfirmation: '',
-  role: props.initialState?.role ?? 'user',
+  password_confirmation: '',
+  role: props.user?.roles[0] ?? Roles.Editor,
 })
 
-const isSubmitting = ref(false)
+const roleItems = computed(() => {
+  if (hasRole(Roles.Admin)) {
+    return [
+      {
+        label: 'Editor',
+        value: Roles.Editor,
+        icon: 'i-lucide-pen-line',
+      },
+    ]
+  }
 
-const roleItems = [
-  {
-    label: 'Super admin',
-    value: 'super-admin',
-    icon: 'i-lucide-shield-alert',
-  },
-  {
-    label: 'Admin',
-    value: 'admin',
-    icon: 'i-lucide-shield-check',
-  },
-  {
-    label: 'Editor',
-    value: 'editor',
-    icon: 'i-lucide-pen-line',
-  },
-  {
-    label: 'User',
-    value: 'user',
-    icon: 'i-lucide-user',
-  },
-]
+  if (hasRole(Roles.SuperAdmin)) {
+    return [
+      {
+        label: 'Editor',
+        value: Roles.Editor,
+        icon: 'i-lucide-pen-line',
+      },
+      {
+        label: 'Admin',
+        value: Roles.Admin,
+        icon: 'i-lucide-shield-check',
+      },
+    ]
+  }
+
+  return []
+})
 
 const submitLabel = computed(() => {
   return isEditMode.value ? 'Update user' : 'Create user'
@@ -72,37 +75,20 @@ const submitIcon = computed(() => {
   return isEditMode.value ? 'i-lucide-save' : 'i-lucide-user-plus'
 })
 
-const handleSubmit = async () => {
-  isSubmitting.value = true
+const canChangeRole = computed(() => {
+  const isCurrentUser = props.user?.id === userSession.value?.id;
 
+  return !isCurrentUser && (hasRole(Roles.SuperAdmin) || hasRole(Roles.Admin) && !isEditMode.value);
+})
+
+const handleSubmit = async (event: FormSubmitEvent<UserFormState>) => {
   try {
-    const payload: Record<string, string> = {
-      name: state.name,
-      email: state.email,
-      role: state.role,
-    }
-
-    if (state.password) {
-      payload.password = state.password
-      payload.password_confirmation = state.passwordConfirmation
-    }
-
     if (isEditMode.value) {
-      // TODO: заменить на свой API клиент
-      // await $fetch(`/api/admin/users/${props.userId}`, {
-      //   method: 'PUT',
-      //   body: payload,
-      // })
+      const user = props.user!
 
-      console.log('update user', props.userId, payload)
+      await userStore.update(user.id, event.data as UpdateUserCredentials)
     } else {
-      // TODO: заменить на свой API клиент
-      // await $fetch('/api/admin/users', {
-      //   method: 'POST',
-      //   body: payload,
-      // })
-
-      console.log('create user', payload)
+      await userStore.create(event.data as CreateUserCredentials)
     }
 
     toast.add({
@@ -114,24 +100,28 @@ const handleSubmit = async () => {
     })
 
     await navigateTo('/users')
-  } catch {
+  } catch (error) {
+    const fetchError = error as FetchError<{ message?: string }>
+
+    const fallbackMessage = isEditMode.value
+        ? 'Failed to update user.'
+        : 'Failed to create user.'
+
     toast.add({
       title: 'Something went wrong',
-      description: isEditMode.value
-          ? 'Failed to update user.'
-          : 'Failed to create user.',
+      description: fetchError.data?.message ?? fallbackMessage,
       color: 'error',
     })
-  } finally {
-    isSubmitting.value = false
   }
 }
 </script>
 
 <template>
   <UForm
+      :schema="formSchema"
       :state="state"
-      class="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]"
+      :class="canChangeRole ? 'xl:grid-cols-[minmax(0,1fr)_360px]' : ''"
+      class="grid gap-6 "
       @submit="handleSubmit"
   >
     <div class="space-y-6">
@@ -186,7 +176,10 @@ const handleSubmit = async () => {
             </h3>
 
             <p class="mt-1 text-sm text-muted">
-              {{ isEditMode ? 'Leave password fields empty to keep current password.' : 'Set password for the new user.' }}
+              {{ isEditMode
+                ? 'Leave blank if you do not want to change the password.'
+                : 'Set password for the new user.'
+              }}
             </p>
           </div>
 
@@ -194,7 +187,7 @@ const handleSubmit = async () => {
             <UFormField
                 label="Password"
                 name="password"
-                :required="!isEditMode"
+                required
             >
               <UInput
                   v-model="state.password"
@@ -207,11 +200,11 @@ const handleSubmit = async () => {
 
             <UFormField
                 label="Confirm password"
-                name="passwordConfirmation"
-                :required="!isEditMode"
+                name="password_confirmation"
+                required
             >
               <UInput
-                  v-model="state.passwordConfirmation"
+                  v-model="state.password_confirmation"
                   type="password"
                   icon="i-lucide-lock-keyhole"
                   placeholder="Repeat password"
@@ -224,7 +217,7 @@ const handleSubmit = async () => {
     </div>
 
     <aside class="space-y-6 xl:sticky xl:top-6 xl:self-start">
-      <UCard>
+      <UCard v-if="canChangeRole">
         <template #header>
           <div>
             <h2 class="text-base font-semibold">
@@ -265,8 +258,8 @@ const handleSubmit = async () => {
           <UButton
               type="submit"
               :icon="submitIcon"
-              :loading="isSubmitting"
               block
+              :loading="loading"
           >
             {{ submitLabel }}
           </UButton>
