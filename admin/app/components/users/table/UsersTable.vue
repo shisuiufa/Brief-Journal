@@ -70,7 +70,7 @@ const getUserActions = (user: UserResource): DropdownMenuItem[][] => {
 
 <template>
   <UCard>
-    <UTable :data="users" :columns="columns">
+    <UTable :data="users" :columns="columns" :loading="loading">
       <template #name-cell="{ row }">
         <div class="flex items-center gap-3">
           <UAvatar :alt="row.original.name" size="md" />
