@@ -6,7 +6,7 @@ use App\Contracts\Media\ImageStorageInterface;
 use App\Services\Image\ImageStorageService;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Passport;
-use Carbon\CarbonInterval;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**

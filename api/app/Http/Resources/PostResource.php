@@ -30,6 +30,7 @@ class PostResource extends JsonResource
             'author' => new UserResource($this->whenLoaded('author')),
             'categories' => CategoryResource::collection($this->whenLoaded('categories')),
             'tags' => TagResource::collection($this->whenLoaded('tags')),
+            'views_count' => $this->views_count,
             'created_at' => $this->created_at?->toISOString(),
             'updated_at' => $this->updated_at?->toISOString(),
         ];

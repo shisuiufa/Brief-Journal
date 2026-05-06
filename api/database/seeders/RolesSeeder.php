@@ -31,6 +31,14 @@ class RolesSeeder extends Seeder
             PermissionEnum::CreateEditors->value,
             PermissionEnum::EditEditors->value,
             PermissionEnum::DeleteEditors->value,
+            PermissionEnum::ViewCategories->value,
+            PermissionEnum::CreateCategories->value,
+            PermissionEnum::EditCategories->value,
+            PermissionEnum::DeleteCategories->value,
+            PermissionEnum::ViewTags->value,
+            PermissionEnum::CreateTags->value,
+            PermissionEnum::EditTags->value,
+            PermissionEnum::DeleteTags->value,
         ]);
 
         $editor->givePermissionTo([
@@ -39,6 +47,8 @@ class RolesSeeder extends Seeder
             PermissionEnum::EditPosts->value,
             PermissionEnum::DeletePosts->value,
             PermissionEnum::PublishPosts->value,
+            PermissionEnum::ViewCategories->value,
+            PermissionEnum::ViewTags->value,
         ]);
 
         $user->syncPermissions([

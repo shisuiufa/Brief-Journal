@@ -11,6 +11,18 @@ enum PermissionEnum: string
     case DeletePosts = 'delete posts';
     case PublishPosts = 'publish posts';
 
+    // Categories
+    case ViewCategories = 'view categories';
+    case CreateCategories = 'create categories';
+    case EditCategories = 'edit categories';
+    case DeleteCategories = 'delete categories';
+
+    // Tags
+    case ViewTags = 'view tags';
+    case CreateTags = 'create tags';
+    case EditTags = 'edit tags';
+    case DeleteTags = 'delete tags';
+
     // Users
     case ViewUsers = 'view users';
 
@@ -26,4 +38,5 @@ enum PermissionEnum: string
 
     // Roles
     case ManageRoles = 'manage roles';
+
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Contracts\Post\IncrementPostViewsActionInterface;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
 use Illuminate\Http\Request;
@@ -23,13 +24,15 @@ class PostController extends Controller
         return PostResource::collection($posts);
     }
 
-    public function show(string $slug): PostResource
+    public function show(string $slug, IncrementPostViewsActionInterface $incrementViews): PostResource
     {
         $post = Post::query()
             ->published()
             ->where('slug', $slug)
             ->with(['author', 'categories', 'tags'])
             ->firstOrFail();
+
+        $post = $incrementViews->execute($post);
 
         return new PostResource($post);
     }

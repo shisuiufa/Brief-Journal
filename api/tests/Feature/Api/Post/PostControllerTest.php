@@ -135,3 +135,17 @@ it('shows published post with categories and tags', function () {
         ->assertJsonPath('data.categories.0.slug', 'laravel')
         ->assertJsonPath('data.tags.0.slug', 'passport');
 });
+
+it('increments views count when showing published post', function () {
+    $post = Post::factory()->published()->create([
+        'slug' => 'published-post',
+        'views_count' => 5,
+    ]);
+
+    $this->getJson('/api/posts/published-post')
+        ->assertOk()
+        ->assertJsonPath('data.views_count', 6);
+
+    expect($post->refresh()->views_count)->toBe(6);
+});
+
