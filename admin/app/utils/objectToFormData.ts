@@ -11,6 +11,13 @@ export const objectToFormData = (payload: Record<string, unknown>) => {
       return;
     }
 
+    if (Array.isArray(value)) {
+      value.forEach((item) => {
+        formData.append(`${key}[]`, String(item));
+      });
+      return;
+    }
+
     formData.append(key, String(value));
   });
 
