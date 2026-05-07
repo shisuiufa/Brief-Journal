@@ -30,8 +30,17 @@ const props = withDefaults(
 const toast = useToast();
 
 const postStore = usePostStore();
+const categoryStore = useCategoryStore();
+const tagStore = useTagStore();
 
 const { loading } = storeToRefs(postStore);
+const { list: categories } = storeToRefs(categoryStore);
+const { list: tags } = storeToRefs(tagStore);
+
+await Promise.all([
+  categoryStore.fetchCategories(),
+  tagStore.fetchTags(),
+]);
 
 const isEditMode = computed(() => props.mode === "edit");
 const formSchema = computed(() =>
@@ -46,6 +55,8 @@ const state = reactive<PostFormState>({
   excerpt: props.post?.excerpt ?? "",
   content: props.post?.content ?? "",
   status: props.post?.status ?? PostStatus.Draft,
+  category_ids: props.post?.categories.map((category) => category.id) ?? [],
+  tag_ids: props.post?.tags.map((tag) => tag.id) ?? [],
   image: null,
 });
 
@@ -61,6 +72,20 @@ const statusItems = [
     icon: "i-lucide-circle-check",
   },
 ];
+
+const categoryItems = computed(() =>
+  (categories.value ?? []).map((category) => ({
+    label: category.name,
+    value: category.id,
+  })),
+);
+
+const tagItems = computed(() =>
+  (tags.value ?? []).map((tag) => ({
+    label: tag.name,
+    value: tag.id,
+  })),
+);
 
 const submitLabel = computed(() => {
   if (isEditMode.value) {
@@ -219,6 +244,30 @@ const handleSubmit = async (event: FormSubmitEvent<PostFormState>) => {
             <USelect
               v-model="state.status"
               :items="statusItems"
+              class="w-full"
+            />
+          </UFormField>
+
+          <UFormField label="Categories" name="category_ids">
+            <USelectMenu
+              v-model="state.category_ids"
+              :items="categoryItems"
+              value-key="value"
+              multiple
+              placeholder="Select categories"
+              icon="i-lucide-folder"
+              class="w-full"
+            />
+          </UFormField>
+
+          <UFormField label="Tags" name="tag_ids">
+            <USelectMenu
+              v-model="state.tag_ids"
+              :items="tagItems"
+              value-key="value"
+              multiple
+              placeholder="Select tags"
+              icon="i-lucide-tags"
               class="w-full"
             />
           </UFormField>
