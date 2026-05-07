@@ -47,6 +47,27 @@ function getItems(state: "collapsed" | "expanded") {
 
   if (hasAnyRole([Roles.Admin, Roles.SuperAdmin])) {
     items.push({
+      label: "Taxonomy",
+      icon: "i-lucide-tags",
+      defaultOpen: true,
+      children:
+        state === "expanded"
+          ? [
+              {
+                label: "Categories",
+                icon: "i-lucide-folder",
+                to: "/categories",
+              },
+              {
+                label: "Tags",
+                icon: "i-lucide-tags",
+                to: "/tags",
+              },
+            ]
+          : [],
+    });
+
+    items.push({
       label: "Users",
       icon: "i-lucide-users",
       defaultOpen: true,
