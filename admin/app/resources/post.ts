@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { resourceSchema } from "~/resources/resource";
+import { taxonomySchema } from "~/resources/taxonomy";
 import { userSchema } from "~/resources/user";
 
 export const PostStatus = {
@@ -30,6 +31,9 @@ export const postSchema = resourceSchema.extend({
   status: postStatusSchema,
   published_at: z.string().nullable(),
   author: userSchema,
+  categories: z.array(taxonomySchema).default([]),
+  tags: z.array(taxonomySchema).default([]),
+  views_count: z.number().default(0),
 });
 
 const stripHtml = (value: string) => {
@@ -47,6 +51,8 @@ const postFormSchema = z.object({
     message: "Content is required",
   }),
   status: postStatusSchema,
+  category_ids: z.array(z.number()),
+  tag_ids: z.array(z.number()),
 });
 
 export const createPostSchema = postFormSchema
