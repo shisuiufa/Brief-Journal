@@ -16,11 +16,7 @@ definePageMeta({
 const toast = useToast();
 const categoryStore = useCategoryStore();
 
-const {
-  list: categories,
-  loading,
-  meta,
-} = storeToRefs(categoryStore);
+const { list: categories, loading, meta } = storeToRefs(categoryStore);
 
 const selectedCategory = ref<TaxonomyResource | null>(null);
 

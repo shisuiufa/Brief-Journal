@@ -51,7 +51,10 @@ export const useTagStore = defineStore("tag", () => {
     }
   };
 
-  const update = async (id: string | number, credentials: UpdateTagCredentials) => {
+  const update = async (
+    id: string | number,
+    credentials: UpdateTagCredentials,
+  ) => {
     try {
       if (loading.value) return;
 

@@ -37,10 +37,7 @@ const { loading } = storeToRefs(postStore);
 const { list: categories } = storeToRefs(categoryStore);
 const { list: tags } = storeToRefs(tagStore);
 
-await Promise.all([
-  categoryStore.fetchCategories(),
-  tagStore.fetchTags(),
-]);
+await Promise.all([categoryStore.fetchCategories(), tagStore.fetchTags()]);
 
 const isEditMode = computed(() => props.mode === "edit");
 const formSchema = computed(() =>

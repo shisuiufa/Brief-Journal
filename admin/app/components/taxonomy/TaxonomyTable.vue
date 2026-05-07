@@ -33,9 +33,7 @@ const columns: TableColumn<TaxonomyResource>[] = [
 ];
 
 const emptyText = computed(() => {
-  return props.type === "category"
-    ? "No categories yet."
-    : "No tags yet.";
+  return props.type === "category" ? "No categories yet." : "No tags yet.";
 });
 
 const getActions = (item: TaxonomyResource): DropdownMenuItem[][] => [
@@ -74,9 +72,7 @@ const getActions = (item: TaxonomyResource): DropdownMenuItem[][] => [
             class="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 ring-1 ring-primary/20"
           >
             <UIcon
-              :name="
-                type === 'category' ? 'i-lucide-folder' : 'i-lucide-tags'
-              "
+              :name="type === 'category' ? 'i-lucide-folder' : 'i-lucide-tags'"
               class="size-4 text-primary"
             />
           </div>
