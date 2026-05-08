@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Database\Factories\TagFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -21,5 +23,13 @@ class Tag extends Model
     public function posts(): BelongsToMany
     {
         return $this->belongsToMany(Post::class)->withTimestamps();
+    }
+
+    #[Scope]
+    protected function withPublishedPostsCount(Builder $query): void
+    {
+        $query->withCount([
+            'posts as posts_count' => fn (Builder $query) => $query->published(),
+        ]);
     }
 }

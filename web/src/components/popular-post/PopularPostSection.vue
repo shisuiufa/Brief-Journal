@@ -3,6 +3,12 @@ import { ArrowTrendingUpIcon } from '@heroicons/vue/24/outline'
 import PopularPostList from '@/components/popular-post/PopularPostList.vue'
 import UiCard from '@/components/ui/UiCard.vue'
 import UiBadge from '@/components/ui/UiBadge.vue'
+import { usePostStore } from '@/stores/usePostStore.ts'
+import { storeToRefs } from 'pinia'
+
+const postStore = usePostStore()
+
+const { populars } = storeToRefs(postStore)
 </script>
 
 <template>
@@ -21,6 +27,6 @@ import UiBadge from '@/components/ui/UiBadge.vue'
       <UiBadge>Rising</UiBadge>
     </div>
 
-    <PopularPostList />
+    <PopularPostList :posts="populars ?? []" />
   </UiCard>
 </template>

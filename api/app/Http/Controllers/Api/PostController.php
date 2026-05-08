@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use App\Contracts\Post\IncrementPostViewsActionInterface;
+use App\Http\Controllers\Controller;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
 use Illuminate\Http\Request;
@@ -35,5 +36,18 @@ class PostController extends Controller
         $post = $incrementViews->execute($post);
 
         return new PostResource($post);
+    }
+
+    public function populars(): ResourceCollection
+    {
+        $popularPosts = Post::query()
+            ->published()
+            ->with(['author', 'categories', 'tags'])
+            ->orderByDesc('views_count')
+            ->latest('published_at')
+            ->limit(4)
+            ->get();
+
+        return PostResource::collection($popularPosts);
     }
 }

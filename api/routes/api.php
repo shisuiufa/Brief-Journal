@@ -1,6 +1,7 @@
 <?php
 
-use App\Http\Controllers\PostController;
+use App\Http\Controllers\Api\PostController;
+use App\Http\Controllers\Api\TagController;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -12,4 +13,6 @@ Route::middleware('auth:api')->group(function () {
 });
 
 Route::get('/posts', [PostController::class, 'index']);
+Route::get('/posts/populars', [PostController::class, 'populars']);
 Route::get('/posts/{post:slug}', [PostController::class, 'show']);
+Route::get('/tags', [TagController::class, 'index']);
