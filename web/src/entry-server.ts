@@ -1,9 +1,10 @@
 import { createHead } from '@unhead/vue/server'
 import { renderToString } from '@vue/server-renderer'
 import { createApp } from './create-app'
+import { getCallOnceKeys } from './plugins/call-once'
 
 export async function render(url: string) {
-  const { app, router } = createApp()
+  const { app, router, pinia, callOnce } = createApp()
   const head = createHead()
 
   app.use(head)
@@ -18,5 +19,9 @@ export async function render(url: string) {
     html,
     status,
     head,
+    state: {
+      pinia: pinia.state.value,
+      callOnce: getCallOnceKeys(callOnce),
+    },
   }
 }

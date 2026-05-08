@@ -6,6 +6,8 @@ import { createServer as createHttpServer } from 'node:http'
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { createServer as createViteServer } from 'vite'
+import { uneval } from 'devalue'
+import type { InitialState } from './src/types/initial-state'
 
 type ManifestChunk = {
   file: string
@@ -21,6 +23,7 @@ type RenderResult = {
   html: string
   status: number
   head: ServerHead
+  state: InitialState
 }
 
 type ServerEntry = {
@@ -35,24 +38,28 @@ const templatePath = path.resolve(root, 'index.html')
 
 const serverEntryUrl = pathToFileURL(path.resolve(root, 'dist/server/entry-server.js')).href
 
-function renderStyles(manifest: Manifest, entry: string): string {
-  const chunk = manifest[entry]
-
-  if (!chunk) {
-    return ''
+const renderClientAssets = (
+  manifest: Manifest | null,
+): { headTags: string; clientEntry: string } => {
+  if (!manifest) {
+    return {
+      headTags: '<link rel="stylesheet" href="/src/assets/main.css" />',
+      clientEntry: '<script type="module" src="/src/entry-client.ts"></script>',
+    }
   }
 
-  return (chunk.css || []).map((cssFile) => `<link rel="stylesheet" href="/${cssFile}">`).join('\n')
+  const chunk = manifest['src/entry-client.ts']
+
+  return {
+    headTags: (chunk?.css ?? [])
+      .map((cssFile) => `<link rel="stylesheet" href="/${cssFile}">`)
+      .join('\n'),
+    clientEntry: chunk ? `<script type="module" src="/${chunk.file}"></script>` : '',
+  }
 }
 
-function renderClientEntry(manifest: Manifest, entry: string): string {
-  const chunk = manifest[entry]
-
-  if (!chunk) {
-    return ''
-  }
-
-  return `<script type="module" src="/${chunk.file}"></script>`
+const renderInitialState = (state: InitialState): string => {
+  return `<script>window.__INITIAL_STATE__ = ${uneval(state)}</script>`
 }
 
 async function createServer() {
@@ -97,18 +104,12 @@ async function createServer() {
       }
 
       const rendered = await serverEntry.render(url)
-
-      const headTags = manifest
-        ? renderStyles(manifest, 'src/entry-client.ts')
-        : '<link rel="stylesheet" href="/src/assets/main.css" />'
-
-      const clientEntry = manifest
-        ? renderClientEntry(manifest, 'src/entry-client.ts')
-        : '<script type="module" src="/src/entry-client.ts"></script>'
+      const { headTags, clientEntry } = renderClientAssets(manifest)
 
       const html = template
         .replace('<!--head-tags-->', headTags)
         .replace('<!--app-html-->', rendered.html)
+        .replace('<!--initial-state-->', renderInitialState(rendered.state))
         .replace('<!--client-entry-->', clientEntry)
 
       const htmlWithHead = transformHtmlTemplate(rendered.head, html)
@@ -125,4 +126,4 @@ async function createServer() {
   })
 }
 
-createServer()
+createServer().then()
