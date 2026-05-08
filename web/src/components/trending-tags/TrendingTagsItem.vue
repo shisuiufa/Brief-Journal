@@ -1,13 +1,14 @@
 <script setup lang="ts">
 defineProps<{
   label: string
+  slug: string
   count: number
 }>()
 </script>
 
 <template>
   <RouterLink
-    to=""
+    :to="{ name: 'home', query: { tag: slug } }"
     class="bg-button-tag border border-default shadow-soft group inline-flex cursor-pointer items-center gap-3 rounded-2xl px-4 py-3 text-left transition hover:-translate-y-0.5 hover:bg-accent-soft"
   >
     <span class="text-foreground text-sm font-semibold">{{ label }}</span>

@@ -1,16 +1,65 @@
 <script setup lang="ts">
-import PostSearch from '@/components/post/PostSearch.vue'
 import CategoryTabs from '@/components/category/CategoryTabs.vue'
 import FeaturedPostCard from '@/components/featured-post/FeaturedPostCard.vue'
-import PostList from '@/components/post/PostList.vue'
 import HomeSidebar from '@/components/home/HomeSidebar.vue'
+import HomeViewSkeleton from '@/components/home/HomeViewSkeleton.vue'
+import PostList from '@/components/post/PostList.vue'
+import PostSearch from '@/components/post/PostSearch.vue'
 import UiPagination from '@/components/ui/paginator/UiPagination.vue'
 import UiCard from '@/components/ui/UiCard.vue'
+import { useCallOnce } from '@/composables/useCallOnce'
+import { usePostStore } from '@/stores/usePostStore'
+import { useTagStore } from '@/stores/useTagStore'
+import { useHead } from '@unhead/vue'
+import { storeToRefs } from 'pinia'
+import { computed } from 'vue'
+
+useHead({
+  title: 'Brief Journal',
+  meta: [
+    {
+      name: 'description',
+      content:
+        'A server-rendered Vue journal with articles on frontend development, design systems, and product engineering.',
+    },
+    {
+      property: 'og:title',
+      content: 'Brief Journal',
+    },
+    {
+      property: 'og:description',
+      content:
+        'A server-rendered Vue journal with articles on frontend development, design systems, and product engineering.',
+    },
+    {
+      property: 'og:type',
+      content: 'website',
+    },
+  ],
+})
+
+const postStore = usePostStore()
+const tagStore = useTagStore()
+const callOnce = useCallOnce()
+
+const { list: posts, meta } = storeToRefs(postStore)
+const isHomeReady = computed(() => meta.value !== null)
+
+const loadData = async () => {
+  await Promise.all([
+    postStore.fetchPosts(),
+    postStore.fetchPopulars(),
+    tagStore.fetchTrendingTags(),
+  ])
+}
+
+callOnce('home', loadData)
 </script>
 
 <template>
   <div class="pt-5 pb-8">
     <div
+      v-if="isHomeReady"
       class="grid grid-cols-1 gap-4 xl:gap-8 md:grid-cols-[minmax(0,1fr)_300px] lg:grid-cols-[minmax(0,1fr)_400px]"
     >
       <div class="flex flex-col items-center">
@@ -23,12 +72,14 @@ import UiCard from '@/components/ui/UiCard.vue'
           <CategoryTabs class="max-w-xl" />
         </UiCard>
 
-        <PostList class="w-full mb-4 xl:mb-8" />
+        <PostList class="w-full mb-4 xl:mb-8" :posts="posts ?? []" />
 
-        <UiPagination :page="10" :totalPages="51" />
+        <UiPagination :page="meta?.current_page ?? 1" :totalPages="meta?.last_page ?? 1" />
       </div>
 
       <HomeSidebar />
     </div>
+
+    <HomeViewSkeleton v-else />
   </div>
 </template>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import UiCard from '@/components/ui/UiCard.vue'
-import PostAuthor from '@/components/post/PostAuthor.vue'
+
 </script>
 
 <template>
@@ -28,7 +28,7 @@ import PostAuthor from '@/components/post/PostAuthor.vue'
           </p>
         </div>
 
-        <PostAuthor />
+<!--        <PostAuthor />-->
       </div>
     </div>
   </UiCard>

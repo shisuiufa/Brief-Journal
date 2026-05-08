@@ -3,6 +3,12 @@ import UiCard from '@/components/ui/UiCard.vue'
 import { TagIcon } from '@heroicons/vue/24/outline'
 import TrendingTagsList from '@/components/trending-tags/TrendingTagsList.vue'
 import UiBadge from '@/components/ui/UiBadge.vue'
+import { useTagStore } from '@/stores/useTagStore'
+import { storeToRefs } from 'pinia'
+
+const tagStore = useTagStore()
+
+const { trendingTags } = storeToRefs(tagStore)
 </script>
 
 <template>
@@ -21,6 +27,6 @@ import UiBadge from '@/components/ui/UiBadge.vue'
       <UiBadge>Hot</UiBadge>
     </div>
 
-    <TrendingTagsList />
+    <TrendingTagsList :tags="trendingTags" />
   </UiCard>
 </template>

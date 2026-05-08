@@ -1,6 +1,11 @@
 import { z } from "zod";
 import { resourceSchema } from "~/resources/resource";
 
+export interface SelectTaxonomy {
+  id: number;
+  name: string;
+}
+
 export const taxonomyType = {
   Category: "category",
   Tag: "tag",

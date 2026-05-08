@@ -12,6 +12,7 @@ import {
 import type { FormSubmitEvent } from "#ui/types";
 import ImageUploadField from "~/components/ImageUploadField.vue";
 import type { FetchError } from "ofetch";
+import type { SelectTaxonomy } from "~/resources/taxonomy";
 
 type PostFormMode = "create" | "edit";
 type PostFormState = CreatePostCredentials | UpdatePostCredentials;
@@ -52,7 +53,8 @@ const state = reactive<PostFormState>({
   excerpt: props.post?.excerpt ?? "",
   content: props.post?.content ?? "",
   status: props.post?.status ?? PostStatus.Draft,
-  category_ids: props.post?.categories.map((category) => category.id) ?? [],
+  category_ids:
+    props.post?.categories.map((category) => Number(category.id)) ?? [],
   tag_ids: props.post?.tags.map((tag) => tag.id) ?? [],
   image: null,
 });
@@ -70,18 +72,28 @@ const statusItems = [
   },
 ];
 
+const buildTaxonomyItems = (
+  items: SelectTaxonomy[] = [],
+  selectedItems: SelectTaxonomy[] = [],
+) => {
+  const mergedItems = new Map<number, { label: string; value: number }>();
+
+  [...selectedItems, ...items].forEach((item) => {
+    mergedItems.set(Number(item.id), {
+      label: item.name,
+      value: Number(item.id),
+    });
+  });
+
+  return Array.from(mergedItems.values());
+};
+
 const categoryItems = computed(() =>
-  (categories.value ?? []).map((category) => ({
-    label: category.name,
-    value: category.id,
-  })),
+  buildTaxonomyItems(categories.value, props.post?.categories),
 );
 
 const tagItems = computed(() =>
-  (tags.value ?? []).map((tag) => ({
-    label: tag.name,
-    value: tag.id,
-  })),
+  buildTaxonomyItems(tags.value, props.post?.tags),
 );
 
 const submitLabel = computed(() => {
