@@ -1,6 +1,7 @@
 import type { App, InjectionKey } from 'vue'
 import { useApiPath } from '@/config/entrypoint'
 import type { ApiRequestBody, ApiRequestOptions, ApiQuery } from '@/types/api'
+import { ApiHttpError } from '@/errors/ApiHttpError.ts'
 
 export type ApiClient = <TResponse>(url: string, options?: ApiRequestOptions) => Promise<TResponse>
 
@@ -74,7 +75,15 @@ export const createApiClient = (baseUrl = useApiPath()): ApiClient => {
     })
 
     if (!response.ok) {
-      throw response
+      let data: unknown = null
+
+      try {
+        data = await response.clone().json()
+      } catch {
+        // body is empty or not JSON
+      }
+
+      throw new ApiHttpError(response, data)
     }
 
     if (response.status === 204) {

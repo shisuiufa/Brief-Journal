@@ -11,9 +11,18 @@ export async function render(url: string) {
 
   await router.push(url)
   await router.isReady()
+  const route = router.currentRoute.value
 
   const html = await renderToString(app)
-  const status = router.currentRoute.value.name === 'not-found' ? 404 : 200
+  const postState = pinia.state.value.post as
+    | { currentPostNotFoundSlug?: string | null }
+    | undefined
+
+  const routeSlug = Array.isArray(route.params.slug) ? route.params.slug[0] : route.params.slug
+
+  const isPostNotFound = route.name === 'post' && postState?.currentPostNotFoundSlug === routeSlug
+
+  const status = route.name === 'not-found' || isPostNotFound ? 404 : 200
 
   return {
     html,
