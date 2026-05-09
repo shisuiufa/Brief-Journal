@@ -23,7 +23,9 @@ defineProps<{
           :alt="post.title"
           class="h-full w-full object-cover"
         />
-        <div class="absolute inset-0 bg-linear-to-t from-black/75 via-black/20 to-transparent"></div>
+        <div
+          class="absolute inset-0 bg-linear-to-t from-black/75 via-black/20 to-transparent"
+        ></div>
         <div class="absolute bottom-0 left-0 right-0 p-5 xl:p-8">
           <div v-if="post.categories.length" class="mb-4 flex flex-wrap gap-2">
             <UiBadge v-for="category in post.categories" :key="category.id">

@@ -12,9 +12,7 @@ defineProps<{
 
 <template>
   <UiCard class="p-5">
-    <p class="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-muted">
-      Article details
-    </p>
+    <p class="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-muted">Article details</p>
 
     <div class="space-y-4">
       <div>

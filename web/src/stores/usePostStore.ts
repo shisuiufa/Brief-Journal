@@ -1,13 +1,15 @@
 import { useApi } from '@/composables/useApi'
 import type { PostResource } from '@/resources/post'
-import type {
-  ResourceCollection,
-  ResourceItem,
-  ResourceCollectionMeta,
-  ResourcePagination,
+import {
+  type ResourceCollection,
+  type ResourceItem,
+  type ResourceCollectionMeta,
+  type ResourcePagination,
+  ApiError,
 } from '@/types/api'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
+import { ApiHttpError } from '@/errors/ApiHttpError.ts'
 
 export const usePostStore = defineStore('post', () => {
   const api = useApi()
@@ -18,6 +20,8 @@ export const usePostStore = defineStore('post', () => {
   const meta = ref<ResourceCollectionMeta | null>(null)
   const links = ref<ResourcePagination | null>(null)
 
+  const currentPostNotFoundSlug = ref<string | null>(null)
+
   const fetchPosts = async () => {
     const res = await api<ResourceCollection<PostResource>>('/api/posts')
 
@@ -27,11 +31,22 @@ export const usePostStore = defineStore('post', () => {
   }
 
   const fetchPost = async (slug: string) => {
-    const res = await api<ResourceItem<PostResource>>(`/api/posts/${slug}`)
+    try {
+      const res = await api<ResourceItem<PostResource>>(`/api/posts/${slug}`)
 
-    currentPost.value = res.data
+      currentPost.value = res.data
+      currentPostNotFoundSlug.value = null
 
-    return res.data
+      return res.data
+    } catch (error: unknown) {
+      if (error instanceof ApiHttpError && error.status === ApiError.NotFound) {
+        currentPost.value = null
+        currentPostNotFoundSlug.value = slug
+
+        return null
+      }
+      throw error
+    }
   }
 
   const fetchPopulars = async () => {
@@ -45,9 +60,10 @@ export const usePostStore = defineStore('post', () => {
     fetchPosts,
     fetchPopulars,
     list,
-    currentPost,
     meta,
     links,
     populars,
+    currentPost,
+    currentPostNotFoundSlug,
   }
 })
