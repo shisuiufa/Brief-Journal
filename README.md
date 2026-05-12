@@ -44,10 +44,12 @@ Password: admin
 docker compose exec api composer install
 docker compose exec api cp .env.example .env
 docker compose exec api php artisan key:generate
+docker compose exec api sh -lc "chown -R www-data:www-data storage bootstrap/cache && chmod -R ug+rwX storage bootstrap/cache"
 docker compose exec api php artisan migrate --seed
 docker compose exec api php artisan storage:link
 docker compose exec api php artisan passport:keys
 docker compose exec api php artisan passport:client --password
+docker compose exec api sh -lc "chown -R www-data:www-data /tmp/passport-keys && chmod 600 /tmp/passport-keys/oauth-private.key /tmp/passport-keys/oauth-public.key"
 ```
 
 Если запускаете API через Docker, проверьте настройки базы данных в `api/.env`:
@@ -66,6 +68,12 @@ DB_PASSWORD=postgres
 ```env
 PASSPORT_PASSWORD_CLIENT_ID=...
 PASSPORT_PASSWORD_SECRET=...
+```
+После добавления Passport client в .env
+
+```bash
+docker compose exec api php artisan optimize:clear
+docker compose restart api
 ```
 
 ## Ручной запуск без Docker
