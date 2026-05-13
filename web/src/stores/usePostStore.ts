@@ -6,11 +6,11 @@ import {
   type ResourceCollectionMeta,
   type ResourcePagination,
   ApiError,
+  type ApiQuery,
 } from '@/types/api'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { ApiHttpError } from '@/errors/ApiHttpError.ts'
-
 export const usePostStore = defineStore('post', () => {
   const api = useApi()
 
@@ -21,9 +21,10 @@ export const usePostStore = defineStore('post', () => {
   const links = ref<ResourcePagination | null>(null)
 
   const currentPostNotFoundSlug = ref<string | null>(null)
-
-  const fetchPosts = async () => {
-    const res = await api<ResourceCollection<PostResource>>('/api/posts')
+  const fetchPosts = async (query: ApiQuery = {}) => {
+    const res = await api<ResourceCollection<PostResource>>('/api/posts', {
+      query,
+    })
 
     list.value = res.data
     meta.value = res.meta

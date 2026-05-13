@@ -12,7 +12,10 @@ import { usePostStore } from '@/stores/usePostStore'
 import { useTagStore } from '@/stores/useTagStore'
 import { useHead } from '@unhead/vue'
 import { storeToRefs } from 'pinia'
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
+import { useCategoryStore } from '@/stores/useCategoryStore.ts'
+import { useRoute, useRouter } from 'vue-router'
+import { getNumberQuery, getStringQuery } from '@/utils/query.ts'
 
 useHead({
   title: 'Brief Journal',
@@ -40,20 +43,46 @@ useHead({
 
 const postStore = usePostStore()
 const tagStore = useTagStore()
+const categoryStore = useCategoryStore()
 const callOnce = useCallOnce()
+const route = useRoute()
+const router = useRouter()
 
 const { list: posts, meta } = storeToRefs(postStore)
 const isHomeReady = computed(() => meta.value !== null)
 
+const postsQuery = computed(() => ({
+  search: getStringQuery(route.query.search),
+  category: getStringQuery(route.query.category),
+  tag: getStringQuery(route.query.tag),
+  page: getNumberQuery(route.query.page),
+  per_page: getNumberQuery(route.query.per_page),
+}))
+
 const loadData = async () => {
   await Promise.all([
-    postStore.fetchPosts(),
+    postStore.fetchPosts(postsQuery.value),
     postStore.fetchPopulars(),
     tagStore.fetchTrendingTags(),
+    categoryStore.fetchCategories(),
   ])
 }
 
-callOnce('home', loadData)
+callOnce(`home:${route.fullPath}`, loadData)
+
+watch(postsQuery, () => {
+  void postStore.fetchPosts(postsQuery.value)
+})
+
+const handlePageUpdate = (page: number) => {
+  void router.push({
+    name: 'home',
+    query: {
+      ...route.query,
+      page: page === 1 ? undefined : page,
+    },
+  })
+}
 </script>
 
 <template>
@@ -74,7 +103,11 @@ callOnce('home', loadData)
 
         <PostList class="w-full mb-4 xl:mb-8" :posts="posts ?? []" />
 
-        <UiPagination :page="meta?.current_page ?? 1" :totalPages="meta?.last_page ?? 1" />
+        <UiPagination
+          :page="meta?.current_page ?? 1"
+          :totalPages="meta?.last_page ?? 1"
+          @update:page="handlePageUpdate"
+        />
       </div>
 
       <HomeSidebar />
