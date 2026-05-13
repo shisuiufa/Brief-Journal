@@ -13,6 +13,9 @@ class PostController extends Controller
 {
     public function index(Request $request): ResourceCollection
     {
+        $perPage = $request->integer('per_page', 15);
+        $perPage = min(max($perPage, 1), 100);
+
         $posts = Post::query()
             ->published()
             ->search($request->string('search')->toString())
@@ -20,7 +23,7 @@ class PostController extends Controller
             ->tag($request->string('tag')->toString())
             ->with(['author', 'categories', 'tags'])
             ->latest('published_at')
-            ->paginate(15);
+            ->paginate($perPage);
 
         return PostResource::collection($posts);
     }
