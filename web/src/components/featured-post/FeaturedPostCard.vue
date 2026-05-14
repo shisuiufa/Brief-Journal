@@ -13,13 +13,18 @@ const hiddenCategoriesCount = computed(() => Math.max(props.post.categories.leng
 </script>
 
 <template>
-  <UiCard class="p-5 xl:p-8 cursor-pointer">
+  <UiCard
+    as="RouterLink"
+    :to="{ name: 'post', params: { slug: post.slug } }"
+    class="p-5 xl:p-8 cursor-pointer"
+  >
     <div class="xl:flex gap-4 md:gap-8">
       <div class="w-full xl:w-2xs mb-3 xl:mt-0 h-auto rounded-2xl overflow-hidden">
         <img
-          src="https://i.pinimg.com/originals/4c/0b/e5/4c0be594d9e76702f5a61c08176bb600.jpg"
-          alt="post"
-          class="w-full h-full object-cover object-center"
+          v-if="post.image_url"
+          :src="post.image_url"
+          :alt="post.title"
+          class="w-full h-full object-contain object-center"
         />
       </div>
 
