@@ -11,4 +11,8 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
 
-CMD ["sh", "-lc", "mkdir -p /tmp/passport-keys && if [ -f /var/www/storage/oauth-private.key ] && [ -f /var/www/storage/oauth-public.key ]; then cp /var/www/storage/oauth-private.key /tmp/passport-keys/oauth-private.key && cp /var/www/storage/oauth-public.key /tmp/passport-keys/oauth-public.key && chown www-data:www-data /tmp/passport-keys/oauth-private.key /tmp/passport-keys/oauth-public.key && chmod 600 /tmp/passport-keys/oauth-private.key /tmp/passport-keys/oauth-public.key; fi; php-fpm -F"]
+COPY docker-entrypoint.sh /usr/local/bin/api-entrypoint
+
+RUN chmod +x /usr/local/bin/api-entrypoint
+
+CMD ["api-entrypoint"]

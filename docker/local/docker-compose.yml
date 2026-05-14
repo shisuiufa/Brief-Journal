@@ -39,6 +39,7 @@ services:
     working_dir: /var/www
     environment:
       PASSPORT_KEY_PATH: /tmp/passport-keys
+      PASSPORT_SOURCE_PATH: /var/www/storage
     volumes:
       - ../../api:/var/www
     depends_on:
