@@ -24,6 +24,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
     'content',
     'status',
     'published_at',
+    'featured_at',
 ])]
 class Post extends Model
 {
@@ -35,6 +36,7 @@ class Post extends Model
         return [
             'status' => PostStatusEnum::class,
             'published_at' => 'datetime',
+            'featured_at' => 'datetime',
         ];
     }
 
@@ -51,6 +53,12 @@ class Post extends Model
     public function tags(): BelongsToMany
     {
         return $this->belongsToMany(Tag::class)->withTimestamps();
+    }
+
+    #[Scope]
+    protected function featured(Builder $query): void
+    {
+        $query->whereNotNull('featured_at');
     }
 
     #[Scope]

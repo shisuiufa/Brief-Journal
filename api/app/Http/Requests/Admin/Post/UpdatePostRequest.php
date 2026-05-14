@@ -65,6 +65,8 @@ class UpdatePostRequest extends FormRequest
                 new Enum(PostStatusEnum::class),
             ],
 
+            'is_featured' => ['boolean'],
+
             'category_ids' => ['array'],
             'category_ids.*' => ['integer', 'exists:categories,id'],
 

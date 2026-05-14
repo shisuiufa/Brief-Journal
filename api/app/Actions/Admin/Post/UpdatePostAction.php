@@ -59,6 +59,7 @@ final readonly class UpdatePostAction implements UpdatePostActionInterface
             'content' => $data->content,
             'status' => $data->status,
             'published_at' => $this->determinePublishedAtForUpdate($post, $data),
+            'featured_at' => $data->isFeatured ? ($post->featured_at ?? now()) : null,
         ];
 
         if ($newImage !== null) {

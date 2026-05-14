@@ -28,6 +28,18 @@ class PostController extends Controller
         return PostResource::collection($posts);
     }
 
+    public function featured(): PostResource
+    {
+        $post = Post::query()
+            ->published()
+            ->featured()
+            ->with(['author', 'categories', 'tags'])
+            ->latest('featured_at')
+            ->firstOrFail();
+
+        return new PostResource($post);
+    }
+
     public function show(string $slug, IncrementPostViewsActionInterface $incrementViews): PostResource
     {
         $post = Post::query()

@@ -34,6 +34,8 @@ export const postSchema = resourceSchema.extend({
   categories: z.array(taxonomySchema).default([]),
   tags: z.array(taxonomySchema).default([]),
   views_count: z.number().default(0),
+  featured_at: z.string().nullable(),
+  is_featured: z.boolean().default(false),
 });
 
 const stripHtml = (value: string) => {
@@ -53,6 +55,7 @@ const postFormSchema = z.object({
   status: postStatusSchema,
   category_ids: z.array(z.number()),
   tag_ids: z.array(z.number()),
+  is_featured: z.boolean().default(false),
 });
 
 export const createPostSchema = postFormSchema

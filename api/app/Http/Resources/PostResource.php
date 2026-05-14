@@ -33,6 +33,8 @@ class PostResource extends JsonResource
             'views_count' => $this->views_count,
             'created_at' => $this->created_at?->toISOString(),
             'updated_at' => $this->updated_at?->toISOString(),
+            'featured_at' => $this->featured_at,
+            'is_featured' => $this->featured_at !== null,
         ];
     }
 }

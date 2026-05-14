@@ -36,6 +36,7 @@ final readonly class CreatePostAction implements CreatePostActionInterface
                     'content' => $data->content,
                     'status' => $data->status,
                     'published_at' => $data->status === PostStatusEnum::Draft ? null : now(),
+                    'featured_at' => $data->isFeatured ? now() : null,
                 ]);
 
                 $post->saveOrFail();

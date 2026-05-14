@@ -19,6 +19,7 @@ export const usePostStore = defineStore('post', () => {
   const populars = ref<PostResource[]>([])
   const meta = ref<ResourceCollectionMeta | null>(null)
   const links = ref<ResourcePagination | null>(null)
+  const featured = ref<PostResource | null>(null)
 
   const currentPostNotFoundSlug = ref<string | null>(null)
   const fetchPosts = async (query: ApiQuery = {}) => {
@@ -56,15 +57,23 @@ export const usePostStore = defineStore('post', () => {
     populars.value = res.data
   }
 
+  const fetchFeatured = async () => {
+    const res = await api<ResourceItem<PostResource>>('/api/posts/featured')
+
+    featured.value = res.data
+  }
+
   return {
     fetchPost,
     fetchPosts,
     fetchPopulars,
+    fetchFeatured,
     list,
     meta,
     links,
     populars,
     currentPost,
     currentPostNotFoundSlug,
+    featured,
   }
 })

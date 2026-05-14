@@ -1,6 +1,15 @@
 <script setup lang="ts">
 import UiCard from '@/components/ui/UiCard.vue'
+import type { PostResource } from '@/resources/post.ts'
+import PostAuthor from '@/components/post/PostAuthor.vue'
+import { computed } from 'vue'
 
+const props = defineProps<{
+  post: PostResource
+}>()
+
+const visibleCategories = computed(() => props.post.categories.slice(0, 2))
+const hiddenCategoriesCount = computed(() => Math.max(props.post.categories.length - 2, 0))
 </script>
 
 <template>
@@ -16,19 +25,33 @@ import UiCard from '@/components/ui/UiCard.vue'
 
       <div class="h-auto flex flex-col justify-between">
         <div>
-          <p class="font-semibold text-sm mb-2 text-muted uppercase tracking-[0.12em]">category</p>
+          <div v-if="post.categories.length" class="mb-2 flex min-h-7 flex-wrap items-center gap-2">
+            <span
+              v-for="category in visibleCategories"
+              :key="category.id"
+              class="bg-button-tag border-default text-muted inline-flex h-7 max-w-full items-center rounded-full border px-3 text-xs font-semibold"
+            >
+              {{ category.name }}
+            </span>
+
+            <span
+              v-if="hiddenCategoriesCount"
+              class="border-default text-muted inline-flex h-7 items-center rounded-full border bg-transparent px-2.5 text-xs font-semibold"
+            >
+              +{{ hiddenCategoriesCount }}
+            </span>
+          </div>
 
           <h1 class="font-bold text-3xl mb-3 text-foreground">
-            The Future of Generative UI: Beyond Component Libraries
+            {{ post.title }}
           </h1>
 
           <p class="text-base mb-3 text-muted">
-            Exploring how algorithmic design systems are shifting from static assets to dynamic,
-            context-aware interfaces…
+            {{ post.excerpt }}
           </p>
         </div>
 
-<!--        <PostAuthor />-->
+        <PostAuthor :post="post" />
       </div>
     </div>
   </UiCard>

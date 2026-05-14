@@ -16,6 +16,7 @@ final readonly class UpdatePostData
         public PostStatusEnum $status,
         public array $categoryIds,
         public array $tagIds,
+        public bool $isFeatured,
     ) {}
 
     public static function fromArray(array $data): self
@@ -31,6 +32,7 @@ final readonly class UpdatePostData
                 : PostStatusEnum::from($data['status']),
             categoryIds: $data['category_ids'] ?? [],
             tagIds: $data['tag_ids'] ?? [],
+            isFeatured: (bool) ($data['is_featured'] ?? false),
         );
     }
 }

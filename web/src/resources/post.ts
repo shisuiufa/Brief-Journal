@@ -22,6 +22,8 @@ export const postSchema = resourceSchema.extend({
   categories: z.array(taxonomySchema).default([]),
   tags: z.array(taxonomySchema).default([]),
   views_count: z.number().default(0),
+  featured_at: z.string().nullable(),
+  is_featured: z.boolean().default(false),
 })
 
 export type PostResource = z.infer<typeof postSchema>

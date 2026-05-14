@@ -48,7 +48,7 @@ const callOnce = useCallOnce()
 const route = useRoute()
 const router = useRouter()
 
-const { list: posts, meta } = storeToRefs(postStore)
+const { list: posts, meta, featured } = storeToRefs(postStore)
 const isHomeReady = computed(() => meta.value !== null)
 
 const postsQuery = computed(() => ({
@@ -65,6 +65,7 @@ const loadData = async () => {
     postStore.fetchPopulars(),
     tagStore.fetchTrendingTags(),
     categoryStore.fetchCategories(),
+    postStore.fetchFeatured(),
   ])
 }
 
@@ -92,7 +93,7 @@ const handlePageUpdate = (page: number) => {
       class="grid grid-cols-1 gap-4 xl:gap-8 md:grid-cols-[minmax(0,1fr)_300px] lg:grid-cols-[minmax(0,1fr)_400px]"
     >
       <div class="flex flex-col items-center">
-        <FeaturedPostCard class="w-full mb-4 xl:mb-8" />
+        <FeaturedPostCard v-if="featured" :post="featured" class="w-full mb-4 xl:mb-8" />
 
         <UiCard
           class="w-full p-5 mb-4 xl:mb-8 grid grid-cols-1 xl:grid-cols-2 items-start justify-between gap-4 xl:gap-8"

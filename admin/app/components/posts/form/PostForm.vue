@@ -57,6 +57,7 @@ const state = reactive<PostFormState>({
     props.post?.categories.map((category) => Number(category.id)) ?? [],
   tag_ids: props.post?.tags.map((tag) => tag.id) ?? [],
   image: null,
+  is_featured: props.post?.is_featured ?? false,
 });
 
 const statusItems = [
@@ -249,6 +250,10 @@ const handleSubmit = async (event: FormSubmitEvent<PostFormState>) => {
         </template>
 
         <div class="space-y-5">
+          <UFormField label="Featured post" name="is_featured">
+            <USwitch v-model="state.is_featured" />
+          </UFormField>
+
           <UFormField label="Status" name="status" required>
             <USelect
               v-model="state.status"
