@@ -18,6 +18,11 @@ export const objectToFormData = (payload: Record<string, unknown>) => {
       return;
     }
 
+    if (typeof value === "boolean") {
+      formData.append(key, value ? "1" : "0");
+      return;
+    }
+
     formData.append(key, String(value));
   });
 
