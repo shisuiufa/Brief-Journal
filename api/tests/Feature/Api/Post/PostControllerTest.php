@@ -148,4 +148,3 @@ it('increments views count when showing published post', function () {
 
     expect($post->refresh()->views_count)->toBe(6);
 });
-

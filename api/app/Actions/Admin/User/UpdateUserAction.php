@@ -13,11 +13,11 @@ final readonly class UpdateUserAction implements UpdateUserActionInterface
 {
     public function __construct(
         private RealtimePublisherInterface $realtimePublisher,
-    ){}
+    ) {}
 
     public function execute(User $user, UpdateUserData $data): User
     {
-        $user =  DB::transaction(function () use ($user, $data): User {
+        $user = DB::transaction(function () use ($user, $data): User {
             $attributes = [
                 'name' => $data->name,
                 'email' => $data->email,

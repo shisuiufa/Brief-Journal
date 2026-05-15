@@ -12,7 +12,8 @@ final readonly class DestroyCategoryAction implements DestroyCategoryActionInter
 {
     public function __construct(
         private RealtimePublisherInterface $realtimePublisher,
-    ){}
+    ) {}
+
     /**
      * @throws Throwable
      */

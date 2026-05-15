@@ -13,7 +13,8 @@ final readonly class UpdateCategoryAction implements UpdateCategoryActionInterfa
 {
     public function __construct(
         private RealtimePublisherInterface $realtimePublisher,
-    ){}
+    ) {}
+
     /**
      * @throws Throwable
      */

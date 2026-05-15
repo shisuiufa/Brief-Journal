@@ -12,7 +12,8 @@ final readonly class DestroyTagAction implements DestroyTagActionInterface
 {
     public function __construct(
         private RealtimePublisherInterface $realtimePublisher,
-    ){}
+    ) {}
+
     /**
      * @throws Throwable
      */

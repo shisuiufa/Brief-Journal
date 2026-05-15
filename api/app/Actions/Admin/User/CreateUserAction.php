@@ -13,7 +13,7 @@ final readonly class CreateUserAction implements CreateUserActionInterface
 {
     public function __construct(
         private RealtimePublisherInterface $realtimePublisher,
-    ){}
+    ) {}
 
     public function execute(CreateUserData $data): User
     {

@@ -13,7 +13,7 @@ final readonly class CreateTagAction implements CreateTagActionInterface
 {
     public function __construct(
         private RealtimePublisherInterface $realtimePublisher,
-    ){}
+    ) {}
 
     /**
      * @throws Throwable

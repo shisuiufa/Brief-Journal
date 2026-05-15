@@ -13,7 +13,7 @@ final readonly class DeleteUserAction implements DeleteUserActionInterface
 {
     public function __construct(
         private RealtimePublisherInterface $realtimePublisher,
-    ){}
+    ) {}
 
     public function execute(User $user): void
     {
