@@ -14,7 +14,7 @@ final readonly class RealtimePublisher implements RealtimePublisherInterface
     /**
      * @throws Throwable
      */
-    public function publish(RealtimeEventEnum $event, array $payload): void
+    public function publish(RealtimeEventEnum $event, array $payload = []): void
     {
         Redis::connection('realtime')->command('publish', [
             self::CHANNEL,

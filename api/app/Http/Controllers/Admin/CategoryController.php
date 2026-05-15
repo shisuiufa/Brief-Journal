@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Contracts\Admin\Category\CreateCategoryActionInterface;
+use App\Contracts\Admin\Category\DestroyCategoryActionInterface;
 use App\Contracts\Admin\Category\UpdateCategoryActionInterface;
 use App\Data\Admin\Category\CategoryData;
 use App\Http\Controllers\Controller;
@@ -70,9 +71,9 @@ class CategoryController extends Controller
     }
 
     #[Authorize('delete', 'category')]
-    public function destroy(Category $category): JsonResponse
+    public function destroy(Category $category, DestroyCategoryActionInterface $action): JsonResponse
     {
-        $category->delete();
+        $action->execute($category);
 
         return response()->json([
             'message' => 'Category deleted successfully.',

@@ -57,14 +57,12 @@ final readonly class UpdatePostAction implements UpdatePostActionInterface
         if (! $wasPublished && $post->status === PostStatusEnum::Published) {
             $this->realtimePublisher->publish(RealtimeEventEnum::PostPublished, [
                 'id' => $post->id,
-                'slug' => $post->slug,
             ]);
         }
 
         if ($wasPublished && $post->status === PostStatusEnum::Published) {
             $this->realtimePublisher->publish(RealtimeEventEnum::PostUpdated, [
                 'id' => $post->id,
-                'slug' => $post->slug,
             ]);
         }
 

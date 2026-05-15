@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Contracts\Admin\Tag\CreateTagActionInterface;
+use App\Contracts\Admin\Tag\DestroyTagActionInterface;
 use App\Contracts\Admin\Tag\UpdateTagActionInterface;
 use App\Data\Admin\Tag\TagData;
 use App\Http\Controllers\Controller;
@@ -70,9 +71,9 @@ class TagController extends Controller
     }
 
     #[Authorize('delete', 'tag')]
-    public function destroy(Tag $tag): JsonResponse
+    public function destroy(Tag $tag, DestroyTagActionInterface $action): JsonResponse
     {
-        $tag->delete();
+        $action->execute($tag);
 
         return response()->json([
             'message' => 'Tag deleted successfully.',
