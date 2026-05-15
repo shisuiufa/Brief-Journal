@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import PostDetailsCard from '@/components/post/PostDetailsCard.vue'
-import PostTopicsCard from '@/components/post/PostTopicsCard.vue'
-import type { PostResource } from '@/resources/post'
+import PostDetailsCard from '@/components/post/PostDetailsCard.vue';
+import PostTopicsCard from '@/components/post/PostTopicsCard.vue';
+import type { PostResource } from '@/resources/post';
 
 defineProps<{
-  post: PostResource
-  readTime: string
-}>()
+  post: PostResource;
+  readTime: string;
+}>();
 </script>
 
 <template>

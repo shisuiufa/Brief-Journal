@@ -1,4 +1,4 @@
 export type PostRealtimePayload = {
-  id: number
-  slug: string
-}
+  id: number;
+  slug: string;
+};

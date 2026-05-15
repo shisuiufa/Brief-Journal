@@ -1,17 +1,17 @@
-import type { LocationQueryValue } from 'vue-router'
+import type { LocationQueryValue } from 'vue-router';
 
-type QueryValue = LocationQueryValue | LocationQueryValue[] | undefined
+type QueryValue = LocationQueryValue | LocationQueryValue[] | undefined;
 
 export const getStringQuery = (value: QueryValue) => {
-  return typeof value === 'string' ? value : undefined
-}
+  return typeof value === 'string' ? value : undefined;
+};
 
 export const getNumberQuery = (value: QueryValue) => {
   if (typeof value !== 'string') {
-    return undefined
+    return undefined;
   }
 
-  const number = Number(value)
+  const number = Number(value);
 
-  return Number.isFinite(number) ? number : undefined
-}
+  return Number.isFinite(number) ? number : undefined;
+};

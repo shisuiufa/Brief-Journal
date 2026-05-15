@@ -1,22 +1,22 @@
 <script setup lang="ts">
-import CategoryTabs from '@/components/category/CategoryTabs.vue'
-import FeaturedPostCard from '@/components/featured-post/FeaturedPostCard.vue'
-import HomeSidebar from '@/components/home/HomeSidebar.vue'
-import HomeViewSkeleton from '@/components/home/HomeViewSkeleton.vue'
-import PostList from '@/components/post/PostList.vue'
-import PostSearch from '@/components/post/PostSearch.vue'
-import UiPagination from '@/components/ui/paginator/UiPagination.vue'
-import UiCard from '@/components/ui/UiCard.vue'
-import { useCallOnce } from '@/composables/useCallOnce'
-import { usePostStore } from '@/stores/usePostStore'
-import { useTagStore } from '@/stores/useTagStore'
-import { useHead } from '@unhead/vue'
-import { storeToRefs } from 'pinia'
-import { computed, watch } from 'vue'
-import { useCategoryStore } from '@/stores/useCategoryStore.ts'
-import { useRoute, useRouter } from 'vue-router'
-import { getNumberQuery, getStringQuery } from '@/utils/query.ts'
-import { usePostRealtime } from '@/composables/usePostRealtime.ts'
+import CategoryTabs from '@/components/category/CategoryTabs.vue';
+import FeaturedPostCard from '@/components/featured-post/FeaturedPostCard.vue';
+import HomeSidebar from '@/components/home/HomeSidebar.vue';
+import HomeViewSkeleton from '@/components/home/HomeViewSkeleton.vue';
+import PostList from '@/components/post/PostList.vue';
+import PostSearch from '@/components/post/PostSearch.vue';
+import UiPagination from '@/components/ui/paginator/UiPagination.vue';
+import UiCard from '@/components/ui/UiCard.vue';
+import { useCallOnce } from '@/composables/useCallOnce';
+import { usePostStore } from '@/stores/usePostStore';
+import { useTagStore } from '@/stores/useTagStore';
+import { useHead } from '@unhead/vue';
+import { storeToRefs } from 'pinia';
+import { computed, watch } from 'vue';
+import { useCategoryStore } from '@/stores/useCategoryStore.ts';
+import { useRoute, useRouter } from 'vue-router';
+import { getNumberQuery, getStringQuery } from '@/utils/query.ts';
+import { usePostRealtime } from '@/composables/usePostRealtime.ts';
 
 useHead({
   title: 'Brief Journal',
@@ -40,17 +40,17 @@ useHead({
       content: 'website',
     },
   ],
-})
+});
 
-const postStore = usePostStore()
-const tagStore = useTagStore()
-const categoryStore = useCategoryStore()
-const callOnce = useCallOnce()
-const route = useRoute()
-const router = useRouter()
+const postStore = usePostStore();
+const tagStore = useTagStore();
+const categoryStore = useCategoryStore();
+const callOnce = useCallOnce();
+const route = useRoute();
+const router = useRouter();
 
-const { list: posts, meta, featured } = storeToRefs(postStore)
-const isHomeReady = computed(() => meta.value !== null)
+const { list: posts, meta, featured } = storeToRefs(postStore);
+const isHomeReady = computed(() => meta.value !== null);
 
 const postsQuery = computed(() => ({
   search: getStringQuery(route.query.search),
@@ -58,7 +58,7 @@ const postsQuery = computed(() => ({
   tag: getStringQuery(route.query.tag),
   page: getNumberQuery(route.query.page),
   per_page: getNumberQuery(route.query.per_page),
-}))
+}));
 
 const loadData = async () => {
   await Promise.all([
@@ -67,14 +67,14 @@ const loadData = async () => {
     tagStore.fetchTrendingTags(),
     categoryStore.fetchCategories(),
     postStore.fetchFeatured(),
-  ])
-}
+  ]);
+};
 
-callOnce(`home:${route.fullPath}`, loadData)
+callOnce(`home:${route.fullPath}`, loadData);
 
 watch(postsQuery, () => {
-  void postStore.fetchPosts(postsQuery.value)
-})
+  void postStore.fetchPosts(postsQuery.value);
+});
 
 const handlePageUpdate = (page: number) => {
   void router.push({
@@ -83,10 +83,10 @@ const handlePageUpdate = (page: number) => {
       ...route.query,
       page: page === 1 ? undefined : page,
     },
-  })
-}
+  });
+};
 
-usePostRealtime(postsQuery)
+usePostRealtime(postsQuery);
 </script>
 
 <template>

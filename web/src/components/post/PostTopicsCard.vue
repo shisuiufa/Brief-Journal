@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import UiBadge from '@/components/ui/UiBadge.vue'
-import UiCard from '@/components/ui/UiCard.vue'
-import type { PostResource } from '@/resources/post'
-import { RouterLink } from 'vue-router'
+import UiBadge from '@/components/ui/UiBadge.vue';
+import UiCard from '@/components/ui/UiCard.vue';
+import type { PostResource } from '@/resources/post';
+import { RouterLink } from 'vue-router';
 
 defineProps<{
-  post: PostResource
-}>()
+  post: PostResource;
+}>();
 </script>
 
 <template>

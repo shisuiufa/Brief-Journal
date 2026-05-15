@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { computed } from 'vue';
+import { useRoute } from 'vue-router';
 
 const props = defineProps<{
-  label: string
-  slug: string
-  count: number
-}>()
+  label: string;
+  slug: string;
+  count: number;
+}>();
 
-const route = useRoute()
+const route = useRoute();
 
-const isActive = computed(() => route.query.tag === props.slug)
+const isActive = computed(() => route.query.tag === props.slug);
 
 const target = computed(() => ({
   name: 'home',
@@ -19,7 +19,7 @@ const target = computed(() => ({
     tag: isActive.value ? undefined : props.slug,
     page: undefined,
   },
-}))
+}));
 </script>
 
 <template>

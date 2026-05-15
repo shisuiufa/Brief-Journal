@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import FeaturedPostSkeleton from '@/components/featured-post/FeaturedPostSkeleton.vue'
-import HomeFiltersSkeleton from '@/components/home/HomeFiltersSkeleton.vue'
-import HomeSidebarSkeleton from '@/components/home/HomeSidebarSkeleton.vue'
-import PostListSkeleton from '@/components/post/PostListSkeleton.vue'
-import UiSkeleton from '@/components/ui/UiSkeleton.vue'
+import FeaturedPostSkeleton from '@/components/featured-post/FeaturedPostSkeleton.vue';
+import HomeFiltersSkeleton from '@/components/home/HomeFiltersSkeleton.vue';
+import HomeSidebarSkeleton from '@/components/home/HomeSidebarSkeleton.vue';
+import PostListSkeleton from '@/components/post/PostListSkeleton.vue';
+import UiSkeleton from '@/components/ui/UiSkeleton.vue';
 </script>
 
 <template>

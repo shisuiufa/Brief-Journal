@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import TrendingTagsItem from '@/components/trending-tags/TrendingTagsItem.vue'
-import type { TagResource } from '@/resources/taxonomy'
+import TrendingTagsItem from '@/components/trending-tags/TrendingTagsItem.vue';
+import type { TagResource } from '@/resources/taxonomy';
 
 defineProps<{
-  tags: TagResource[]
-}>()
+  tags: TagResource[];
+}>();
 </script>
 
 <template>

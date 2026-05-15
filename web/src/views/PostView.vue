@@ -1,31 +1,31 @@
 <script setup lang="ts">
-import PostArticle from '@/components/post/PostArticle.vue'
-import PostSidebar from '@/components/post/PostSidebar.vue'
-import PostViewSkeleton from '@/components/post/PostViewSkeleton.vue'
-import { usePostStore } from '@/stores/usePostStore'
-import { getReadingTime } from '@/utils/readingTime'
-import { useHead } from '@unhead/vue'
-import { ArrowLeftIcon } from '@heroicons/vue/24/outline'
-import { storeToRefs } from 'pinia'
-import { computed } from 'vue'
-import { RouterLink, useRoute } from 'vue-router'
-import { useCallOnce } from '@/composables/useCallOnce.ts'
-import NotFoundPanel from '@/components/not-found/NotFoundPanel.vue'
-import { useCurrentPostRealtime } from '@/composables/useCurrentPostRealtime.ts'
+import PostArticle from '@/components/post/PostArticle.vue';
+import PostSidebar from '@/components/post/PostSidebar.vue';
+import PostViewSkeleton from '@/components/post/PostViewSkeleton.vue';
+import { usePostStore } from '@/stores/usePostStore';
+import { getReadingTime } from '@/utils/readingTime';
+import { useHead } from '@unhead/vue';
+import { ArrowLeftIcon } from '@heroicons/vue/24/outline';
+import { storeToRefs } from 'pinia';
+import { computed } from 'vue';
+import { RouterLink, useRoute } from 'vue-router';
+import { useCallOnce } from '@/composables/useCallOnce.ts';
+import NotFoundPanel from '@/components/not-found/NotFoundPanel.vue';
+import { useCurrentPostRealtime } from '@/composables/useCurrentPostRealtime.ts';
 
-const route = useRoute()
-const postStore = usePostStore()
-const callOnce = useCallOnce()
+const route = useRoute();
+const postStore = usePostStore();
+const callOnce = useCallOnce();
 
-const { currentPost: post, currentPostNotFoundSlug } = storeToRefs(postStore)
+const { currentPost: post, currentPostNotFoundSlug } = storeToRefs(postStore);
 
-const slug = computed(() => String(route.params.slug || ''))
-const pageTitle = computed(() => post.value?.title ?? '')
-const pageDescription = computed(() => post.value?.excerpt ?? 'Article is unavailable.')
-const readTime = computed(() => (post.value ? getReadingTime(post.value.content) : ''))
-const isPostReady = computed(() => post.value?.slug === slug.value)
+const slug = computed(() => String(route.params.slug || ''));
+const pageTitle = computed(() => post.value?.title ?? '');
+const pageDescription = computed(() => post.value?.excerpt ?? 'Article is unavailable.');
+const readTime = computed(() => (post.value ? getReadingTime(post.value.content) : ''));
+const isPostReady = computed(() => post.value?.slug === slug.value);
 
-const isPostNotFound = computed(() => currentPostNotFoundSlug.value === slug.value)
+const isPostNotFound = computed(() => currentPostNotFoundSlug.value === slug.value);
 
 useHead(
   computed(() => ({
@@ -57,15 +57,15 @@ useHead(
         : []),
     ],
   })),
-)
+);
 
 const loadPost = async () => {
-  await postStore.fetchPost(slug.value)
-}
+  await postStore.fetchPost(slug.value);
+};
 
-callOnce(`post:${slug.value}`, loadPost)
+callOnce(`post:${slug.value}`, loadPost);
 
-useCurrentPostRealtime(slug)
+useCurrentPostRealtime(slug);
 </script>
 
 <template>

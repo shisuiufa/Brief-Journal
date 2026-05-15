@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import type { PostResource } from '@/resources/post'
-import { formatDate } from '@/utils/formatDate'
+import type { PostResource } from '@/resources/post';
+import { formatDate } from '@/utils/formatDate';
 
 defineProps<{
-  post?: PostResource
-}>()
+  post?: PostResource;
+}>();
 </script>
 
 <template>

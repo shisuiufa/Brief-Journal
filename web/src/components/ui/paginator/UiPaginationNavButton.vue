@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/outline'
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/outline';
 
 defineProps<{
-  direction: 'prev' | 'next'
-  disabled?: boolean
-}>()
+  direction: 'prev' | 'next';
+  disabled?: boolean;
+}>();
 </script>
 
 <template>

@@ -1,28 +1,28 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed } from 'vue';
 
-const model = defineModel<string>()
+const model = defineModel<string>();
 
 const props = withDefaults(
   defineProps<{
-    textSize?: string
-    iconSize?: string
-    placeholder?: string
-    type?: string
+    textSize?: string;
+    iconSize?: string;
+    placeholder?: string;
+    type?: string;
   }>(),
   {
     textSize: 'text-sm',
     iconSize: 'size-4',
     type: 'text',
   },
-)
+);
 
 const inputClass = computed(() => [
   'text-foreground placeholder:text-muted w-full bg-transparent outline-none',
   props.textSize,
-])
+]);
 
-const iconClass = computed(() => ['text-muted shrink-0', props.iconSize])
+const iconClass = computed(() => ['text-muted shrink-0', props.iconSize]);
 </script>
 
 <template>

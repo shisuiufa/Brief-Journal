@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import PostArticleSkeleton from '@/components/post/PostArticleSkeleton.vue'
-import PostSidebarSkeleton from '@/components/post/PostSidebarSkeleton.vue'
+import PostArticleSkeleton from '@/components/post/PostArticleSkeleton.vue';
+import PostSidebarSkeleton from '@/components/post/PostSidebarSkeleton.vue';
 </script>
 
 <template>

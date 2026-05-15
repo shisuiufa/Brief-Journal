@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { useTheme } from '@/composables/useTheme'
-import { MoonIcon, SunIcon } from '@heroicons/vue/24/outline'
-import { onMounted, ref } from 'vue'
+import { useTheme } from '@/composables/useTheme';
+import { MoonIcon, SunIcon } from '@heroicons/vue/24/outline';
+import { onMounted, ref } from 'vue';
 
-const { toggleTheme, mode } = useTheme()
+const { toggleTheme, mode } = useTheme();
 
-const mounted = ref(false)
+const mounted = ref(false);
 
 onMounted(() => {
-  mounted.value = true
-})
+  mounted.value = true;
+});
 </script>
 
 <template>

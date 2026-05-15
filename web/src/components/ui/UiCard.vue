@@ -1,14 +1,14 @@
 <script setup lang="ts">
 withDefaults(
   defineProps<{
-    as?: string
-    hover?: string
+    as?: string;
+    hover?: string;
   }>(),
   {
     as: 'div',
     hover: 'hover:-translate-y-1',
   },
-)
+);
 </script>
 
 <template>

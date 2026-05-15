@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import UiCard from '@/components/ui/UiCard.vue'
-import UiSkeleton from '@/components/ui/UiSkeleton.vue'
+import UiCard from '@/components/ui/UiCard.vue';
+import UiSkeleton from '@/components/ui/UiSkeleton.vue';
 </script>
 
 <template>

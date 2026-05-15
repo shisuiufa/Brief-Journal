@@ -1,34 +1,34 @@
-import { onMounted, onUnmounted, type ComputedRef } from 'vue'
-import { useSocket } from '@/composables/useSocket'
-import { RealtimeEventEnum } from '@/resources/realtime'
-import { usePostStore } from '@/stores/usePostStore'
-import type { PostRealtimePayload } from '@/types/realtime.ts'
+import { onMounted, onUnmounted, type ComputedRef } from 'vue';
+import { useSocket } from '@/composables/useSocket';
+import { RealtimeEventEnum } from '@/resources/realtime';
+import { usePostStore } from '@/stores/usePostStore';
+import type { PostRealtimePayload } from '@/types/realtime.ts';
 
 export const useCurrentPostRealtime = (slug: ComputedRef<string>) => {
-  const socket = useSocket()
-  const postStore = usePostStore()
+  const socket = useSocket();
+  const postStore = usePostStore();
 
   const refreshCurrentPost = async (payload: PostRealtimePayload) => {
     if (payload.slug !== slug.value) {
-      return
+      return;
     }
 
-    await postStore.fetchPost(slug.value)
-  }
+    await postStore.fetchPost(slug.value);
+  };
 
   onMounted(() => {
     if (!socket) {
-      return
+      return;
     }
-    socket.on(RealtimeEventEnum.PostUpdated, refreshCurrentPost)
-    socket.on(RealtimeEventEnum.PostDeleted, refreshCurrentPost)
-  })
+    socket.on(RealtimeEventEnum.PostUpdated, refreshCurrentPost);
+    socket.on(RealtimeEventEnum.PostDeleted, refreshCurrentPost);
+  });
 
   onUnmounted(() => {
     if (!socket) {
-      return
+      return;
     }
-    socket.off(RealtimeEventEnum.PostUpdated, refreshCurrentPost)
-    socket.off(RealtimeEventEnum.PostDeleted, refreshCurrentPost)
-  })
-}
+    socket.off(RealtimeEventEnum.PostUpdated, refreshCurrentPost);
+    socket.off(RealtimeEventEnum.PostDeleted, refreshCurrentPost);
+  });
+};

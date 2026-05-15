@@ -1,8 +1,8 @@
 <script setup lang="ts">
 defineProps<{
-  page: number
-  active?: boolean
-}>()
+  page: number;
+  active?: boolean;
+}>();
 </script>
 
 <template>

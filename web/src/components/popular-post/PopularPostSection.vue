@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { ArrowTrendingUpIcon } from '@heroicons/vue/24/outline'
-import PopularPostList from '@/components/popular-post/PopularPostList.vue'
-import UiCard from '@/components/ui/UiCard.vue'
-import UiBadge from '@/components/ui/UiBadge.vue'
-import { usePostStore } from '@/stores/usePostStore.ts'
-import { storeToRefs } from 'pinia'
+import { ArrowTrendingUpIcon } from '@heroicons/vue/24/outline';
+import PopularPostList from '@/components/popular-post/PopularPostList.vue';
+import UiCard from '@/components/ui/UiCard.vue';
+import UiBadge from '@/components/ui/UiBadge.vue';
+import { usePostStore } from '@/stores/usePostStore.ts';
+import { storeToRefs } from 'pinia';
 
-const postStore = usePostStore()
+const postStore = usePostStore();
 
-const { populars } = storeToRefs(postStore)
+const { populars } = storeToRefs(postStore);
 </script>
 
 <template>

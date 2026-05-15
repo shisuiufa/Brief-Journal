@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import PostAuthor from '@/components/post/PostAuthor.vue'
-import UiBadge from '@/components/ui/UiBadge.vue'
-import UiCard from '@/components/ui/UiCard.vue'
-import type { PostResource } from '@/resources/post'
-import { formatDate } from '@/utils/formatDate'
-import { formatViews } from '@/utils/formatNumber'
-import { CalendarDaysIcon, ClockIcon, EyeIcon } from '@heroicons/vue/24/outline'
+import PostAuthor from '@/components/post/PostAuthor.vue';
+import UiBadge from '@/components/ui/UiBadge.vue';
+import UiCard from '@/components/ui/UiCard.vue';
+import type { PostResource } from '@/resources/post';
+import { formatDate } from '@/utils/formatDate';
+import { formatViews } from '@/utils/formatNumber';
+import { CalendarDaysIcon, ClockIcon, EyeIcon } from '@heroicons/vue/24/outline';
 
 defineProps<{
-  post: PostResource
-  readTime: string
-}>()
+  post: PostResource;
+  readTime: string;
+}>();
 </script>
 
 <template>

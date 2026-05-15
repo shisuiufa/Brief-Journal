@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import PostItemSkeleton from '@/components/post/PostItemSkeleton.vue'
+import PostItemSkeleton from '@/components/post/PostItemSkeleton.vue';
 </script>
 
 <template>

@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import UiBadge from '@/components/ui/UiBadge.vue'
-import UiCard from '@/components/ui/UiCard.vue'
-import { ArrowLeftIcon } from '@heroicons/vue/24/outline'
-import { RouterLink } from 'vue-router'
+import UiBadge from '@/components/ui/UiBadge.vue';
+import UiCard from '@/components/ui/UiCard.vue';
+import { ArrowLeftIcon } from '@heroicons/vue/24/outline';
+import { RouterLink } from 'vue-router';
 
 defineProps<{
-  requestedPath: string
-}>()
+  requestedPath: string;
+}>();
 </script>
 
 <template>

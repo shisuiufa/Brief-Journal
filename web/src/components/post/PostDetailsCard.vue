@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import UiCard from '@/components/ui/UiCard.vue'
-import type { PostResource } from '@/resources/post'
-import { formatDate } from '@/utils/formatDate'
-import { formatViews } from '@/utils/formatNumber'
+import UiCard from '@/components/ui/UiCard.vue';
+import type { PostResource } from '@/resources/post';
+import { formatDate } from '@/utils/formatDate';
+import { formatViews } from '@/utils/formatNumber';
 
 defineProps<{
-  post: PostResource
-  readTime: string
-}>()
+  post: PostResource;
+  readTime: string;
+}>();
 </script>
 
 <template>

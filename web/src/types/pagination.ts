@@ -1,1 +1,1 @@
-export type PaginationItem = number | 'ellipsis'
+export type PaginationItem = number | 'ellipsis';

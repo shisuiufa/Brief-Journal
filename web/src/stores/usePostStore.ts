@@ -1,5 +1,5 @@
-import { useApi } from '@/composables/useApi'
-import type { PostResource } from '@/resources/post'
+import { useApi } from '@/composables/useApi';
+import type { PostResource } from '@/resources/post';
 import {
   type ResourceCollection,
   type ResourceItem,
@@ -7,61 +7,61 @@ import {
   type ResourcePagination,
   ApiError,
   type ApiQuery,
-} from '@/types/api'
-import { defineStore } from 'pinia'
-import { ref } from 'vue'
-import { ApiHttpError } from '@/errors/ApiHttpError.ts'
+} from '@/types/api';
+import { defineStore } from 'pinia';
+import { ref } from 'vue';
+import { ApiHttpError } from '@/errors/ApiHttpError.ts';
 export const usePostStore = defineStore('post', () => {
-  const api = useApi()
+  const api = useApi();
 
-  const list = ref<PostResource[]>([])
-  const currentPost = ref<PostResource | null>(null)
-  const populars = ref<PostResource[]>([])
-  const meta = ref<ResourceCollectionMeta | null>(null)
-  const links = ref<ResourcePagination | null>(null)
-  const featured = ref<PostResource | null>(null)
+  const list = ref<PostResource[]>([]);
+  const currentPost = ref<PostResource | null>(null);
+  const populars = ref<PostResource[]>([]);
+  const meta = ref<ResourceCollectionMeta | null>(null);
+  const links = ref<ResourcePagination | null>(null);
+  const featured = ref<PostResource | null>(null);
 
-  const currentPostNotFoundSlug = ref<string | null>(null)
+  const currentPostNotFoundSlug = ref<string | null>(null);
   const fetchPosts = async (query: ApiQuery = {}) => {
     const res = await api<ResourceCollection<PostResource>>('/api/posts', {
       query,
-    })
+    });
 
-    list.value = res.data
-    meta.value = res.meta
-    links.value = res.links
-  }
+    list.value = res.data;
+    meta.value = res.meta;
+    links.value = res.links;
+  };
 
   const fetchPost = async (slug: string) => {
     try {
-      const res = await api<ResourceItem<PostResource>>(`/api/posts/${slug}`)
+      const res = await api<ResourceItem<PostResource>>(`/api/posts/${slug}`);
 
-      currentPost.value = res.data
-      currentPostNotFoundSlug.value = null
+      currentPost.value = res.data;
+      currentPostNotFoundSlug.value = null;
 
-      return res.data
+      return res.data;
     } catch (error: unknown) {
       if (error instanceof ApiHttpError && error.status === ApiError.NotFound) {
-        currentPost.value = null
-        currentPostNotFoundSlug.value = slug
+        currentPost.value = null;
+        currentPostNotFoundSlug.value = slug;
 
-        return null
+        return null;
       }
-      throw error
+      throw error;
     }
-  }
+  };
 
   const fetchPopulars = async () => {
-    const res = await api<ResourceCollection<PostResource>>('/api/posts/populars')
+    const res = await api<ResourceCollection<PostResource>>('/api/posts/populars');
 
-    populars.value = res.data
-  }
+    populars.value = res.data;
+  };
 
   const fetchFeatured = async () => {
-    const res = await api<ResourceItem<PostResource>>('/api/posts/featured')
+    const res = await api<ResourceItem<PostResource>>('/api/posts/featured');
 
-    featured.value = res.data
-  }
+    featured.value = res.data;
+  };
 
   return {
     fetchPost,
@@ -75,5 +75,5 @@ export const usePostStore = defineStore('post', () => {
     currentPost,
     currentPostNotFoundSlug,
     featured,
-  }
-})
+  };
+});

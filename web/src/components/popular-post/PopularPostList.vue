@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import PopularPostItem from '@/components/popular-post/PopularPostItem.vue'
-import type { PostResource } from '@/resources/post'
-import { formatViews } from '@/utils/formatNumber'
-import { getReadingTime } from '@/utils/readingTime'
+import PopularPostItem from '@/components/popular-post/PopularPostItem.vue';
+import type { PostResource } from '@/resources/post';
+import { formatViews } from '@/utils/formatNumber';
+import { getReadingTime } from '@/utils/readingTime';
 
 defineProps<{
-  posts: PostResource[]
-}>()
+  posts: PostResource[];
+}>();
 </script>
 
 <template>

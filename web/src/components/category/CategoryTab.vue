@@ -1,10 +1,10 @@
 <script setup lang="ts">
 defineProps<{
-  label: string
-  active?: boolean
-}>()
+  label: string;
+  active?: boolean;
+}>();
 
-defineEmits(['select'])
+defineEmits(['select']);
 </script>
 
 <template>

@@ -3,18 +3,18 @@ const articleDateFormatter = new Intl.DateTimeFormat('en-US', {
   day: 'numeric',
   year: 'numeric',
   timeZone: 'UTC',
-})
+});
 
 export const formatDate = (value: string | number | Date | null | undefined): string => {
   if (!value) {
-    return ''
+    return '';
   }
 
-  const date = value instanceof Date ? value : new Date(value)
+  const date = value instanceof Date ? value : new Date(value);
 
   if (Number.isNaN(date.getTime())) {
-    return ''
+    return '';
   }
 
-  return articleDateFormatter.format(date)
-}
+  return articleDateFormatter.format(date);
+};

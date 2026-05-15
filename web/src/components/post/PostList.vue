@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import PostItem from '@/components/post/PostItem.vue'
-import type { PostResource } from '@/resources/post'
+import PostItem from '@/components/post/PostItem.vue';
+import type { PostResource } from '@/resources/post';
 
-defineProps<{ posts: PostResource[] }>()
+defineProps<{ posts: PostResource[] }>();
 </script>
 
 <template>

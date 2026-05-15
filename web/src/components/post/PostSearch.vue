@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import UiInput from '@/components/ui/UiInput.vue'
-import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
-import { useRoute, useRouter } from 'vue-router'
-import { ref, watch } from 'vue'
-import { useDebounceFn } from '@vueuse/core'
-import { getStringQuery } from '@/utils/query.ts'
+import UiInput from '@/components/ui/UiInput.vue';
+import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline';
+import { useRoute, useRouter } from 'vue-router';
+import { ref, watch } from 'vue';
+import { useDebounceFn } from '@vueuse/core';
+import { getStringQuery } from '@/utils/query.ts';
 
-const route = useRoute()
-const router = useRouter()
+const route = useRoute();
+const router = useRouter();
 
-const search = ref(getStringQuery(route.query.search))
+const search = ref(getStringQuery(route.query.search));
 
 const updateSearchQuery = useDebounceFn(() => {
   router.replace({
@@ -19,10 +19,10 @@ const updateSearchQuery = useDebounceFn(() => {
       search: search.value?.trim() || undefined,
       page: undefined,
     },
-  })
-}, 400)
+  });
+}, 400);
 
-watch(search, updateSearchQuery)
+watch(search, updateSearchQuery);
 </script>
 
 <template>

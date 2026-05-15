@@ -1,14 +1,14 @@
-import { z } from 'zod'
-import { resourceSchema } from '@/resources/resource'
-import { taxonomySchema } from '@/resources/taxonomy'
-import { userSchema } from '@/resources/user'
+import { z } from 'zod';
+import { resourceSchema } from '@/resources/resource';
+import { taxonomySchema } from '@/resources/taxonomy';
+import { userSchema } from '@/resources/user';
 
 export const PostStatus = {
   Draft: 'draft',
   Published: 'published',
-} as const
+} as const;
 
-export const postStatusSchema = z.enum([PostStatus.Draft, PostStatus.Published])
+export const postStatusSchema = z.enum([PostStatus.Draft, PostStatus.Published]);
 
 export const postSchema = resourceSchema.extend({
   title: z.string(),
@@ -24,6 +24,6 @@ export const postSchema = resourceSchema.extend({
   views_count: z.number().default(0),
   featured_at: z.string().nullable(),
   is_featured: z.boolean().default(false),
-})
+});
 
-export type PostResource = z.infer<typeof postSchema>
+export type PostResource = z.infer<typeof postSchema>;

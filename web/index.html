@@ -4,16 +4,16 @@
     <meta charset="UTF-8" />
     <link rel="icon" href="/favicon.ico" />
     <script>
-      ;(() => {
+      (() => {
         try {
-          const stored = localStorage.getItem('vueuse-color-scheme')
-          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const stored = localStorage.getItem('vueuse-color-scheme');
+          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
           if (stored === 'dark' || ((!stored || stored === 'auto') && prefersDark)) {
-            document.documentElement.classList.add('dark')
+            document.documentElement.classList.add('dark');
           }
         } catch {}
-      })()
+      })();
     </script>
     <!--head-tags-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />

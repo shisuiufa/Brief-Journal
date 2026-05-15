@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { ClockIcon, EyeIcon } from '@heroicons/vue/24/outline'
+import { ClockIcon, EyeIcon } from '@heroicons/vue/24/outline';
 
 defineProps<{
-  rank: number
-  slug: string
-  title: string
-  views: string
-  readTime: string
-}>()
+  rank: number;
+  slug: string;
+  title: string;
+  views: string;
+  readTime: string;
+}>();
 </script>
 
 <template>

@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import UiCard from '@/components/ui/UiCard.vue'
-import type { PostResource } from '@/resources/post.ts'
-import PostAuthor from '@/components/post/PostAuthor.vue'
-import { computed } from 'vue'
+import UiCard from '@/components/ui/UiCard.vue';
+import type { PostResource } from '@/resources/post.ts';
+import PostAuthor from '@/components/post/PostAuthor.vue';
+import { computed } from 'vue';
 
 const props = defineProps<{
-  post: PostResource
-}>()
+  post: PostResource;
+}>();
 
-const visibleCategories = computed(() => props.post.categories.slice(0, 2))
-const hiddenCategoriesCount = computed(() => Math.max(props.post.categories.length - 2, 0))
+const visibleCategories = computed(() => props.post.categories.slice(0, 2));
+const hiddenCategoriesCount = computed(() => Math.max(props.post.categories.length - 2, 0));
 </script>
 
 <template>

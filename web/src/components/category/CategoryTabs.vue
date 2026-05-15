@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import CategoryTab from '@/components/category/CategoryTab.vue'
-import { useCategoryStore } from '@/stores/useCategoryStore.ts'
-import { storeToRefs } from 'pinia'
-import { useRoute, useRouter } from 'vue-router'
+import CategoryTab from '@/components/category/CategoryTab.vue';
+import { useCategoryStore } from '@/stores/useCategoryStore.ts';
+import { storeToRefs } from 'pinia';
+import { useRoute, useRouter } from 'vue-router';
 
-const route = useRoute()
-const router = useRouter()
-const categoryStore = useCategoryStore()
+const route = useRoute();
+const router = useRouter();
+const categoryStore = useCategoryStore();
 
-const { categories } = storeToRefs(categoryStore)
+const { categories } = storeToRefs(categoryStore);
 
 const handleSelect = (slug: string) => {
-  const nextCategory = route.query.category === slug ? undefined : slug
+  const nextCategory = route.query.category === slug ? undefined : slug;
 
   router.push({
     name: 'home',
@@ -20,8 +20,8 @@ const handleSelect = (slug: string) => {
       category: nextCategory,
       page: undefined,
     },
-  })
-}
+  });
+};
 </script>
 
 <template>
