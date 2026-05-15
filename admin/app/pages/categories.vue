@@ -7,9 +7,7 @@ import {
   type TaxonomyResource,
 } from "~/resources/taxonomy";
 import type { FetchError } from "ofetch";
-import {
-  useTaxonomyRealtime,
-} from "~/composables/useTaxonomyRealtime";
+import { useTaxonomyRealtime } from "~/composables/useTaxonomyRealtime";
 
 definePageMeta({
   middleware: "role",
