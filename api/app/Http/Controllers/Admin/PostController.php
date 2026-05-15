@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Contracts\Admin\Post\CreatePostActionInterface;
+use App\Contracts\Admin\Post\DeletePostActionInterface;
 use App\Contracts\Admin\Post\UpdatePostActionInterface;
 use App\Data\Admin\Post\CreatePostData;
 use App\Data\Admin\Post\UpdatePostData;
@@ -76,9 +77,9 @@ class PostController extends Controller
     }
 
     #[Authorize('delete', 'post')]
-    public function destroy(Post $post): JsonResponse
+    public function destroy(Post $post, DeletePostActionInterface $action): JsonResponse
     {
-        $post->delete();
+        $action->execute($post);
 
         return response()->json([
             'message' => 'Post deleted successfully.',
