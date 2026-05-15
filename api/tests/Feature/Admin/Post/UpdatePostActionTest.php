@@ -28,6 +28,7 @@ $createUpdateData = function (
         status: $overrides['status'] ?? null,
         categoryIds: $overrides['category_ids'] ?? [],
         tagIds: $overrides['tag_ids'] ?? [],
+        isFeatured: false,
     );
 };
 

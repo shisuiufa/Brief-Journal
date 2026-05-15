@@ -34,6 +34,7 @@ $createPostData = function (
         status: $overrides['status'] ?? $status,
         categoryIds: $overrides['category_ids'] ?? [],
         tagIds: $overrides['tag_ids'] ?? [],
+        isFeatured: false,
     );
 };
 
