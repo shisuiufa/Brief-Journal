@@ -21,7 +21,6 @@ export const usePostStore = defineStore("post", () => {
 
   const search = ref<string>("");
   const status = ref<PostStatusFilter>(PostStatusFilter.All);
-
   const loading = ref<boolean>(false);
 
   const fetchPosts = async () => {
