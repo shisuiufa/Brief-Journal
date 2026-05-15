@@ -4,8 +4,10 @@ namespace App\Actions\Admin\Post;
 
 use App\Contracts\Admin\Post\CreatePostActionInterface;
 use App\Contracts\Media\ImageStorageInterface;
+use App\Contracts\Realtime\RealtimePublisherInterface;
 use App\Data\Admin\Post\CreatePostData;
 use App\Enums\Post\PostStatusEnum;
+use App\Enums\Realtime\RealtimeEventEnum;
 use App\Models\Post;
 use Illuminate\Support\Facades\DB;
 use Throwable;
@@ -14,6 +16,7 @@ final readonly class CreatePostAction implements CreatePostActionInterface
 {
     public function __construct(
         private ImageStorageInterface $imageStorage,
+        private RealtimePublisherInterface $realtimePublisher,
     ) {}
 
     /**
@@ -26,7 +29,7 @@ final readonly class CreatePostAction implements CreatePostActionInterface
         try {
             $imagePath = $this->imageStorage->store($data->image, 'posts');
 
-            return DB::transaction(function () use ($data, $imagePath): Post {
+            $post = DB::transaction(function () use ($data, $imagePath): Post {
                 $post = new Post([
                     'user_id' => $data->userId,
                     'title' => $data->title,
@@ -46,6 +49,15 @@ final readonly class CreatePostAction implements CreatePostActionInterface
 
                 return $post;
             });
+
+            if ($post->status === PostStatusEnum::Published) {
+                $this->realtimePublisher->publish(RealtimeEventEnum::PostPublished, [
+                    'id' => $post->id,
+                    'slug' => $post->slug,
+                ]);
+            }
+
+            return $post;
         } catch (Throwable $exception) {
             $this->cleanupStoredImage($imagePath);
 

@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Contracts\Media\ImageStorageInterface;
+use App\Contracts\Realtime\RealtimePublisherInterface;
 use App\Services\Image\ImageStorageService;
+use App\Services\Realtime\RealtimePublisher;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Passport;
 
@@ -15,6 +17,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(ImageStorageInterface::class, ImageStorageService::class);
+        $this->app->bind(RealtimePublisherInterface::class, RealtimePublisher::class);
     }
 
     /**

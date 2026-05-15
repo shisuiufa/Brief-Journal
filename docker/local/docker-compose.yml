@@ -14,6 +14,15 @@ services:
     volumes:
       - brief_journal_postgres_data:/var/lib/postgresql/data
 
+  redis:
+    image: redis:7-alpine
+    container_name: brief_journal_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - brief_journal_redis_data:/data
+
   pgadmin:
     image: dpage/pgadmin4
     container_name: brief_journal_pgadmin
@@ -44,8 +53,31 @@ services:
       - ../../api:/var/www
     depends_on:
       - postgres
+      - redis
     ports:
       - "9000:9000"
+
+  socket-service:
+    build:
+      context: ../../socket-service
+      dockerfile: ../docker/local/socket-service/Dockerfile
+    container_name: brief_journal_socket_service
+    restart: unless-stopped
+    working_dir: /app
+    environment:
+      PORT: "3001"
+      REDIS_HOST: "redis"
+      REDIS_PORT: "6379"
+      API_BASE_URL: "http://nginx"
+    volumes:
+      - ../../socket-service:/app
+      - /app/node_modules
+    ports:
+      - "3001:3001"
+    depends_on:
+      - redis
+      - api
+      - nginx
 
   nginx:
     image: nginx:alpine
@@ -103,3 +135,4 @@ services:
 volumes:
   brief_journal_postgres_data:
   brief_journal_pgadmin_data:
+  brief_journal_redis_data:

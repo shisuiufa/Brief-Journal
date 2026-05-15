@@ -36,7 +36,7 @@ const isProduction = process.env.NODE_ENV === 'production'
 
 const templatePath = path.resolve(root, 'index.html')
 
-const serverEntryUrl = pathToFileURL(path.resolve(root, 'dist/server/entry-server.js')).href
+const serverEntryUrl = pathToFileURL(path.resolve(root, 'dist/server/entry-server.ts')).href
 
 const renderClientAssets = (
   manifest: Manifest | null,

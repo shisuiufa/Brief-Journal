@@ -4,8 +4,10 @@ namespace App\Actions\Admin\Post;
 
 use App\Contracts\Admin\Post\UpdatePostActionInterface;
 use App\Contracts\Media\ImageStorageInterface;
+use App\Contracts\Realtime\RealtimePublisherInterface;
 use App\Data\Admin\Post\UpdatePostData;
 use App\Enums\Post\PostStatusEnum;
+use App\Enums\Realtime\RealtimeEventEnum;
 use App\Models\Post;
 use Carbon\CarbonInterface;
 use Illuminate\Support\Facades\DB;
@@ -16,6 +18,7 @@ final readonly class UpdatePostAction implements UpdatePostActionInterface
 {
     public function __construct(
         private ImageStorageInterface $imageStorage,
+        private RealtimePublisherInterface $realtimePublisher,
     ) {}
 
     /**
@@ -24,6 +27,8 @@ final readonly class UpdatePostAction implements UpdatePostActionInterface
     public function execute(Post $post, UpdatePostData $data): Post
     {
         $this->ensureStatusCanBeUpdated($post, $data);
+
+        $wasPublished = $post->status === PostStatusEnum::Published;
 
         $oldImage = $post->image;
         $newImage = null;
@@ -47,7 +52,23 @@ final readonly class UpdatePostAction implements UpdatePostActionInterface
             $this->cleanupStoredImage($oldImage);
         }
 
-        return $post->refresh();
+        $post = $post->refresh();
+
+        if (! $wasPublished && $post->status === PostStatusEnum::Published) {
+            $this->realtimePublisher->publish(RealtimeEventEnum::PostPublished, [
+                'id' => $post->id,
+                'slug' => $post->slug,
+            ]);
+        }
+
+        if ($wasPublished && $post->status === PostStatusEnum::Published) {
+            $this->realtimePublisher->publish(RealtimeEventEnum::PostUpdated, [
+                'id' => $post->id,
+                'slug' => $post->slug,
+            ]);
+        }
+
+        return $post;
     }
 
     private function buildAttributes(Post $post, UpdatePostData $data, ?string $newImage): array
