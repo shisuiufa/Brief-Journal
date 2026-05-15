@@ -6,6 +6,7 @@ use App\Contracts\Post\IncrementPostViewsActionInterface;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
@@ -28,14 +29,20 @@ class PostController extends Controller
         return PostResource::collection($posts);
     }
 
-    public function featured(): PostResource
+    public function featured(): PostResource|JsonResponse
     {
         $post = Post::query()
             ->published()
             ->featured()
             ->with(['author', 'categories', 'tags'])
             ->latest('featured_at')
-            ->firstOrFail();
+            ->first();
+
+        if (! $post) {
+            return response()->json([
+                'data' => null,
+            ]);
+        }
 
         return new PostResource($post);
     }

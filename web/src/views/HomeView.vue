@@ -16,6 +16,7 @@ import { computed, watch } from 'vue'
 import { useCategoryStore } from '@/stores/useCategoryStore.ts'
 import { useRoute, useRouter } from 'vue-router'
 import { getNumberQuery, getStringQuery } from '@/utils/query.ts'
+import { usePostRealtime } from '@/composables/usePostRealtime.ts'
 
 useHead({
   title: 'Brief Journal',
@@ -84,6 +85,8 @@ const handlePageUpdate = (page: number) => {
     },
   })
 }
+
+usePostRealtime(postsQuery)
 </script>
 
 <template>

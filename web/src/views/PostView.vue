@@ -11,6 +11,7 @@ import { computed } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 import { useCallOnce } from '@/composables/useCallOnce.ts'
 import NotFoundPanel from '@/components/not-found/NotFoundPanel.vue'
+import { useCurrentPostRealtime } from '@/composables/useCurrentPostRealtime.ts'
 
 const route = useRoute()
 const postStore = usePostStore()
@@ -63,6 +64,8 @@ const loadPost = async () => {
 }
 
 callOnce(`post:${slug.value}`, loadPost)
+
+useCurrentPostRealtime(slug)
 </script>
 
 <template>
