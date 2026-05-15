@@ -2,6 +2,7 @@
 import UsersFilters from "~/components/users/UsersFilters.vue";
 import UsersTable from "~/components/users/table/UsersTable.vue";
 import { Roles } from "~/resources/role";
+import { useUserRealtime } from "~/composables/useUserRealtime";
 
 definePageMeta({
   middleware: "role",
@@ -13,7 +14,7 @@ const userStore = useUserStore();
 
 const { list } = storeToRefs(userStore);
 
-const { pending, refresh } = await useLazyAsyncData("users", () =>
+const { pending } = await useLazyAsyncData("users", () =>
   userStore.fetchUsers(),
 );
 
@@ -25,7 +26,6 @@ const handleDelete = async (id: number) => {
       description: "The account has been removed.",
       color: "success",
     });
-    await refresh();
   } catch {
     toast.add({
       title: "Failed to delete user",
@@ -34,6 +34,8 @@ const handleDelete = async (id: number) => {
     });
   }
 };
+
+useUserRealtime();
 </script>
 
 <template>

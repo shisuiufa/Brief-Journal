@@ -2,12 +2,15 @@
 import DashboardStats from "~/components/dashboard/DashboardStats.vue";
 import DashboardRecentPosts from "~/components/dashboard/DashboardRecentPosts.vue";
 import DashboardQuickActions from "~/components/dashboard/DashboardQuickActions.vue";
+import { usePostRealtime } from "~/composables/usePostRealtime";
 
 const postStore = usePostStore();
 
 const { pending } = await useLazyAsyncData("posts", () =>
   postStore.fetchPosts(),
 );
+
+usePostRealtime();
 </script>
 
 <template>

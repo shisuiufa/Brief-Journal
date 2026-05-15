@@ -7,6 +7,7 @@ import {
   type TaxonomyResource,
 } from "~/resources/taxonomy";
 import type { FetchError } from "ofetch";
+import { useTaxonomyRealtime } from "~/composables/useTaxonomyRealtime";
 
 definePageMeta({
   middleware: "role",
@@ -20,7 +21,7 @@ const { list: tags, loading, meta } = storeToRefs(tagStore);
 
 const selectedTag = ref<TaxonomyResource | null>(null);
 
-const { pending, refresh } = await useLazyAsyncData("admin-tags", () =>
+const { pending } = await useLazyAsyncData("admin-tags", () =>
   tagStore.fetchTags(),
 );
 
@@ -48,7 +49,6 @@ const handleSubmit = async (credentials: TaxonomyCredentials) => {
     });
 
     selectedTag.value = null;
-    await refresh();
   } catch (error) {
     toast.add({
       title: "Something went wrong",
@@ -71,8 +71,6 @@ const handleDelete = async (id: number) => {
       description: "The tag has been removed.",
       color: "success",
     });
-
-    await refresh();
   } catch (error) {
     toast.add({
       title: "Failed to delete tag",
@@ -84,8 +82,9 @@ const handleDelete = async (id: number) => {
 
 const handlePage = async (page: number) => {
   tagStore.setPage(page);
-  await refresh();
 };
+
+useTaxonomyRealtime();
 </script>
 
 <template>

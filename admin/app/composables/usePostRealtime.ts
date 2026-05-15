@@ -1,3 +1,5 @@
+import { RealtimeEventEnum } from "~/resources/realtime";
+
 export const usePostRealtime = () => {
   const socket = useSocket();
   const postStore = usePostStore();
@@ -7,14 +9,14 @@ export const usePostRealtime = () => {
   };
 
   onMounted(() => {
-    socket.on("post.published", refreshPosts);
-    socket.on("post.updated", refreshPosts);
-    socket.on("post.deleted", refreshPosts);
+    socket.on(RealtimeEventEnum.PostPublished, refreshPosts);
+    socket.on(RealtimeEventEnum.PostUpdated, refreshPosts);
+    socket.on(RealtimeEventEnum.PostDeleted, refreshPosts);
   });
 
   onUnmounted(() => {
-    socket.off("post.published", refreshPosts);
-    socket.off("post.updated", refreshPosts);
-    socket.off("post.deleted", refreshPosts);
+    socket.off(RealtimeEventEnum.PostPublished, refreshPosts);
+    socket.off(RealtimeEventEnum.PostUpdated, refreshPosts);
+    socket.off(RealtimeEventEnum.PostDeleted, refreshPosts);
   });
 };
